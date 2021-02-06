@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         //camera.upperRadiusLimit = 13*2;
         let light1 = new BABYLON.PointLight('light1',new BABYLON.Vector3(0,1,0), scene);
         light1.parent = camera;
-    
+        inizializzaColori(scene);
         populateScene(scene);
         
         scene.registerBeforeRender(() => {
@@ -35,19 +35,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 });
 
 //Funzione per creare il terreno
-function createTerrain(scene) {
-    //materiali dell'ambiente
-    const metal = new BABYLON.StandardMaterial('metal', scene)
-    metal.diffuseColor = new BABYLON.Color3(0.447, 0.474, 0.447);
-    //metal.specularColor = new BABYLON.Color3(0.5, 0.6, 0.87);
-    const wood = new BABYLON.StandardMaterial('wood', scene)
-    wood.diffuseColor = new BABYLON.Color3(0.478, 0.356, 0.219);
-    //wood.specularColor = new BABYLON.Color3(0.5, 0.6, 0.87);
-    const gravel = new BABYLON.StandardMaterial('gravel', scene);
-    gravel.diffuseColor = new BABYLON.Color3(0.560, 0.619, 0.572);
-    const rusted_steel = new BABYLON.StandardMaterial('rusted_steel', scene);
-    rusted_steel.diffuseColor = new BABYLON.Color3(0.718, 0.255, 0.055);
-    
+function createTerrain(scene) {    
     for(let i=0; i<10; i++) {   //numero di chunk da generare
         z_offset = i * chunk_size; //z_offset = (i + chunk_offset) * chunk_size;
         
@@ -55,28 +43,28 @@ function createTerrain(scene) {
         for(let x_offset=-8; x_offset<=8; x_offset+=16) {   //il valore di x_offset varia la distanza fra i centri dei binari
             for(let k=-2; k<=2; k+=4) {
                 let rail_h_inf = BABYLON.MeshBuilder.CreateBox('rail_h_inf', {height:0.1, depth: chunk_size, width:1.0}, scene);   //h_inf indica la parte orizzontale inferiore di una rotaia
-                rail_h_inf.material = metal;
+                rail_h_inf.material = colori(scene, 3);
                 rail_h_inf.position.y = -0.5;
                 rail_h_inf.position.x = k + x_offset;
                 rail_h_inf.position.z = z_offset;
             }
             for(let i=-2; i<=2; i+=4) {
                 let rail_v = BABYLON.MeshBuilder.CreateBox('rail_v', {height:1.0, depth: chunk_size, width:0.25}, scene);   //v indica la parte verticale di una rotaia
-                rail_v.material = metal;
+                rail_v.material = colori(scene, 3);
                 rail_v.position.y = 0;
                 rail_v.position.x = i + x_offset;
                 rail_v.position.z = z_offset;
             }
             for(let k=-2; k<=2; k+=4) {
                 let rail_h_sup = BABYLON.MeshBuilder.CreateBox('rail_h_sup', {height:0.1, depth: chunk_size, width:0.6}, scene);   //h_sup indica la parte orizzontale superiore di una rotaia
-                rail_h_sup.material = metal;
+                rail_h_sup.material = colori(scene, 3);
                 rail_h_sup.position.y = +0.5;
                 rail_h_sup.position.x = k + x_offset;
                 rail_h_sup.position.z = z_offset;
             }
             for(let i=-(chunk_size/2);i<=(chunk_size/2); i+=4) {
                 let traversa = BABYLON.MeshBuilder.CreateBox('traversa',{height:0.25, depth:1, width:6.5}, scene);
-                traversa.material = wood;
+                traversa.material = colori(scene, 4);
                 traversa.position.x = x_offset;
                 traversa.position.y = -0.675;  //(-0.5-0.1/2-0.25/2)
                 traversa.position.z = i + z_offset;
@@ -84,13 +72,13 @@ function createTerrain(scene) {
             for(let i=-(chunk_size/2);i<=(chunk_size/2); i+=4) {
                 for(let j=-1.7; j<=1.7; j+=3.4) {
                     let bullone = BABYLON.MeshBuilder.CreateCylinder('bullone', {height:0.5, diameter:0.15}, scene);
-                    bullone.material = rusted_steel;
+                    bullone.material = colori(scene, 6);
                     if (x_offset < 0) bullone.position.x = j + x_offset;
                     else bullone.position.x = j + x_offset;
                     bullone.position.y = -0.4;
                     bullone.position.z = i + z_offset;
                     dado = BABYLON.MeshBuilder.CreateCylinder('dado', {height: 0.15, diameter: 0.25, tessellation: 6}, scene);
-                    dado.material = rusted_steel;
+                    dado.material = colori(scene, 6);
                     if (x_offset < 0) dado.position.x = j + x_offset;
                     else dado.position.x = j + x_offset;
                     dado.position.y = -0.4;
@@ -102,7 +90,7 @@ function createTerrain(scene) {
         //creazione terreno
         for(let s=-1; s<=1; s+=1) {
             let terreno = BABYLON.MeshBuilder.CreatePlane('terreno', {size: chunk_size, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
-            terreno.material = gravel;
+            terreno.material = colori(scene, 5);
             terreno.rotation.x = Math.PI/2;
             terreno.position.x = s*chunk_size;
             terreno.position.y = -0.8;
@@ -428,14 +416,163 @@ function populateScene(scene) {
     
     createTerrain(scene);
     createStation(scene);
+    treno(scene);
 }
 
-//Funzione per creare il blocco di città
-/*function createCity(scene) {
+//Funzioni per radunare tutti i colorli e poterli richiamare a propria scelta
+let colgrigio, colrosso, colnero, metal, gravel, rusted_steel, giallo;
+
+function inizializzaColori(scene) {
+    colgrigio = new BABYLON.StandardMaterial('grigio', scene); //0
+    colgrigio.diffuseColor = new BABYLON.Color3(0.702, 0.702, 0.702);
+    colrosso = new BABYLON.StandardMaterial('rosso', scene); //1
+    colrosso.diffuseColor = new BABYLON.Color3(1, 0.176, 0.176);
+    colnero = new BABYLON.StandardMaterial('nero', scene); //2
+    colnero.diffuseColor = new BABYLON.Color3(0.078, 0.078, 0.078);
+    metal = new BABYLON.StandardMaterial('metal', scene); //3
+    metal.diffuseColor = new BABYLON.Color3(0.447, 0.474, 0.447);
+    wood = new BABYLON.StandardMaterial('wood', scene); //4
+    wood.diffuseColor = new BABYLON.Color3(0.478, 0.356, 0.219);
+    gravel = new BABYLON.StandardMaterial('gravel', scene); //5
+    gravel.diffuseColor = new BABYLON.Color3(0.560, 0.619, 0.572);
+    rusted_steel = new BABYLON.StandardMaterial('rusted_steel', scene); //6
+    rusted_steel.diffuseColor = new BABYLON.Color3(0.718, 0.255, 0.055);
+    giallo = new BABYLON.StandardMaterial('giallo', scene); //7
+    giallo.diffuseColor = new BABYLON.Color3(1, 1, 0);
+}
+    
+function colori(scene, numerocol) {
+    if (numerocol == 0) {
+      return colgrigio;
+    } else if (numerocol == 1) {
+      return colrosso;
+    } else if (numerocol == 2) {
+      return colnero;
+    } else if (numerocol == 3) {
+      return metal;
+    } else if (numerocol == 4) {
+      return wood;
+    } else if (numerocol == 5) {
+      return gravel;
+    } else if (numerocol == 6) {
+      return rusted_steel;
+    } else if (numerocol == 7) {
+      return giallo;
+    }
+}
+
+//////////////////////////// ! ! ! ! ! ZONA TRENO ! ! ! ! ! ////////////////////////////
+
+//////////////////////////// ! ! ! ! ! ZONA TRENO ! ! ! ! ! ////////////////////////////
+
+//////////////////////////// ! ! ! ! ! ZONA TRENO ! ! ! ! ! ////////////////////////////
+
+function treno(scene) {
+    carrozza(scene, 8, 100);
+    carrozza(scene, 8, 170);
+    locomotiva(scene, 8, 30, 3, -3, 33, Math.PI/16*5.7);
+    locomotiva(scene, 8, 240, -3, 3, -33, Math.PI/16*10.3);
+}
+
+function locomotiva(scene, posx, posz, avaoind, avaoind2, avaoind3, rotazione) {
+
+    centro(scene, posx, posz+avaoind, colori(scene, 2), 60);
+
+    spigoli(scene, posx+1, 10.5, posz+avaoind, colori(scene, 1), 60);
+    spigoli(scene, posx-1, 10.5, posz+avaoind, colori(scene, 1), 60);
+    spigoli(scene, posx+1, 4.5, posz+avaoind2, colori(scene, 0), 72);
+    spigoli(scene, posx-1, 4.5, posz+avaoind2, colori(scene, 0), 72);
+
+    tettofondo(scene, posx, 3, posz+avaoind2, colori(scene, 0), 72);
+    tettofondo(scene, posx, 12, posz+avaoind, colori(scene, 1), 60);
+
+    ruota(scene, posx-2, posz-25, colori(scene, 2));
+    ruota(scene, posx-2, posz-15, colori(scene, 2));
+    ruota(scene, posx+2, posz-25, colori(scene, 2));
+    ruota(scene, posx+2, posz-15, colori(scene, 2));
+    ruota(scene, posx-2, posz+15, colori(scene, 2));
+    ruota(scene, posx-2, posz+25, colori(scene, 2));
+    ruota(scene, posx+2, posz+15, colori(scene, 2));
+    ruota(scene, posx+2, posz+25, colori(scene, 2));
+
+    musocen(scene, posx, posz-avaoind3, colori(scene, 1), rotazione);
+    musolat(scene, posx+4, posz-avaoind3, colori(scene, 1));
+    musolat(scene, posx-4, posz-avaoind3, colori(scene, 1));
 
 }
 
-//Funzione per creare il blocco di foresta
-function createForest(scene) {
+function carrozza(scene, posx, posz) {
 
-} */
+    centro(scene, posx, posz, colori(scene, 2), 66);
+
+    spigoli(scene, posx+1, 10.5, posz, colori(scene, 1), 66);
+    spigoli(scene, posx-1, 10.5, posz, colori(scene, 1), 66);
+    spigoli(scene, posx+1, 4.5, posz, colori(scene, 0), 66);
+    spigoli(scene, posx-1, 4.5, posz, colori(scene, 0), 66);
+
+    tettofondo(scene, posx, 3, posz, colori(scene, 0), 66);
+    tettofondo(scene, posx, 12, posz, colori(scene, 1), 66);
+
+    ruota(scene, posx-2, posz-25, colori(scene, 2));
+    ruota(scene, posx-2, posz-15, colori(scene, 2));
+    ruota(scene, posx+2, posz-25, colori(scene, 2));
+    ruota(scene, posx+2, posz-15, colori(scene, 2));
+    ruota(scene, posx-2, posz+15, colori(scene, 2));
+    ruota(scene, posx-2, posz+25, colori(scene, 2));
+    ruota(scene, posx+2, posz+15, colori(scene, 2));
+    ruota(scene, posx+2, posz+25, colori(scene, 2));
+
+}
+
+function ruota(scene, posx, posz, colore) {
+    var ruota = BABYLON.MeshBuilder.CreateCylinder('ruota', {height: 0.4, diameter: 2}, scene);
+    ruota.rotation.z = Math.PI/2;
+    ruota.position.x = posx;
+    ruota.position.y = 1.55;
+    ruota.position.z = posz;
+    ruota.material = colore;
+}
+
+function centro(scene, posx, posz, colore, lunghezza) {
+    var carrozzacentro = BABYLON.MeshBuilder.CreateBox('carrozzacentro', {width: 8, height: 6, depth: lunghezza}, scene);
+    carrozzacentro.position.x = posx;
+    carrozzacentro.position.y = 7.5;
+    carrozzacentro.position.z = posz;
+    carrozzacentro.material = colore;
+}
+
+function tettofondo(scene, posx, posy, posz, colore, lunghezza) {
+    var tettofondo = BABYLON.MeshBuilder.CreateBox('tettofondo', {width: 2, height: 3, depth: lunghezza}, scene);
+    tettofondo.position.x = posx;
+    tettofondo.position.y = posy;
+    tettofondo.position.z = posz;
+    tettofondo.material = colore;
+}
+
+function spigoli(scene, posx, posy, posz, colore, lunghezza) {
+    var spigoli = BABYLON.MeshBuilder.CreateCylinder('spigoli', {height: lunghezza, diameter: 6}, scene);
+    spigoli.rotation.x = Math.PI/2;
+    spigoli.position.x = posx;
+    spigoli.position.y = posy;
+    spigoli.position.z = posz;
+    spigoli.material = colore;
+}
+
+function musocen(scene, posx, posz, colore, rotazione) {
+    var musocen = BABYLON.MeshBuilder.CreateBox('musocen', {height: 13.5, width: 8, depth: 0.1}, scene);
+    musocen.rotation.x = rotazione;
+    musocen.position.x = posx;
+    musocen.position.y = 10.5;
+    musocen.position.z = posz;
+    musocen.material = colore;
+}
+
+function musolat(scene, posx, posz, colore) {
+    var musolat = BABYLON.MeshBuilder.CreateBox('musocen', {height: 12, width: 3, depth: 0.1}, scene);
+    musolat.rotation.z = Math.PI/2;
+    musolat.rotation.y = Math.PI/2;
+    musolat.position.x = posx;
+    musolat.position.y = 6;
+    musolat.position.z = posz;
+    musolat.material = colore;
+}
