@@ -322,9 +322,6 @@ function createTerrain(scene) {
 //Funzione per creare la stazione
 function createStation(scene) {
     for(let x_offset=-30; x_offset<=30; x_offset+=60) {
-        //dichiarazione dei materiali (inclusa la DynamicTexture usata per scrivere il nome della stazione)
-        const giallo = new BABYLON.StandardMaterial('giallo', scene);
-        giallo.diffuseColor = new BABYLON.Color3(1, 1, 0);
         //scritte sul cartello
         const material = new BABYLON.StandardMaterial("material", scene);
         let font_type = "Arial";
@@ -376,7 +373,7 @@ function createStation(scene) {
         sost_v.position.z = pav_z - 20;
         
         let linea_gialla = BABYLON.MeshBuilder.CreatePlane('linea_gialla', {height: 3*chunk_size, width: 4, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
-        linea_gialla.material = giallo;
+        linea_gialla.material = colori(scene, 7);
         linea_gialla.rotation.x = Math.PI/2;
         if (x_offset < 0) linea_gialla.position.x = x_offset + 7.5;
         else linea_gialla.position.x = x_offset - 7.5;
