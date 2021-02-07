@@ -3,9 +3,12 @@
 //Progetto: Train Simulator
 //Descrizione: Un simulatore di guida di treni, in cui si può scegliere
     //la velocità del treno potrà essere decisa e modificata in corsa,
-    //la rotaia è infinita. 
+    //la rotaia è infinita.
+    
+    //TODO: la ringhiera non deve generarsi sopra le stazioni
 
 const chunk_size = 32;  //chunk = unità di terreno usata per la generazione procedurale
+let last_station_z = 0; //salvo la coordinata z dell'ultima stazione generata (verrà assegnata inizialmente a 0 in quanto la prima stazione è centrata rispetto a z=0)
 
 window.addEventListener('DOMContentLoaded', (event) => {
         const canvas = document.getElementById('renderCanvas');
@@ -20,13 +23,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
         let light1 = new BABYLON.PointLight('light1',new BABYLON.Vector3(0,1,0), scene);
         light1.parent = camera;
         inizializzaColori(scene);
-        populateScene(scene);
+        let chunk_offset = 0;
+        populateScene(scene, chunk_offset, camera);
         
         scene.registerBeforeRender(() => {
-            let t = performance.now() * 0.03;
+            let t = performance.now() * 0.1;
             camera.setPosition(new BABYLON.Vector3(-8, 7.5, t));
             camera.setTarget(new BABYLON.Vector3(-8, 7.5, 10+t));
-            //console.log(t);
+            if (camera.position.z > (5 + chunk_offset) * chunk_size) {
+                chunk_offset+=10;
+                populateScene(scene, chunk_offset, camera);
+            }
+            //console.log(camera.position.z);
         });
         
         engine.runRenderLoop(()=>scene.render());
@@ -34,36 +42,36 @@ window.addEventListener('DOMContentLoaded', (event) => {
         
 });
 
-//Funzione per creare il terreno
-function createTerrain(scene) {    
-    for(let i=0; i<10; i++) {   //numero di chunk da generare
-        z_offset = i * chunk_size; //z_offset = (i + chunk_offset) * chunk_size;
+//Funzione per creare il terreno della ferrovia
+function createTerrain(scene, chunk_offset) {    
+    for(let i=0; i<10; i++) {   //numero di chunk da generare alla volta
+        z_offset = (i + chunk_offset) * chunk_size;
         
         //creazione binari
         for(let x_offset=-8; x_offset<=8; x_offset+=16) {   //il valore di x_offset varia la distanza fra i centri dei binari
             for(let k=-2; k<=2; k+=4) {
-                let rail_h_inf = BABYLON.MeshBuilder.CreateBox('rail_h_inf', {height:0.1, depth: chunk_size, width:1.0}, scene);   //h_inf indica la parte orizzontale inferiore di una rotaia
+                let rail_h_inf = BABYLON.MeshBuilder.CreateBox('rail_h_inf', {height: 0.1, depth: chunk_size, width: 1.0}, scene);   //h_inf indica la parte orizzontale inferiore di una rotaia
                 rail_h_inf.material = colori(scene, 3);
                 rail_h_inf.position.y = -0.5;
                 rail_h_inf.position.x = k + x_offset;
                 rail_h_inf.position.z = z_offset;
             }
             for(let i=-2; i<=2; i+=4) {
-                let rail_v = BABYLON.MeshBuilder.CreateBox('rail_v', {height:1.0, depth: chunk_size, width:0.25}, scene);   //v indica la parte verticale di una rotaia
+                let rail_v = BABYLON.MeshBuilder.CreateBox('rail_v', {height: 1.0, depth: chunk_size, width: 0.25}, scene);   //v indica la parte verticale di una rotaia
                 rail_v.material = colori(scene, 3);
                 rail_v.position.y = 0;
                 rail_v.position.x = i + x_offset;
                 rail_v.position.z = z_offset;
             }
             for(let k=-2; k<=2; k+=4) {
-                let rail_h_sup = BABYLON.MeshBuilder.CreateBox('rail_h_sup', {height:0.1, depth: chunk_size, width:0.6}, scene);   //h_sup indica la parte orizzontale superiore di una rotaia
+                let rail_h_sup = BABYLON.MeshBuilder.CreateBox('rail_h_sup', {height: 0.1, depth: chunk_size, width: 0.6}, scene);   //h_sup indica la parte orizzontale superiore di una rotaia
                 rail_h_sup.material = colori(scene, 3);
                 rail_h_sup.position.y = +0.5;
                 rail_h_sup.position.x = k + x_offset;
                 rail_h_sup.position.z = z_offset;
             }
             for(let i=-(chunk_size/2);i<=(chunk_size/2); i+=4) {
-                let traversa = BABYLON.MeshBuilder.CreateBox('traversa',{height:0.25, depth:1, width:6.5}, scene);
+                let traversa = BABYLON.MeshBuilder.CreateBox('traversa',{height: 0.25, depth: 1, width: 6.5}, scene);
                 traversa.material = colori(scene, 4);
                 traversa.position.x = x_offset;
                 traversa.position.y = -0.675;  //(-0.5-0.1/2-0.25/2)
@@ -71,13 +79,13 @@ function createTerrain(scene) {
             }
             for(let i=-(chunk_size/2);i<=(chunk_size/2); i+=4) {
                 for(let j=-1.7; j<=1.7; j+=3.4) {
-                    let bullone = BABYLON.MeshBuilder.CreateCylinder('bullone', {height:0.5, diameter:0.15}, scene);
+                    let bullone = BABYLON.MeshBuilder.CreateCylinder('bullone', {height: 0.5, diameter: 0.15}, scene);
                     bullone.material = colori(scene, 6);
                     if (x_offset < 0) bullone.position.x = j + x_offset;
                     else bullone.position.x = j + x_offset;
                     bullone.position.y = -0.4;
                     bullone.position.z = i + z_offset;
-                    dado = BABYLON.MeshBuilder.CreateCylinder('dado', {height: 0.15, diameter: 0.25, tessellation: 6}, scene);
+                    let dado = BABYLON.MeshBuilder.CreateCylinder('dado', {height: 0.15, diameter: 0.25, tessellation: 6}, scene);
                     dado.material = colori(scene, 6);
                     if (x_offset < 0) dado.position.x = j + x_offset;
                     else dado.position.x = j + x_offset;
@@ -98,10 +106,10 @@ function createTerrain(scene) {
         }
         
         //creazione pali
-        if(z_offset%(4*chunk_size) == 0) {  //creo i pali ogni 4 chunks
+        if(z_offset % (4*chunk_size) == 0) {  //creo i pali ogni 4 chunks
             for(let x_offset=-24; x_offset<=24; x_offset+=48) {
-                let cilindro1 = BABYLON.MeshBuilder.CreateCylinder('cilindro1', {height:15, diameter:2.0}, scene);  //sezione verticale
-                let cilindro2 = BABYLON.MeshBuilder.CreateCylinder('cilindro2', {height:15, diameter:1.5}, scene);
+                let cilindro1 = BABYLON.MeshBuilder.CreateCylinder('cilindro1', {height: 15, diameter: 2.0}, scene);  //sezione verticale
+                let cilindro2 = BABYLON.MeshBuilder.CreateCylinder('cilindro2', {height: 15, diameter: 1.5}, scene);  //sezione verticale superiore ristretta
                 let troncodicono = BABYLON.MeshBuilder.CreateCylinder('troncodicono', {diameterTop: 1.5, diameterBottom: 2.0, height: 1.0}, scene);
                 cilindro1.position.x = x_offset;
                 cilindro2.position.x = x_offset;
@@ -113,14 +121,14 @@ function createTerrain(scene) {
                 cilindro2.position.z = z_offset;
                 troncodicono.position.z = z_offset;
                 
-                let cilindro_orizz = BABYLON.MeshBuilder.CreateCylinder('cilindro_orizz', {height:20, diameter: 1.125}, scene); //creazione dei "pali orizzontali"
+                let cilindro_orizz = BABYLON.MeshBuilder.CreateCylinder('cilindro_orizz', {height: 20, diameter: 1.125}, scene); //creazione dei "pali orizzontali"
                 cilindro_orizz.rotation.z = Math.PI/2;
                 if (x_offset < 0) cilindro_orizz.position.x = x_offset + 10;   //controllo se la sezione orizzontale si trova a sinistra (tengo il segno concorde)
                 else cilindro_orizz.position.x = x_offset - 10;                //oppure a destra rispetto all'origine (inverto la sua traslazione sulle ascisse)       metodo alternativo: cilindro_orizz.position.x = x_offset + (x_offset < 0 ? 10 : -10);
                 cilindro_orizz.position.y = 22.5;
                 cilindro_orizz.position.z = z_offset;
                 
-                let tirante = BABYLON.MeshBuilder.CreateCylinder('tirante', {height:15, diameter: 0.5}, scene);    //creazione dei tiranti che sostengono le sezioni orizzontali su quella verticale
+                let tirante = BABYLON.MeshBuilder.CreateCylinder('tirante', {height: 15, diameter: 0.5}, scene);    //creazione dei tiranti che sostengono le sezioni orizzontali su quella verticale
                 if (x_offset < 0) {
                     tirante.position.x = x_offset + 7.0;   //in questo caso controllo la posizione per determinare l'angolo di rotazione del tirante
                     tirante.rotation.z = Math.PI/2.5;
@@ -132,7 +140,7 @@ function createTerrain(scene) {
                 tirante.position.y = 25;
                 tirante.position.z = z_offset;
                 
-                let soffietto = BABYLON.MeshBuilder.CreateCylinder('soffietto', {height:3, diameter: 1}, scene); //creazione degli isolatori dei fili superiori
+                let soffietto = BABYLON.MeshBuilder.CreateCylinder('soffietto', {height: 3, diameter: 1}, scene); //creazione degli isolatori dei fili superiori
                 if (x_offset < 0) soffietto.position.x = -8;
                 else soffietto.position.x = +8; 
                 soffietto.position.y = 22.5 + 1.125/2 + 1.5;
@@ -147,6 +155,42 @@ function createTerrain(scene) {
             filo_sup.position.x = x_offset;
             filo_sup.position.y = 22.5 + 1.125/2 + 3.0 + 0.125;
             filo_sup.position.z = z_offset;
+        }
+        
+        //creazione ringhiera
+        for(let i=-(chunk_size/2); i<=(chunk_size/2); i+=2) {   //sezione verticale della ringhiera
+            for(let x_offset=-30; x_offset<=30; x_offset+=60) {
+                if (z_offset > 3/2 * chunk_size) {  //creo le sbarre verticali solo se non mi trovo nel territorio della stazione, la cui profondità lungo l'asse z vale 3*chunk_size, per evitare sovrapposizioni
+                    let sbarra_v = BABYLON.MeshBuilder.CreateBox('sbarra_h', {width: 0.25, depth: 0.25, height: 10}, scene);
+                    sbarra_v.material = colori(scene, 6);
+                    sbarra_v.rotation.y = Math.PI/4;
+                    sbarra_v.position.x = x_offset;
+                    sbarra_v.position.y = 5 - 0.8;
+                    sbarra_v.position.z = i + z_offset;
+                    }
+                }
+        }
+        for(let i=-2; i<=2; i+=4) { //sezione orizzontale della ringhiera
+            for(let x_offset=-30; x_offset<=30; x_offset+=60) {
+                if (z_offset > 3/2 * chunk_size) {  //creo le sbarre orizzontali solo se non mi trovo nel territorio della stazione, la cui profondità lungo l'asse z vale 3*chunk_size, per evitare sovrapposizioni
+                    let sbarra_h = BABYLON.MeshBuilder.CreateBox('sbarra_v', {width: 0.25, depth: 0.25, height: chunk_size}, scene);
+                    sbarra_h.material = colori(scene, 6);
+                    sbarra_h.rotation.x = Math.PI/2;
+                    sbarra_h.position.x = x_offset;
+                    if(i < 0) sbarra_h.position.y = i + 4;
+                    else sbarra_h.position.y = i + 6;
+                    sbarra_h.position.z = z_offset;
+                    }
+                }
+        }
+        for(let x_offset=-30; x_offset<=30; x_offset+=60) { //blocco di appoggio per i pali verticali della ringhiera
+            let blocco = BABYLON.MeshBuilder.CreateBox('blocco', {width: 5, depth: chunk_size, height: 1}, scene);
+            blocco.material = colori(scene, 8);
+            
+            blocco.position.x = x_offset;
+            blocco.position.y = -0.8 + 0.5;
+            blocco.position.z = z_offset;
+                
         }
     }
     
@@ -319,58 +363,73 @@ function createTerrain(scene) {
     }
 }*/
 
+//Funzione per i nomi di città
+let listaCitta = ['Genova', 'Reggio Emilia', 'Bologna'];
+
+function stationName() {
+    let index = Math.floor(Math.random() * listaCitta.length);
+    let station_name = listaCitta[index];
+    listaCitta.splice(index, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
+    console.log(listaCitta);
+    return station_name;
+}
+
 //Funzione per creare la stazione
-function createStation(scene) {
+function createStation(scene, chunk_offset) {
+    //scritte sul cartello
+    const material = new BABYLON.StandardMaterial("material", scene);
+    let font_type = "Arial";
+    let planeWidth = 10;
+    let planeHeight = 3;
+    let plane = BABYLON.MeshBuilder.CreatePlane("scritta", {width:planeWidth, height:planeHeight}, scene);
+    let DTWidth = planeWidth * 60;      //i moltiplicatori sono uguali per mantenere l'aspect ratio
+    let DTHeight = planeHeight * 60;
+        
+    z_offset = chunk_offset * chunk_size;
+    last_station_z = z_offset;
+              
+    let nome_stazione = '';
+    if(chunk_offset == 0) nome_stazione = "Piacenza";
+    else nome_stazione = stationName();
+    let dynamicTexture = new BABYLON.DynamicTexture("DynamicTexture", {width:DTWidth, height:DTHeight}, scene);
+    //Check width of text for given font type at any size of font
+    let ctx = dynamicTexture.getContext();
+	let size = 12; //può essere qualsiasi valore
+    ctx.font = size + "px " + font_type;
+    let larghezza_testo = ctx.measureText(nome_stazione).width + 7.5; //il valore +5 permette di lasciare un po' del bordo blu
+    let font_size = Math.floor(DTWidth / (larghezza_testo / size)); //larghezza_testo / size coincide con il ratio
+    let font = font_size + "px " + font_type;
+    if(nome_stazione == undefined) dynamicTexture.drawText(nome_stazione, null, null, font, "#FF0000", "#000000", true);
+    else dynamicTexture.drawText(nome_stazione, null, null, font, "#FFFFFF", "#120A8F", true);   //text, position_x (0=left), position_y (0=bottom), font type, text color, background color, InvertY (default is true - y increases downwards)
+    material.diffuseTexture = dynamicTexture;
+    plane.material = material;
+    plane.position.x = -30;
+    plane.position.y = 12.8;
+    plane.position.z = z_offset - 20;
+    
+    let sostegno_v = BABYLON.MeshBuilder.CreateCylinder('sostegno_v', {diameter: 0.8, height: 8}, scene);   //palo di sostegno per il cartello
+    sostegno_v.position.x = -30;
+    sostegno_v.position.y = 7.2;
+    sostegno_v.position.z = z_offset - 20;
+        
+    let sostegno_h = BABYLON.MeshBuilder.CreateCylinder('sostegno_h', {diameter: 0.8, height: planeWidth+1}, scene);   //parte verticale sopra il palo
+    sostegno_h.rotation.z = Math.PI/2;
+    sostegno_h.position.x = -30;
+    sostegno_h.position.y = 11.2;
+    sostegno_h.position.z = z_offset - 20;
+    
+    for(x_offset=-(planeWidth/2); x_offset<=(planeWidth/2); x_offset+=planeWidth) {
+        let sost_v = BABYLON.MeshBuilder.CreateCylinder('sost_v', {diameter: 0.4, height: 3.2}, scene);   //bordi della scritta
+        sost_v.position.x = x_offset - 30;
+        sost_v.position.y = 12.8;
+        sost_v.position.z = z_offset - 20;
+    }
+    
     for(let x_offset=-30; x_offset<=30; x_offset+=60) {
-        //scritte sul cartello
-        const material = new BABYLON.StandardMaterial("material", scene);
-        let font_type = "Arial";
-        let planeWidth = 10;
-        let planeHeight = 3;
-        let plane = BABYLON.MeshBuilder.CreatePlane("scritta", {width:planeWidth, height:planeHeight}, scene);
-        let DTWidth = planeWidth * 60;      //i moltiplicatori sono uguali per mantenere l'aspect ratio
-        let DTHeight = planeHeight * 60;
-        let nome_stazione = "Piacenza";     //qui si potrebbe aggiungere la chiamata ad una funzione che sceglie dei nomi casuali all'interno di un elenco
-        let dynamicTexture = new BABYLON.DynamicTexture("DynamicTexture", {width:DTWidth, height:DTHeight}, scene);
-        //Check width of text for given font type at any size of font
-        let ctx = dynamicTexture.getContext();
-	    let size = 12; //può essere qualsiasi valore
-        ctx.font = size + "px " + font_type;
-        let larghezza_testo = ctx.measureText(nome_stazione).width + 7.5; //il valore +5 permette di lasciare un po' del bordo blu
-        let font_size = Math.floor(DTWidth / (larghezza_testo / size)); //larghezza_testo / size coincide con il ratio
-        let font = font_size + "px " + font_type;
-	    dynamicTexture.drawText(nome_stazione, null, null, font, "#FFFFFF", "#120A8F", true);   //text, posizion_x (0=left), posizion_y (0=bottom), font type, text color, background color, InvertY (default is true - y increases downwards)        
-        material.diffuseTexture = dynamicTexture;
-        plane.material = material;
-        
-        const pav_z = 0;
-        
-        plane.position.x = -30;
-        plane.position.y = 12.8;
-        plane.position.z = pav_z - 20;
-        
         let pavimentazione = BABYLON.MeshBuilder.CreateBox('pavimentazione', {height:4, width:25, depth: 3*chunk_size}, scene);
         pavimentazione.position.x = x_offset;
         pavimentazione.position.y = 1.2;
-        pavimentazione.position.z = pav_z;
-        
-        let sostegno_v = BABYLON.MeshBuilder.CreateCylinder('sostegno_v', {diameter: 0.8, height: 8}, scene);   //palo di sostegno per il cartello
-        sostegno_v.position.x = -30;
-        sostegno_v.position.y = 7.2;
-        sostegno_v.position.z = pav_z - 20;
-        
-        let sostegno_h = BABYLON.MeshBuilder.CreateCylinder('sostegno_h', {diameter: 0.8, height: planeWidth+1}, scene);   //parte verticale sopra il palo
-        sostegno_h.rotation.z = Math.PI/2;
-        sostegno_h.position.x = -30;
-        sostegno_h.position.y = 11.2;
-        sostegno_h.position.z = pav_z - 20;
-        
-        
-        let sost_v = BABYLON.MeshBuilder.CreateCylinder('sost_v', {diameter: 0.4, height: 3.2}, scene);   //bordi della scritta
-        if(x_offset < 0) sost_v.position.x = planeWidth/2 + x_offset;
-        else sost_v.position.x = planeWidth/2 - (x_offset + planeWidth);
-        sost_v.position.y = 12.8;
-        sost_v.position.z = pav_z - 20;
+        pavimentazione.position.z = z_offset;
         
         let linea_gialla = BABYLON.MeshBuilder.CreatePlane('linea_gialla', {height: 3*chunk_size, width: 4, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
         linea_gialla.material = colori(scene, 7);
@@ -378,17 +437,17 @@ function createStation(scene) {
         if (x_offset < 0) linea_gialla.position.x = x_offset + 7.5;
         else linea_gialla.position.x = x_offset - 7.5;
         linea_gialla.position.y = 3.201;
-        linea_gialla.position.z = pav_z;
+        linea_gialla.position.z = z_offset;
         
-        for(let z_offset=-3*chunk_size; z_offset<=3*chunk_size; z_offset+=6*chunk_size) {
-            let rampa = BABYLON.MeshBuilder.CreatePolyhedron('rampa',{custom: {"vertex" : [[25,0,0],[-25,0,0],[25,0,50],[-25,0,50],[25,8,0],[-25,8,0]],"face" : [[1,0,2,3],[3,2,4,5],[5,4,0,1],[0,4,2],[1,3,5]]},size: 0.5},scene); //tratto dal file "shape_1.js"
-            rampa.position.x = x_offset;
+        for(let ramp_z_offset=-3*chunk_size; ramp_z_offset<=3*chunk_size; ramp_z_offset+=6*chunk_size) {
+            let rampa = BABYLON.MeshBuilder.CreatePolyhedron('rampa',{custom: {"vertex" : [[12,0,0],[-12,0,0],[12,0,50],[-12,0,50],[12,8,0],[-12,8,0]],"face" : [[1,0,2,3],[3,2,4,5],[5,4,0,1],[0,4,2],[1,3,5]]},size: 0.5},scene); //tratto dal file "shape_1.js"
+            rampa.position.x = x_offset + 6.5;
             rampa.position.y = -0.8;
-            if(z_offset < 0) {
+            if(ramp_z_offset < 0) {
                 rampa.rotation.y = Math.PI;
-                rampa.position.z = pav_z + z_offset / 2;
+                rampa.position.z = z_offset + ramp_z_offset / 2;
             }
-            else rampa.position.z = pav_z + z_offset / 2;
+            else rampa.position.z = z_offset + ramp_z_offset / 2;
         }
         
         
@@ -396,7 +455,7 @@ function createStation(scene) {
 }
 
 //Funzione per generare procedualmente la scena
-function populateScene(scene) {
+function populateScene(scene, chunk_offset, camera) {
 
     //var box = BABYLON.Mesh.CreateBox("Box", 1.0, scene);
     //scene.clearColor = new BABYLON.Color3(0.639, 0.878, 0.921);   //colore cielo
@@ -411,9 +470,14 @@ function populateScene(scene) {
     skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", scene);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;*/
     
-    createTerrain(scene);
-    createStation(scene);
+    createTerrain(scene, chunk_offset);
+    if((camera.position.z > last_station_z + 500) || (chunk_offset == 0)) createStation(scene, chunk_offset);
+    //if((camera.position.z > last_station_z + 2000 + Math.floor(Math.random() * 8001)) || (chunk_offset == 0)) createStation(scene, chunk_offset);    //creo le stazioni ad almeno 2 km di distanza l'una dall'altra; la massima distanza ammessa è 10 km
     treno(scene);
+    //scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
+    //scene.fogDensity = 0.01;
+    //scene.fogStart = 20.0;
+    //scene.fogEnd = 60.0;
 }
 
 //Funzioni per radunare tutti i colorli e poterli richiamare a propria scelta
@@ -431,11 +495,15 @@ function inizializzaColori(scene) {
     wood = new BABYLON.StandardMaterial('wood', scene); //4
     wood.diffuseColor = new BABYLON.Color3(0.478, 0.356, 0.219);
     gravel = new BABYLON.StandardMaterial('gravel', scene); //5
-    gravel.diffuseColor = new BABYLON.Color3(0.560, 0.619, 0.572);
+    //gravel.diffuseColor = new BABYLON.Color3(0.560, 0.619, 0.572);
+    gravel.diffuseTexture = new BABYLON.Texture("./assets/textures/ghiaia1.jpg", scene);
     rusted_steel = new BABYLON.StandardMaterial('rusted_steel', scene); //6
     rusted_steel.diffuseColor = new BABYLON.Color3(0.718, 0.255, 0.055);
+    rusted_steel.specularColor = new BABYLON.Color3(0, 0, 0);
     giallo = new BABYLON.StandardMaterial('giallo', scene); //7
     giallo.diffuseColor = new BABYLON.Color3(1, 1, 0);
+    cemento = new BABYLON.StandardMaterial('cemento', scene); //8
+    cemento.diffuseColor = new BABYLON.Color3(0.373, 0.373, 0.373);
 }
     
 function colori(scene, numerocol) {
@@ -455,6 +523,8 @@ function colori(scene, numerocol) {
       return rusted_steel;
     } else if (numerocol == 7) {
       return giallo;
+    } else if (numerocol == 8) {
+      return cemento;
     }
 }
 
