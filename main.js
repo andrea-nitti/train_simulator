@@ -6,6 +6,7 @@
     //la rotaia è infinita.
 
 const chunk_size = 32;  //chunk = unità di terreno usata per la generazione procedurale
+const segment_size = 10;    //segment=numero di chunk di blocco di ferrovia generata dalla funzione cretaeTerrain()
 let last_station_z = 0; //salvo la coordinata z dell'ultima stazione generata (verrà assegnata inizialmente a 0 in quanto la prima stazione è centrata rispetto a z=0)
 
 window.addEventListener('DOMContentLoaded', (event) => {
@@ -31,15 +32,30 @@ window.addEventListener('DOMContentLoaded', (event) => {
         light1.parent = camera;
         inizializzaColori(scene);
         let chunk_offset = 0;
-        populateScene(scene, chunk_offset, camera);
+        
+        scene.clearColor = new BABYLON.Color3(0, 0, 0);
+        //let stazione = (camera.position.z > last_station_z + 200) || (chunk_offset == 0);
+        let stazione = (camera.position.z > last_station_z + 2000 + Math.floor(Math.random() * 8001)) || (chunk_offset == 0);   //creo le stazioni ad almeno 2 km di distanza l'una dall'altra; la massima distanza ammessa è 10 km
+        if (stazione) createStation(scene, 0);
+        let segments = [];
+        for(let i=0; i<5; i++) {
+            let Terrain = createTerrain(scene, 0, true);
+            Terrain.position.z = i * chunk_size * segment_size;
+            segments.push(Terrain);
+        }
+        treno(scene);
+        //scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
+        //scene.fogDensity = 0.01;
+        //scene.fogStart = 20.0;
+        //scene.fogEnd = 60.0;
         
         scene.registerBeforeRender(() => {
             let t = performance.now() * 0.1;
             camera.setPosition(new BABYLON.Vector3(-8, 7.5, t));
             camera.setTarget(new BABYLON.Vector3(-8, 7.5, 10+t));
-            if (camera.position.z > (5 + chunk_offset) * chunk_size) {
-                chunk_offset+=10;
-                populateScene(scene, chunk_offset, camera);
+            if (camera.position.z > (chunk_size * 3/2 * segment_size) + segments[0].position.z) {   //sposto il primo segmento se ho superato la metà del secondo
+                segments[0].position.z += segments.length * segment_size * chunk_size;
+                segments.push(segments.shift());    //il primo elemento diventa l'ultimo
             }
             //console.log(camera.position.z);
         });
@@ -215,22 +231,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     }
 }*/
-
-//Funzione per generare proceduralmente la scena
-function populateScene(scene, chunk_offset, camera) {
-
-    //scene.clearColor = new BABYLON.Color3(0.639, 0.878, 0.921);   //colore cielo
-    scene.clearColor = new BABYLON.Color3(0, 0, 0);
-    let stazione = (camera.position.z > last_station_z + 200) || (chunk_offset == 0);
-    //let stazione = (camera.position.z > last_station_z + 2000 + Math.floor(Math.random() * 8001)) || (chunk_offset == 0);   //creo le stazioni ad almeno 2 km di distanza l'una dall'altra; la massima distanza ammessa è 10 km
-    if (stazione) createStation(scene, chunk_offset);
-    let Terrain = createTerrain(scene, chunk_offset, !stazione);
-    treno(scene);
-    //scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
-    //scene.fogDensity = 0.01;
-    //scene.fogStart = 20.0;
-    //scene.fogEnd = 60.0;
-}
 
 //////////////////////////// ! ! ! ! ! ZONA TRENO ! ! ! ! ! ////////////////////////////
 
