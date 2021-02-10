@@ -1,5 +1,5 @@
 //Funzioni per radunare tutti i colori e poterli richiamare a propria scelta
-let colgrigio, colrosso, colnero, metal, gravel, rusted_steel, giallo;
+let colgrigio, colrosso, colnero, metal, gravel, rusted_steel, giallo, cemento, alluminio, porcellana, bricks;
 
 function inizializzaColori(scene) {
     colgrigio = new BABYLON.StandardMaterial('grigio', scene); //0
@@ -11,7 +11,8 @@ function inizializzaColori(scene) {
     metal = new BABYLON.StandardMaterial('metal', scene); //3
     metal.diffuseColor = new BABYLON.Color3(0.447, 0.474, 0.447);
     wood = new BABYLON.StandardMaterial('wood', scene); //4
-    wood.diffuseColor = new BABYLON.Color3(0.478, 0.356, 0.219);
+    //wood.diffuseColor = new BABYLON.Color3(0.478, 0.356, 0.219);
+    wood.diffuseTexture = new BABYLON.Texture("./assets/textures/wood.png", scene);
     gravel = new BABYLON.StandardMaterial('gravel', scene); //5
     //gravel.diffuseColor = new BABYLON.Color3(0.560, 0.619, 0.572);
     gravel.diffuseTexture = new BABYLON.Texture("./assets/textures/ghiaia1.jpg", scene);
@@ -22,6 +23,13 @@ function inizializzaColori(scene) {
     giallo.diffuseColor = new BABYLON.Color3(1, 1, 0);
     cemento = new BABYLON.StandardMaterial('cemento', scene); //8
     cemento.diffuseColor = new BABYLON.Color3(0.373, 0.373, 0.373);
+    alluminio = new BABYLON.StandardMaterial('alluminio', scene); //9
+    alluminio.diffuseColor = new BABYLON.Color3(0.635, 0.635, 0.635);
+    porcellana = new BABYLON.StandardMaterial('porcellana', scene); //10
+    porcellana.diffuseColor = new BABYLON.Color3(0.317, 0.219, 0.121);
+    porcellana.specularColor = new BABYLON.Color3(0, 0, 0);
+    bricks = new BABYLON.StandardMaterial('bricks', scene); //11
+    bricks.diffuseTexture = new BABYLON.Texture("./assets/textures/bricks.jpg", scene);
 }
     
 function colori(scene, numerocol) {
@@ -43,5 +51,11 @@ function colori(scene, numerocol) {
       return giallo;
     } else if (numerocol == 8) {
       return cemento;
+    } else if (numerocol == 9) {
+      return alluminio;
+    } else if (numerocol == 10) {
+      return porcellana;
+    } else if (numerocol == 11) {
+      return bricks;
     }
 }

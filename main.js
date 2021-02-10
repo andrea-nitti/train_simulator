@@ -16,8 +16,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
         const scene = new BABYLON.Scene(engine);
         const camera = new BABYLON.ArcRotateCamera('cam', 0,0,15, new BABYLON.Vector3(0,0,0), scene);
         camera.attachControl(canvas,true);
-        var skybox = BABYLON.Mesh.CreateBox("skyBox", 10000.0, scene);
-        var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+        //camera.wheelPrecision = 50;
+        //camera.lowerRadiusLimit = 3;
+        //camera.upperRadiusLimit = 13*2;
+        let light1 = new BABYLON.PointLight('light1',new BABYLON.Vector3(0,1,0), scene);
+        light1.parent = camera;
+        
+        //creazione della skybox
+        let skybox = BABYLON.Mesh.CreateBox("skyBox", 10000.0, scene);
+        let skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
         skyboxMaterial.diffuseColor = new BABYLON.Color3(1, 1, 0);
         skyboxMaterial.backFaceCulling = false;
         skyboxMaterial.disableLighting = true;
@@ -25,45 +32,56 @@ window.addEventListener('DOMContentLoaded', (event) => {
         skybox.infinteDistance = true;
         skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox", scene);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-        //camera.wheelPrecision = 50;
-        //camera.lowerRadiusLimit = 3;
-        //camera.upperRadiusLimit = 13*2;
-        let light1 = new BABYLON.PointLight('light1',new BABYLON.Vector3(0,1,0), scene);
-        light1.parent = camera;
+        
         inizializzaColori(scene);
         let chunk_offset = 0;
         
+        //imposto il colore esterno alla skybox (nero)
         scene.clearColor = new BABYLON.Color3(0, 0, 0);
+        
         //let stazione = (camera.position.z > last_station_z + 200) || (chunk_offset == 0);
         let stazione = (camera.position.z > last_station_z + 2000 + Math.floor(Math.random() * 8001)) || (chunk_offset == 0);   //creo le stazioni ad almeno 2 km di distanza l'una dall'altra; la massima distanza ammessa è 10 km
-        if (stazione) createStation(scene, 0);
+        if (stazione) createStation(scene, 0);  //creo la prima stazione (quella di partenza, che si trova vicino all'origine dei 3 assi)
         let segments = [];
         for(let i=0; i<5; i++) {
-            let Terrain = createTerrain(scene, 0, true);
+            let Terrain = createTerrain(scene, false);
             Terrain.position.z = i * chunk_size * segment_size;
             segments.push(Terrain);
         }
         treno(scene);
+        let spazio = 0;
+        let velocita = 0;
         //scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
         //scene.fogDensity = 0.01;
         //scene.fogStart = 20.0;
         //scene.fogEnd = 60.0;
         
+        //animazione
         scene.registerBeforeRender(() => {
-            let t = performance.now() * 0.1;
-            camera.setPosition(new BABYLON.Vector3(-8, 7.5, t));
-            camera.setTarget(new BABYLON.Vector3(-8, 7.5, 10+t));
+            spazio += velocita;
+            if(velocita > 0) velocita -= 0.01;  //inerzia
+            /*camera.setPosition(new BABYLON.Vector3(-8, 7.5, spazio));
+            camera.setTarget(new BABYLON.Vector3(-8, 7.5, 10+spazio));*/
             if (camera.position.z > (chunk_size * 3/2 * segment_size) + segments[0].position.z) {   //sposto il primo segmento se ho superato la metà del secondo
                 segments[0].position.z += segments.length * segment_size * chunk_size;
                 segments.push(segments.shift());    //il primo elemento diventa l'ultimo
             }
             //console.log(camera.position.z);
         });
-        
         engine.runRenderLoop(()=>scene.render());
         window.addEventListener("resize", () => engine.resize());
         
+        //rilevo la pressione del tasto W (accelerazione)
+        window.addEventListener("keydown", function(evt) {
+            if (evt.keyCode === 87 && velocita < 320) {
+                velocita += 0.1;
+            }
+            if (evt.keyCode === 83 && velocita > 0) {   //impedisco di tornare indietro
+                velocita -= 0.1;
+            }
+        });
 });
+
 
 //Funzione per creare l'ambiente
 /*function createEnvironment(scene, tipologia, percentuale) {
@@ -231,119 +249,3 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     }
 }*/
-
-//////////////////////////// ! ! ! ! ! ZONA TRENO ! ! ! ! ! ////////////////////////////
-
-//////////////////////////// ! ! ! ! ! ZONA TRENO ! ! ! ! ! ////////////////////////////
-
-//////////////////////////// ! ! ! ! ! ZONA TRENO ! ! ! ! ! ////////////////////////////
-
-function treno(scene) {
-    carrozza(scene, 8, 100);
-    carrozza(scene, 8, 170);
-    locomotiva(scene, 8, 30, 3, -3, 33, Math.PI/16*5.7);
-    locomotiva(scene, 8, 240, -3, 3, -33, Math.PI/16*10.3);
-}
-
-function locomotiva(scene, posx, posz, avaoind, avaoind2, avaoind3, rotazione) {
-
-    centro(scene, posx, posz+avaoind, colori(scene, 2), 60);
-
-    spigoli(scene, posx+1, 10.5, posz+avaoind, colori(scene, 1), 60);
-    spigoli(scene, posx-1, 10.5, posz+avaoind, colori(scene, 1), 60);
-    spigoli(scene, posx+1, 4.5, posz+avaoind2, colori(scene, 0), 72);
-    spigoli(scene, posx-1, 4.5, posz+avaoind2, colori(scene, 0), 72);
-
-    tettofondo(scene, posx, 3, posz+avaoind2, colori(scene, 0), 72);
-    tettofondo(scene, posx, 12, posz+avaoind, colori(scene, 1), 60);
-
-    ruota(scene, posx-2, posz-25, colori(scene, 2));
-    ruota(scene, posx-2, posz-15, colori(scene, 2));
-    ruota(scene, posx+2, posz-25, colori(scene, 2));
-    ruota(scene, posx+2, posz-15, colori(scene, 2));
-    ruota(scene, posx-2, posz+15, colori(scene, 2));
-    ruota(scene, posx-2, posz+25, colori(scene, 2));
-    ruota(scene, posx+2, posz+15, colori(scene, 2));
-    ruota(scene, posx+2, posz+25, colori(scene, 2));
-
-    musocen(scene, posx, posz-avaoind3, colori(scene, 1), rotazione);
-    musolat(scene, posx+4, posz-avaoind3, colori(scene, 1));
-    musolat(scene, posx-4, posz-avaoind3, colori(scene, 1));
-
-}
-
-function carrozza(scene, posx, posz) {
-
-    centro(scene, posx, posz, colori(scene, 2), 66);
-
-    spigoli(scene, posx+1, 10.5, posz, colori(scene, 1), 66);
-    spigoli(scene, posx-1, 10.5, posz, colori(scene, 1), 66);
-    spigoli(scene, posx+1, 4.5, posz, colori(scene, 0), 66);
-    spigoli(scene, posx-1, 4.5, posz, colori(scene, 0), 66);
-
-    tettofondo(scene, posx, 3, posz, colori(scene, 0), 66);
-    tettofondo(scene, posx, 12, posz, colori(scene, 1), 66);
-
-    ruota(scene, posx-2, posz-25, colori(scene, 2));
-    ruota(scene, posx-2, posz-15, colori(scene, 2));
-    ruota(scene, posx+2, posz-25, colori(scene, 2));
-    ruota(scene, posx+2, posz-15, colori(scene, 2));
-    ruota(scene, posx-2, posz+15, colori(scene, 2));
-    ruota(scene, posx-2, posz+25, colori(scene, 2));
-    ruota(scene, posx+2, posz+15, colori(scene, 2));
-    ruota(scene, posx+2, posz+25, colori(scene, 2));
-
-}
-
-function ruota(scene, posx, posz, colore) {
-    var ruota = BABYLON.MeshBuilder.CreateCylinder('ruota', {height: 0.4, diameter: 2}, scene);
-    ruota.rotation.z = Math.PI/2;
-    ruota.position.x = posx;
-    ruota.position.y = 1.55;
-    ruota.position.z = posz;
-    ruota.material = colore;
-}
-
-function centro(scene, posx, posz, colore, lunghezza) {
-    var carrozzacentro = BABYLON.MeshBuilder.CreateBox('carrozzacentro', {width: 8, height: 6, depth: lunghezza}, scene);
-    carrozzacentro.position.x = posx;
-    carrozzacentro.position.y = 7.5;
-    carrozzacentro.position.z = posz;
-    carrozzacentro.material = colore;
-}
-
-function tettofondo(scene, posx, posy, posz, colore, lunghezza) {
-    var tettofondo = BABYLON.MeshBuilder.CreateBox('tettofondo', {width: 2, height: 3, depth: lunghezza}, scene);
-    tettofondo.position.x = posx;
-    tettofondo.position.y = posy;
-    tettofondo.position.z = posz;
-    tettofondo.material = colore;
-}
-
-function spigoli(scene, posx, posy, posz, colore, lunghezza) {
-    var spigoli = BABYLON.MeshBuilder.CreateCylinder('spigoli', {height: lunghezza, diameter: 6}, scene);
-    spigoli.rotation.x = Math.PI/2;
-    spigoli.position.x = posx;
-    spigoli.position.y = posy;
-    spigoli.position.z = posz;
-    spigoli.material = colore;
-}
-
-function musocen(scene, posx, posz, colore, rotazione) {
-    var musocen = BABYLON.MeshBuilder.CreateBox('musocen', {height: 13.5, width: 8, depth: 0.1}, scene);
-    musocen.rotation.x = rotazione;
-    musocen.position.x = posx;
-    musocen.position.y = 10.5;
-    musocen.position.z = posz;
-    musocen.material = colore;
-}
-
-function musolat(scene, posx, posz, colore) {
-    var musolat = BABYLON.MeshBuilder.CreateBox('musocen', {height: 12, width: 3, depth: 0.1}, scene);
-    musolat.rotation.z = Math.PI/2;
-    musolat.rotation.y = Math.PI/2;
-    musolat.position.x = posx;
-    musolat.position.y = 6;
-    musolat.position.z = posz;
-    musolat.material = colore;
-}
