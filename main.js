@@ -13,7 +13,9 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         canvas.addEventListener('wheel', evt => evt.preventDefault());
         const engine = new BABYLON.Engine(canvas, true);
         const scene = new BABYLON.Scene(engine);
-        const camera = new BABYLON.ArcRotateCamera('cam', 0,0,15, new BABYLON.Vector3(0,0,0), scene);
+        //const camera = new BABYLON.ArcRotateCamera('cam', 0,0,15, new BABYLON.Vector3(0,0,0), scene);
+        const camera = new BABYLON.UniversalCamera('cam',new BABYLON.Vector3(-8,7.5,0), scene);
+        camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
         camera.attachControl(canvas,true);
         //camera.wheelPrecision = 50;
         //camera.lowerRadiusLimit = 3;
@@ -65,8 +67,9 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
             velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
             if(velocita < 0) velocita = 0;
             spazio += velocita;
-            camera.setPosition(new BABYLON.Vector3(-8, 7.5, spazio));
-            camera.setTarget(new BABYLON.Vector3(-8, 7.5, 10+spazio));
+            camera.position.z = spazio;
+            //camera.setPosition(new BABYLON.Vector3(-8, 7.5, spazio));
+            //camera.setTarget(new BABYLON.Vector3(-8, 7.5, 10+spazio));
             if(camera.position.z > (chunk_size * 3/2 * segment_size) + segments[0].position.z) {   //sposto il primo segmento di terreno se ho superato la metà del secondo
                 segments[0].position.z += segments.length * segment_size * chunk_size;
                 segments.push(segments.shift());    //il primo elemento diventa l'ultimo
@@ -76,7 +79,7 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
                 let indice = Math.floor(Math.random() * listaCartelli.length);
                 let cartello = listaCartelli[indice];
                 if(cartello != undefined) {
-                    cartello.position.z = stazione.position.z + 10;
+                    cartello.position.z = stazione.position.z + 12;
                     listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
                 }
             }
@@ -91,6 +94,12 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
             }
             if(evt.keyCode === 83) {   //con 83 individuo la pressione del tasto S
                 velocita -= 0.1;    //freno
+            }
+            if(evt.keyCode === 38) {
+                camera.position.y += 0.5;            
+            }
+            if(evt.keyCode === 40 && camera.position.y > 0.5) {
+                camera.position.y -= 0.5;
             }
         });
 });
