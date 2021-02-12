@@ -12,9 +12,26 @@
                 padding:0;
             }
             #renderCanvas {
+                position:absolute;  /* con questo parametro consento di posizionare altri elementi sopra il canvas */
                 width:100%;
                 height:100%;
-                touch-action: none;
+                touch-action:none;
+            }
+            #velocita {
+                position:absolute;
+                text-align:center;
+                top:12px;
+                right:12px;
+                color:yellow;
+                font-size:24px;
+            }
+            #spazio {
+                position:absolute;
+                text-align:center;
+                top:32px;
+                right:12px;
+                color:red;
+                font-size:16px;
             }
         </style>
         <script src="https://cdn.babylonjs.com/babylon.js"></script>
@@ -30,5 +47,7 @@
     </head>
     <body>
         <canvas id="renderCanvas" touch-action="none"></canvas>
+        <div id="velocita"></div>
+        <div id="spazio"></div>
     </body>
 </html>

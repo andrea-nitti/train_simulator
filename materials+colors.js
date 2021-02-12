@@ -18,7 +18,7 @@ function inizializzaColori(scene) {
     gravel.diffuseTexture = new BABYLON.Texture("./assets/textures/ghiaia1.jpg", scene);
     rusted_steel = new BABYLON.StandardMaterial('rusted_steel', scene); //6
     rusted_steel.diffuseColor = new BABYLON.Color3(0.718, 0.255, 0.055);
-    rusted_steel.specularColor = new BABYLON.Color3(0, 0, 0);
+    rusted_steel.specularColor = new BABYLON.Color3(0, 0, 0);   //rimuovo il riflesso
     giallo = new BABYLON.StandardMaterial('giallo', scene); //7
     giallo.diffuseColor = new BABYLON.Color3(1, 1, 0);
     cemento = new BABYLON.StandardMaterial('cemento', scene); //8
@@ -30,6 +30,9 @@ function inizializzaColori(scene) {
     porcellana.specularColor = new BABYLON.Color3(0, 0, 0);
     bricks = new BABYLON.StandardMaterial('bricks', scene); //11
     bricks.diffuseTexture = new BABYLON.Texture("./assets/textures/bricks.jpg", scene);
+    hv = new BABYLON.StandardMaterial('hv', scene); //12
+    hv.diffuseTexture = new BABYLON.Texture("./assets/textures/hv.png", scene);
+    hv.specularColor = new BABYLON.Color3(0, 0, 0);
 }
     
 function colori(scene, numerocol) {
@@ -57,5 +60,7 @@ function colori(scene, numerocol) {
       return porcellana;
     } else if (numerocol == 11) {
       return bricks;
+    } else if (numerocol == 12) {
+      return hv;
     }
 }

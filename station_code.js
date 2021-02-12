@@ -1,11 +1,11 @@
 //Funzione per creare la stazione
-function createStation(scene, chunk_offset) {
+function createStation(scene) {
     let parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro tutta la stazione
     parent_mesh.isVisible = false;  //rendo l'ancora invisibile
     
     const planeWidth = 10;
     const planeHeight = 3;
-    z_offset = chunk_offset * chunk_size;
+    z_offset = 0 * chunk_size;
     
     let sostegno_v = BABYLON.MeshBuilder.CreateCylinder('sostegno_v', {diameter: 0.8, height: 8}, scene);   //palo di sostegno per il cartello
     sostegno_v.position.x = -30;
@@ -56,6 +56,14 @@ function createStation(scene, chunk_offset) {
             else rampa.position.z = (z_offset + chunk_size) + ramp_z_offset / 2;
             rampa.setParent(parent_mesh);
         }
+        //creazione di cartelli di pericolo (solo presso alcune stazioni)
+        let pannello = BABYLON.MeshBuilder.CreatePlane('pannello', {width: 6, height: 2}, scene);
+        if(x_offset < 0) pannello.rotation.y = Math.PI;
+        pannello.material = colori(scene, 12);
+        pannello.position.x = -18.5;
+        pannello.position.y = 21;
+        pannello.position.z = 0;
+        pannello.setParent(parent_mesh);
     }
     let edificio = BABYLON.MeshBuilder.CreateBox('edificio', {height:25, width:30, depth: 3*chunk_size}, scene);
     edificio.material = colori(scene, 11);

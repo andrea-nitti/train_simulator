@@ -72,7 +72,7 @@ function createTerrain(scene, crea_sbarre) {
         }
         
         //creazione pali
-        if(z_offset % (4*chunk_size) == 0) {  //creo i pali ogni 4 chunks
+        if(z_offset % (5*chunk_size) == 0) {  //creo i pali ogni 5 chunks
             for(let x_offset=-24; x_offset<=24; x_offset+=48) {
                 let cilindro1 = BABYLON.MeshBuilder.CreateCylinder('cilindro1', {height: 15, diameter: 2.0}, scene);  //sezione verticale
                 let cilindro2 = BABYLON.MeshBuilder.CreateCylinder('cilindro2', {height: 15, diameter: 1.5}, scene);  //sezione verticale superiore ristretta
@@ -102,19 +102,19 @@ function createTerrain(scene, crea_sbarre) {
                 cilindro_orizz.position.z = z_offset;
                 cilindro_orizz.setParent(parent_mesh);
                 
-                let tirante = BABYLON.MeshBuilder.CreateCylinder('tirante', {height: 15, diameter: 0.5}, scene);    //creazione dei tiranti che sostengono le sezioni orizzontali su quella verticale
-                tirante.material = colori(scene, 9);
+                let tirante1 = BABYLON.MeshBuilder.CreateCylinder('tirante1', {height: 15, diameter: 0.5}, scene);    //creazione dei tiranti che sostengono le sezioni orizzontali su quella verticale
+                tirante1.material = colori(scene, 9);
                 if (x_offset < 0) {
-                    tirante.position.x = x_offset + 7.0;   //in questo caso controllo la posizione per determinare l'angolo di rotazione del tirante
-                    tirante.rotation.z = Math.PI/2.5;
+                    tirante1.position.x = x_offset + 7.0;   //in questo caso controllo la posizione per determinare l'angolo di rotazione del tirante
+                    tirante1.rotation.z = Math.PI/2.5;
                 }
                 else {
-                    tirante.position.x = x_offset - 7.0;
-                    tirante.rotation.z = Math.PI - Math.PI/2.5;
+                    tirante1.position.x = x_offset - 7.0;
+                    tirante1.rotation.z = Math.PI - Math.PI/2.5;
                 }
-                tirante.position.y = 25;
-                tirante.position.z = z_offset;
-                tirante.setParent(parent_mesh);
+                tirante1.position.y = 25;
+                tirante1.position.z = z_offset;
+                tirante1.setParent(parent_mesh);
                 
                 let soffietto1 = BABYLON.MeshBuilder.CreateCylinder('soffietto1', {height: 3.5, diameter: 1}, scene); //creazione dei sostegni degli isolatori dei fili superiori
                 soffietto1.material = colori(scene, 9);
@@ -205,20 +205,28 @@ function createTerrain(scene, crea_sbarre) {
         
         //creazione fili
         for(let x_offset = -8; x_offset<=8; x_offset+=16) {
-            let filo_sup = BABYLON.MeshBuilder.CreateCylinder('filo_sup', {height: chunk_size, diameter: 0.25}, scene);
+            let filo_sup = BABYLON.MeshBuilder.CreateCylinder('filo_sup', {height: chunk_size, diameter: 0.25}, scene); //filo superiore della linea aerea
             filo_sup.material = colori(scene, 2);
             filo_sup.rotation.x = Math.PI/2;
             filo_sup.position.x = x_offset;
             filo_sup.position.y = 22.5 + 1.125/2 + 3.0 + 0.125;
             filo_sup.position.z = z_offset;
             filo_sup.setParent(parent_mesh);
-            let filo_inf = BABYLON.MeshBuilder.CreateCylinder('filo_inf', {height: chunk_size, diameter: 0.25}, scene);
+            let filo_inf = BABYLON.MeshBuilder.CreateCylinder('filo_inf', {height: chunk_size, diameter: 0.25}, scene); //filo inferiore della linea aerea
             filo_inf.material = colori(scene, 2);
             filo_inf.rotation.x = Math.PI/2;
             filo_inf.position.x = x_offset;
             filo_inf.position.y = 18.35;
             filo_inf.position.z = z_offset;
             filo_inf.setParent(parent_mesh);
+            let tirante2 = BABYLON.MeshBuilder.CreateCylinder('tirante2', {height: chunk_size, diameter: 0.35}, scene); //tirante situato tra un palo ed il successivo
+            tirante2.material = colori(scene, 3);
+            tirante2.rotation.x = Math.PI/2;
+            if(x_offset < 0) tirante2.position.x = -24;
+            else tirante2.position.x = 24;
+            tirante2.position.y = 22.5;
+            tirante2.position.z = z_offset;
+            tirante2.setParent(parent_mesh);
         }
         
         //creazione ringhiera (se non sono presenti stazioni)

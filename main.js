@@ -9,6 +9,8 @@ const segment_size = 10;    //segment = numero di chunk di blocco di ferrovia ge
 let last_station_z = 0; //salvo la coordinata z dell'ultima stazione generata (è assegnata inizialmente a 0 in quanto la prima stazione è centrata rispetto all'asse z = 0)
 
 window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe sono state riadattate a partire da MYLIB.js
+        const velocitaOverlay = document.getElementById('velocita');
+        const spazioOverlay = document.getElementById('spazio');
         const canvas = document.getElementById('renderCanvas');
         canvas.addEventListener('wheel', evt => evt.preventDefault());
         const engine = new BABYLON.Engine(canvas, true);
@@ -24,14 +26,14 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         light1.parent = camera;
         
         //creazione della skybox (tratto da https://doc.babylonjs.com/divingDeeper/environment/skybox)
-        let skybox = BABYLON.Mesh.CreateBox("skyBox", 10000.0, scene);
-        let skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+        let skybox = BABYLON.Mesh.CreateBox("skybox", 10000.0, scene);
+        let skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
         skyboxMaterial.diffuseColor = new BABYLON.Color3(1, 1, 0);
         skyboxMaterial.backFaceCulling = false;
         skyboxMaterial.disableLighting = true;
         skybox.material = skyboxMaterial;
         skybox.infinteDistance = true;
-        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox", scene);
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v2", scene);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         
         inizializzaColori(scene);
@@ -47,15 +49,15 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
             Terrain.position.z = i * chunk_size * segment_size;
             segments.push(Terrain);
         }
-        let stazione = createStation(scene, 0); //stazione indica la parent_mesh di tutto il complesso
+        let stazione = createStation(scene); //stazione indica la parent_mesh di tutto il complesso
         let listaCartelli = createSigns(scene);
         treno(scene);
         let spazio = 0;
         let velocita = 0;
-        //scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
+        //scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
         //scene.fogDensity = 0.01;
         //scene.fogStart = 20.0;
-        //scene.fogEnd = 60.0;
+        //scene.fogEnd = 5000.0;
         
         cittaP1(scene, 0, 0);
         cittaP2(scene, 0, 512);
@@ -68,14 +70,12 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
             if(velocita < 0) velocita = 0;
             spazio += velocita;
             camera.position.z = spazio;
-            //camera.setPosition(new BABYLON.Vector3(-8, 7.5, spazio));
-            //camera.setTarget(new BABYLON.Vector3(-8, 7.5, 10+spazio));
-            if(camera.position.z > (chunk_size * 3/2 * segment_size) + segments[0].position.z) {   //sposto il primo segmento di terreno se ho superato la metà del secondo
+            if(camera.position.z > (2.5 * segment_size * chunk_size) + segments[0].position.z) {   //sposto il primo segmento di terreno se ho superato la metà del secondo
                 segments[0].position.z += segments.length * segment_size * chunk_size;
                 segments.push(segments.shift());    //il primo elemento diventa l'ultimo
             }
-            if(camera.position.z > stazione.position.z + 5 * chunk_size) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 5 * chunk_size)
-                stazione.position.z += chunk_size * Math.floor((2000 + Math.random() * 8001) / chunk_size);  //sposto l'ultima stazione ad almeno 2 km di distanza dalla precedente; la massima distanza ammessa è 10 km
+            if(camera.position.z > stazione.position.z + 2.5 * segment_size * chunk_size) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2/5 * segment_size * chunk_size)
+                stazione.position.z += segment_size * chunk_size * Math.floor((200 + Math.random() * 801) / chunk_size);  //sposto l'ultima stazione ad almeno 2 km di distanza dalla precedente; la massima distanza ammessa è 10 km
                 let indice = Math.floor(Math.random() * listaCartelli.length);
                 let cartello = listaCartelli[indice];
                 if(cartello != undefined) {
@@ -83,17 +83,19 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
                     listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
                 }
             }
+            velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);  //il fattore 10 serve a rendere più realistici i valori
+            spazioOverlay.innerText = "Spazio: " + Math.floor(spazio * 10);
             //console.log(velocita);
         });
         engine.runRenderLoop(()=>scene.render());
         window.addEventListener("resize", () => engine.resize());
         
         window.addEventListener("keydown", function(evt) {
-            if(evt.keyCode === 87 && velocita < 320) { //rilevo la pressione del tasto W
-                velocita += 0.1;    //accelero
+            if(evt.keyCode === 87 && velocita < 32) { //rilevo la pressione del tasto W
+                velocita += 0.025;    //accelerazione
             }
             if(evt.keyCode === 83) {   //con 83 individuo la pressione del tasto S
-                velocita -= 0.1;    //freno
+                velocita -= 0.25;    //frenata
             }
             if(evt.keyCode === 38) {
                 camera.position.y += 0.5;            
