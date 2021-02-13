@@ -28,10 +28,37 @@
             #spazio {
                 position:absolute;
                 text-align:center;
-                top:32px;
+                top:48px;
                 right:12px;
                 color:red;
                 font-size:16px;
+            }
+            #aiuto1 {
+                position:absolute;
+                text-align:center;
+                bottom:12px;
+                right:12px;
+                color:white;
+                font-size:16px;
+            }
+            #aiuto2 {
+                position:absolute;
+                text-align:center;
+                bottom:50px;
+                right:12px;
+                color:white;
+                font-size:16px;
+                display:none;
+            }
+            .tasto {
+                font-weight:bold;
+            }
+            .paragrafo {
+                font-weight:bold;
+                color:red;
+            }
+            .descrizione {
+                font-style:italic;
             }
         </style>
         <script src="https://cdn.babylonjs.com/babylon.js"></script>
@@ -43,11 +70,24 @@
         <script src="station_code.js"></script>
         <script src="train_code.js"></script>
         <script src="city_code.js"></script>
+        <script src="ambiente_algoritmo.js"></script>
         <script src="main.js"></script>
     </head>
     <body>
         <canvas id="renderCanvas" touch-action="none"></canvas>
         <div id="velocita"></div>
         <div id="spazio"></div>
+        <div id="aiuto1">Premi H per mostrare/nascondere la lista dei comandi</div>
+        <div id="aiuto2">
+           <span class="paragrafo">Controlli del treno</span><br>
+           <span class="tasto">W</span> <span class="descrizione">Acceleratore</span><br>
+           <span class="tasto">S</span> <span class="descrizione">Freno</span><br>
+           <span class="tasto">SPAZIO</span> <span class="descrizione">Clacson</span><br>
+                
+           <br>
+           <span class="paragrafo">Controlli della visuale</span><br>
+           <span class="tasto">Arrow_Up</span> <span class="descrizione">Movimento verso l'alto</span><br>
+           <span class="tasto">Arrow_Down</span> <span class="descrizione">Movimento verso il basso</span><br>
+           <span class="tasto">Left_Click</span> <span class="descrizione">Movimento laterale</span></div>
     </body>
 </html>

@@ -61,11 +61,11 @@ function createTerrain(scene, crea_sbarre) {
         }
         
         //creazione terreno
-        for(let s=-1; s<=1; s+=1) {
+        for(let s=-2; s<=2; s+=1) {
             let terreno = BABYLON.MeshBuilder.CreatePlane('terreno', {size: chunk_size, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
             terreno.material = colori(scene, 5);
             terreno.rotation.x = Math.PI/2;
-            terreno.position.x = s*chunk_size;
+            terreno.position.x = s * chunk_size;
             terreno.position.y = -0.8;
             terreno.position.z = z_offset;
             terreno.setParent(parent_mesh);
