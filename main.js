@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         
         let segments = [];  //array che contiene 5 segmenti da 10 chunks l'uno di terreno ferroviario
         for(let i=0; i<5; i++) {
-            let Terrain = createTerrain(scene, true);
+            let Terrain = createTerrain(scene);
             Terrain.position.z = i * chunk_size * segment_size;
             segments.push(Terrain);
         }

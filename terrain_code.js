@@ -1,5 +1,5 @@
 //Funzione per creare il terreno della ferrovia
-function createTerrain(scene, crea_sbarre) {
+function createTerrain(scene) {
     let parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro tutto il terreno
     parent_mesh.isVisible = false;  //rendo l'ancora invisbile
     
@@ -230,57 +230,30 @@ function createTerrain(scene, crea_sbarre) {
         }
         
         //creazione ringhiera (se non sono presenti stazioni)
-        if (crea_sbarre) {
-            for(let i=-(chunk_size/2); i<=(chunk_size/2); i+=2) {   //sezione verticale della ringhiera
-                for(let x_offset=-30; x_offset<=30; x_offset+=60) {
-                    let sbarra_v = BABYLON.MeshBuilder.CreateBox('sbarra_h', {width: 0.25, depth: 0.25, height: 10}, scene);
-                    sbarra_v.material = colori(scene, 6);
-                    sbarra_v.rotation.y = Math.PI/4;
-                    sbarra_v.position.x = x_offset;
-                    sbarra_v.position.y = 5 - 0.8;
-                    sbarra_v.position.z = i + z_offset;   
-                    sbarra_v.setParent(parent_mesh); 
-                    }
-            }
-            for(let i=-2; i<=2; i+=4) { //sezione orizzontale della ringhiera
-                for(let x_offset=-30; x_offset<=30; x_offset+=60) {
-                    let sbarra_h = BABYLON.MeshBuilder.CreateBox('sbarra_v', {width: 0.25, depth: 0.25, height: chunk_size}, scene);
-                    sbarra_h.material = colori(scene, 6);
-                    sbarra_h.rotation.x = Math.PI/2;
-                    sbarra_h.position.x = x_offset;
-                    if(i < 0) sbarra_h.position.y = i + 4;
-                    else sbarra_h.position.y = i + 6;
-                    sbarra_h.position.z = z_offset;
-                    sbarra_h.setParent(parent_mesh);
-                    }
-            }
+        for(let i=-(chunk_size/2); i<=(chunk_size/2); i+=2) {   //sezione verticale della ringhiera
+            for(let x_offset=-48; x_offset<=48; x_offset+=96) {
+                let sbarra_v = BABYLON.MeshBuilder.CreateBox('sbarra_h', {width: 0.25, depth: 0.25, height: 10}, scene);
+                sbarra_v.material = colori(scene, 6);
+                sbarra_v.rotation.y = Math.PI/4;
+                sbarra_v.position.x = x_offset;
+                sbarra_v.position.y = 5 - 0.8;
+                sbarra_v.position.z = i + z_offset;   
+                sbarra_v.setParent(parent_mesh); 
+                }
         }
-        else if (i>2) {
-            for(let i=-chunk_size/2; i<=chunk_size/2; i+=2) {   //sezione verticale della ringhiera
-                for(let x_offset=-30; x_offset<=30; x_offset+=60) {
-                    let sbarra_v = BABYLON.MeshBuilder.CreateBox('sbarra_h', {width: 0.25, depth: 0.25, height: 10}, scene);
-                    sbarra_v.material = colori(scene, 6);
-                    sbarra_v.rotation.y = Math.PI/4;
-                    sbarra_v.position.x = x_offset;
-                    sbarra_v.position.y = 5 - 0.8;
-                    sbarra_v.position.z = i + z_offset;   
-                    sbarra_v.setParent(parent_mesh); 
-                    }
-            }
-            for(let i=-2; i<=2; i+=4) { //sezione orizzontale della ringhiera
-                for(let x_offset=-30; x_offset<=30; x_offset+=60) {
-                    let sbarra_h = BABYLON.MeshBuilder.CreateBox('sbarra_v', {width: 0.25, depth: 0.25, height: chunk_size}, scene);
-                    sbarra_h.material = colori(scene, 6);
-                    sbarra_h.rotation.x = Math.PI/2;
-                    sbarra_h.position.x = x_offset;
-                    if(i < 0) sbarra_h.position.y = i + 4;
-                    else sbarra_h.position.y = i + 6;
-                    sbarra_h.position.z = z_offset;
-                    sbarra_h.setParent(parent_mesh);
-                    }
-            }
+        for(let i=-2; i<=2; i+=4) { //sezione orizzontale della ringhiera
+            for(let x_offset=-48; x_offset<=48; x_offset+=96) {
+                let sbarra_h = BABYLON.MeshBuilder.CreateBox('sbarra_v', {width: 0.25, depth: 0.25, height: chunk_size}, scene);
+                sbarra_h.material = colori(scene, 6);
+                sbarra_h.rotation.x = Math.PI/2;
+                sbarra_h.position.x = x_offset;
+                if(i < 0) sbarra_h.position.y = i + 4;
+                else sbarra_h.position.y = i + 6;
+                sbarra_h.position.z = z_offset;
+                sbarra_h.setParent(parent_mesh);
+                }
         }
-        for(let x_offset=-30; x_offset<=30; x_offset+=60) { //blocco di appoggio per i pali verticali della ringhiera
+        for(let x_offset=-48; x_offset<=48; x_offset+=96) { //blocco di appoggio per i pali verticali della ringhiera
             let blocco = BABYLON.MeshBuilder.CreateBox('blocco', {width: 5, depth: chunk_size, height: 1}, scene);
             blocco.material = colori(scene, 8);
             blocco.position.x = x_offset;
