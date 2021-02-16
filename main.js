@@ -6,12 +6,13 @@
 
 const chunk_size = 32;  //chunk = unità di terreno usata per la generazione procedurale
 const segment_size = 10;    //segment = numero di chunk di blocco di ferrovia generata dalla funzione cretaeTerrain()
-let last_station_z = 0; //salvo la coordinata z dell'ultima stazione generata (è assegnata inizialmente a 0 in quanto la prima stazione è centrata rispetto all'asse z = 0)
 
 window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe sono state riadattate a partire da MYLIB.js
         const velocitaOverlay = document.getElementById('velocita');
         const spazioOverlay = document.getElementById('spazio');
         const aiutoOverlay = document.getElementById('aiuto2');
+        const barra = document.getElementById('bar');
+        const progresso = document.getElementById('progress');
         const canvas = document.getElementById('renderCanvas');
         canvas.addEventListener('wheel', evt => evt.preventDefault());
         const engine = new BABYLON.Engine(canvas, true);
@@ -30,14 +31,13 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         skyboxMaterial.disableLighting = true;
         skybox.material = skyboxMaterial;
         skybox.infinteDistance = true;
-        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox", scene)
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox", scene);
         //skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v2", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         
         inizializzaColori(scene);
         
-        //imposto il colore esterno alla skybox (nero)
-        scene.clearColor = new BABYLON.Color3(0, 0, 0);
+        scene.clearColor = new BABYLON.Color3(0, 0, 0); //imposto il colore esterno alla skybox (nero)
         
         let segments = [];  //array che contiene 5 segmenti da 10 chunks l'uno di terreno ferroviario
         for(let i=0; i<5; i++) {
@@ -47,23 +47,38 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         }
         let stazione = createStation(scene); //stazione indica la parent_mesh di tutto il complesso
         let listaCartelli = createSigns(scene);
-        treno(scene);
+        let Foresta1 = foresta(scene, 20, 1024);    //Foresta1 indica la parent_mesh di tutto il complesso
+        let Foresta2 = foresta(scene, -629.5, 1024);    //Foresta2 indica la parent_mesh di tutto il complesso
+        
         let spazio = 0;
         let velocita = 0;
-        //scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
-        //scene.fogDensity = 0.01;
-        //scene.fogStart = 20.0;
-        //scene.fogEnd = 5000.0;
+        
+        //manipolo la nebbia
+        scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
+        scene.fogDensity = 0.005;
+        scene.fogColor = new BABYLON.Color3(0.494, 0.604, 0.686);
+        skybox.applyFog = false;
         
         horn = new BABYLON.Sound("horn", "./assets/sounds/horn.ogg", scene);    //sirena
         
-        let tipperc = createEnvironment(scene, [1,100], stazione.position.z);
+        createEnvironment(scene, stazione.position.z);
         
-        //let isStationPresent = false;
+        let indice = Math.floor(Math.random() * listaCartelli.length);
+        let cartello = listaCartelli[indice];
+        if(cartello != undefined) {
+            cartello.position.z = stazione.position.z + 12;
+            listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
+        }
+        
+        let masterPlane = BABYLON.MeshBuilder.CreatePlane('masterPlane', {size: 1024}, scene);
+        masterPlane.material = campo;
+        masterPlane.rotation.x = Math.PI/2;
+        masterPlane.position.y = -0.875;
         
         //animazione
         scene.registerBeforeRender(() => {
             skybox.position.z = camera.position.z;
+            masterPlane.position.z = camera.position.z;
             velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
             if(velocita < 0) velocita = 0;
             spazio += velocita;
@@ -74,18 +89,24 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
             }
             if(camera.position.z > stazione.position.z + 2.5 * segment_size * chunk_size) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2/5 * segment_size * chunk_size)
                 stazione.position.z += segment_size * chunk_size * Math.floor((200 + Math.random() * 801) / chunk_size);  //sposto l'ultima stazione ad almeno 2 km di distanza dalla precedente; la massima distanza ammessa è 10 km
-                tipperc = createEnvironment(scene, tipperc, stazione.position.z);
+                createEnvironment(scene, stazione.position.z);
                 let indice = Math.floor(Math.random() * listaCartelli.length);
-                //isStationPresent = true;
                 let cartello = listaCartelli[indice];
                 if(cartello != undefined) {
                     cartello.position.z = stazione.position.z + 12;
                     listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
                 }
             }
+            if(camera.position.z > Foresta1.position.z + 5 * segment_size * chunk_size) {
+                Foresta1.position.z += stazione.position.z + 1024;
+                Foresta2.position.z += stazione.position.z + 1024;
+            }
             velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);  //il fattore 10 serve a rendere più realistici i valori
             spazioOverlay.innerText = "Spazio: " + Math.floor(spazio * 10);
-            //console.log(velocita);
+            if(width == 100) {
+                barra.style.display = "none";
+                progresso.style.display = "none";
+            }
         });
         engine.runRenderLoop(()=>scene.render());
         window.addEventListener("resize", () => engine.resize());
@@ -97,7 +118,7 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
             if(evt.keyCode === 83) {   //con 83 individuo la pressione del tasto S
                 velocita -= 0.25;    //frenata
             }
-            if(evt.keyCode === 38 && camera.position.y <= 100) {    //freccia superiore (la telecamera può salire di un'altezza limitata rispetto al terreno)
+            if(evt.keyCode === 38 && camera.position.y <= 64) {    //freccia superiore (la telecamera può salire di un'altezza limitata rispetto al terreno)
                 camera.position.y += 0.5;            
             }
             if(evt.keyCode === 40 && camera.position.y > 0.5) { //freccia inferiore (non consento alla telecamera di scendere sotto il terreno)
@@ -111,4 +132,21 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
             }
             else if(aiutoOverlay.style.display === "block") aiutoOverlay.style.display = "";
         });
+        
+        var i = 0;  //barra di caricamento (tratta da https://www.w3schools.com/howto/howto_js_progressbar.asp)
+        var width = 10;
+        if (i == 0) {
+            i = 1;
+            var id = setInterval(frame, 10);
+            function frame() {
+                if (width >= 100) {
+                    clearInterval(id);
+                    i = 0;
+                } else {
+                    width++;
+                    barra.style.width = width + "%";
+                    barra.innerHTML = "Loading: " + width + "%";
+                }
+            }
+        }
 });

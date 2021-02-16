@@ -60,6 +60,22 @@
             .descrizione {
                 font-style:italic;
             }
+            #progress {
+                position:absolute;
+                width: 100%;
+                background-color: grey;
+                display:block;
+                top:50%;
+            }
+            #bar {
+                width: 10%;
+                height: 30px;
+                background-color: #4CAF50;
+                text-align: center;
+                line-height: 30px;
+                color: white;
+                display:block;
+            }
         </style>
         <script src="https://cdn.babylonjs.com/babylon.js"></script>
         <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
@@ -89,5 +105,8 @@
            <span class="tasto">Arrow_Up</span> <span class="descrizione">Movimento verso l'alto</span><br>
            <span class="tasto">Arrow_Down</span> <span class="descrizione">Movimento verso il basso</span><br>
            <span class="tasto">Left_Click</span> <span class="descrizione">Movimento laterale</span></div>
+        <div id="progress">
+            <div id="bar">5%</div>
+        </div>
     </body>
 </html>

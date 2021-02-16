@@ -4,7 +4,8 @@ const listaCitta = ["Agrigento","Alessandria","Ancona","Aosta","Arezzo","Ascoli 
                   "Imperia","Isernia","L'Aquila","La Spezia","Latina","Lecce","Lecco","Livorno","Lodi","Lucca","Macerata","Mantova","Massa-Carrara","Matera","Messina","Milano","Modena","Monza e Brianza","Napoli","Novara","Nuoro",
                   "Oristano","Palermo","Padova","Parma","Pavia","Perugia","Pesaro e Urbino","Pescara","Piacenza","Pisa","Pistoia","Pordenone","Potenza","Prato","Reggio Calabria","Ragusa","Ravenna","Reggio Emilia","Rieti","Rimini","Roma",
                   "Rovigo","Salerno","Sassari","Savona","Siena","Siracusa","Sondrio","Sud Sardegna","Taranto","Teramo","Terni","Torino","Trapani","Trento","Treviso","Trieste","Udine","Varese","Venezia","Verbano-Cusio-Ossola","Vercelli",
-                  "Verona","Vibo Valentia","Vicenza","Viterbo"];
+                  "Verona","Vibo Valentia","Vicenza","Viterbo","Tokyo","La citta' incantata","Akihabara","Namek","Valhalla","Asgard","Inferno","Purgatorio","Paradiso","Mosca","Via Lattea","Andromeda","Proxima Centauri","Luna","Marte",
+                  "Cortemaggiore","Regno dei funghi","Essecorta"];
 
 //scritte sul cartello (tratto da https://doc.babylonjs.com/divingDeeper/materials/using/dynamicTexture)
 function createSigns(scene) {

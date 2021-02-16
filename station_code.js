@@ -30,13 +30,14 @@ function createStation(scene) {
     
     for(let x_offset=-30; x_offset<=30; x_offset+=60) {
         let pavimentazione = BABYLON.MeshBuilder.CreateBox('pavimentazione', {height:4, width:25, depth: 3*chunk_size}, scene);
+        pavimentazione.material = ground;
         pavimentazione.position.x = x_offset;
         pavimentazione.position.y = 1.2;
         pavimentazione.position.z = z_offset + chunk_size;
         pavimentazione.setParent(parent_mesh);
         
         let linea_gialla = BABYLON.MeshBuilder.CreatePlane('linea_gialla', {height: 3*chunk_size, width: 4, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
-        linea_gialla.material = colori(scene, 7);
+        linea_gialla.material = giallo;
         linea_gialla.rotation.x = Math.PI/2;
         if (x_offset < 0) linea_gialla.position.x = x_offset + 7.5;
         else linea_gialla.position.x = x_offset - 7.5;
@@ -59,19 +60,20 @@ function createStation(scene) {
         //creazione di cartelli di pericolo (solo presso alcune stazioni)
         let pannello = BABYLON.MeshBuilder.CreatePlane('pannello', {width: 6, height: 2}, scene);
         if(x_offset < 0) pannello.rotation.y = Math.PI;
-        pannello.material = colori(scene, 12);
+        pannello.material = hv;
         pannello.position.x = -18.5;
         pannello.position.y = 21;
         pannello.position.z = 0;
         pannello.setParent(parent_mesh);
     }
     let edificio = BABYLON.MeshBuilder.CreateBox('edificio', {height:25, width:30, depth: 3*chunk_size}, scene);
-    edificio.material = colori(scene, 11);
+    edificio.material = bricks;
     edificio.position.x = x_offset + 30 + 25/2;
     edificio.position.y = 25/2 - 0.8;
     edificio.position.z = z_offset + chunk_size;
     edificio.setParent(parent_mesh);
     let tettoia = BABYLON.MeshBuilder.CreateBox('tettoia', {height:0.65, width:12.5, depth: 3*chunk_size}, scene);
+    tettoia.material = station_roof_2;
     tettoia.position.x = x_offset + 25/2 + 9;
     tettoia.position.y = 19;
     tettoia.position.z = z_offset + chunk_size;
@@ -81,5 +83,11 @@ function createStation(scene) {
     cuneo.position.y = 18.675;
     cuneo.position.z = z_offset - chunk_size/2;
     cuneo.setParent(parent_mesh);
+    let tetto = BABYLON.MeshBuilder.CreatePolyhedron('tetto',{custom: {"vertex" : [[0,0,0],[30,0,0],[0,7.5,1.5*chunk_size],[30,7.5,1.5*chunk_size],[0,0,3*chunk_size],[30,0,3*chunk_size]],"face" : [[1,0,2,3],[3,2,4,5],[5,4,0,1],[0,4,2],[1,3,5]]},size: 1},scene);
+    tetto.material = station_roof_1;
+    tetto.position.x = x_offset + 27.5;
+    tetto.position.y = 25 - 0.8;
+    tetto.position.z = z_offset - chunk_size/2;
+    tetto.setParent(parent_mesh);
     return parent_mesh;
 }
