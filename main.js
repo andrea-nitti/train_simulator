@@ -6,11 +6,9 @@
 
 const chunk_size = 32;  //chunk = unità di terreno usata per la generazione procedurale
 const segment_size = 10;    //segment = numero di chunk di blocco di ferrovia generata dalla funzione cretaeTerrain()
+let wire;
 
 window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe sono state riadattate a partire da MYLIB.js
-        const velocitaOverlay = document.getElementById('velocita');
-        const spazioOverlay = document.getElementById('spazio');
-        const aiutoOverlay = document.getElementById('aiuto2');
         const barra = document.getElementById('bar');
         const progresso = document.getElementById('progress');
         const canvas = document.getElementById('renderCanvas');
@@ -23,6 +21,40 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         let light1 = new BABYLON.PointLight('light1',new BABYLON.Vector3(0,1,0), scene);
         light1.parent = camera;
         
+        inizializzaColori(scene);
+        
+        scene.clearColor = new BABYLON.Color3(0, 0, 0); //imposto il colore esterno alla skybox (nero)
+        
+        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "filo.gltf", scene, (meshes) => {
+            wire = meshes[0];
+            setupScene(engine, camera, scene);
+            wire.dispose();
+        });
+        
+        var i = 0;  //barra di caricamento (tratta da https://www.w3schools.com/howto/howto_js_progressbar.asp)
+        var width = 10;
+        if (i == 0) {
+            i = 1;
+            var id = setInterval(frame, 10);
+            function frame() {
+                if (width >= 100) {
+                    clearInterval(id);
+                    i = 0;
+                    barra.style.display = "none";
+                    progresso.style.display = "none";
+                } else {
+                    width++;
+                    barra.style.width = width + "%";
+                    barra.innerHTML = "Loading: " + width + "%";
+                }
+            }
+        }
+});
+
+function setupScene(engine, camera, scene) {
+        const velocitaOverlay = document.getElementById('velocita');
+        const spazioOverlay = document.getElementById('spazio');
+        const aiutoOverlay = document.getElementById('aiuto2');
         //creazione della skybox (tratto da https://doc.babylonjs.com/divingDeeper/environment/skybox)
         let skybox = BABYLON.Mesh.CreateBox("skybox", 10000.0, scene);
         let skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
@@ -35,16 +67,14 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         //skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v2", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         
-        inizializzaColori(scene);
-        
-        scene.clearColor = new BABYLON.Color3(0, 0, 0); //imposto il colore esterno alla skybox (nero)
-        
         let segments = [];  //array che contiene 5 segmenti da 10 chunks l'uno di terreno ferroviario
+        //console.log(wire);
         for(let i=0; i<5; i++) {
             let Terrain = createTerrain(scene);
             Terrain.position.z = i * chunk_size * segment_size;
             segments.push(Terrain);
         }
+        
         let stazione = createStation(scene); //stazione indica la parent_mesh di tutto il complesso
         let listaCartelli = createSigns(scene);
         let Foresta1 = foresta(scene, 20, 1024);    //Foresta1 indica la parent_mesh di tutto il complesso
@@ -103,10 +133,6 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
             }
             velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);  //il fattore 10 serve a rendere più realistici i valori
             spazioOverlay.innerText = "Spazio: " + Math.floor(spazio * 10);
-            if(width == 100) {
-                barra.style.display = "none";
-                progresso.style.display = "none";
-            }
         });
         engine.runRenderLoop(()=>scene.render());
         window.addEventListener("resize", () => engine.resize());
@@ -132,21 +158,4 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
             }
             else if(aiutoOverlay.style.display === "block") aiutoOverlay.style.display = "";
         });
-        
-        var i = 0;  //barra di caricamento (tratta da https://www.w3schools.com/howto/howto_js_progressbar.asp)
-        var width = 10;
-        if (i == 0) {
-            i = 1;
-            var id = setInterval(frame, 10);
-            function frame() {
-                if (width >= 100) {
-                    clearInterval(id);
-                    i = 0;
-                } else {
-                    width++;
-                    barra.style.width = width + "%";
-                    barra.innerHTML = "Loading: " + width + "%";
-                }
-            }
-        }
-});
+}
