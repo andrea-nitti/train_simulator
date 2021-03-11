@@ -6,7 +6,7 @@
 
 const chunk_size = 32;  //chunk = unità di terreno usata per la generazione procedurale
 const segment_size = 10;    //segment = numero di chunk di blocco di ferrovia generata dalla funzione cretaeTerrain()
-let wire;
+let wire, terrain_chunk, ringhiera;
 
 window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe sono state riadattate a partire da MYLIB.js
         const barra = document.getElementById('bar');
@@ -27,8 +27,16 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         
         BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "filo.gltf", scene, (meshes) => {
             wire = meshes[0];
-            setupScene(engine, camera, scene);
-            wire.dispose();
+            BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "chunk_binario.obj", scene, (meshes) => {
+                terrain_chunk = meshes;
+                BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "ringhiera.obj", scene, (meshes) => {
+                    ringhiera = meshes;
+                    setupScene(engine, camera, scene);
+                    //ringhiera.dispose();
+                    //terrain_chunk.position.y = -1000;
+                    wire.dispose();
+                });
+            });
         });
         
         var i = 0;  //barra di caricamento (tratta da https://www.w3schools.com/howto/howto_js_progressbar.asp)
@@ -68,7 +76,6 @@ function setupScene(engine, camera, scene) {
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         
         let segments = [];  //array che contiene 5 segmenti da 10 chunks l'uno di terreno ferroviario
-        //console.log(wire);
         for(let i=0; i<5; i++) {
             let Terrain = createTerrain(scene);
             Terrain.position.z = i * chunk_size * segment_size;

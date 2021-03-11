@@ -7,7 +7,7 @@ function createTerrain(scene) {
         z_offset = i * chunk_size;
         
         //creazione binari
-        for(let x_offset=-8; x_offset<=8; x_offset+=16) {   //il valore di x_offset varia la distanza fra i centri dei binari
+        /*for(let x_offset=-8; x_offset<=8; x_offset+=16) {   //il valore di x_offset varia la distanza fra i centri dei binari
             for(let k=-2; k<=2; k+=4) {
                 let rail_h_inf = BABYLON.MeshBuilder.CreateBox('rail_h_inf', {height: 0.1, depth: chunk_size, width: 1.0}, scene);   //h_inf indica la parte orizzontale inferiore di una rotaia
                 rail_h_inf.material = metal;
@@ -58,10 +58,16 @@ function createTerrain(scene) {
                     dado.setParent(parent_mesh);
                 }
             }
-        }
+        }*/
+        
+        terrain_chunk.forEach(x => {
+            let terrain = x.clone('terrain_chunk');
+            terrain.position.z = z_offset;
+            terrain.setParent(parent_mesh);
+        });
         
         //creazione terreno
-        for(let s=-2; s<=2; s+=1) {
+        /*for(let s=-2; s<=2; s+=1) {
             let terreno = BABYLON.MeshBuilder.CreatePlane('terreno', {size: chunk_size, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
             terreno.material = gravel;
             terreno.rotation.x = Math.PI/2;
@@ -69,7 +75,7 @@ function createTerrain(scene) {
             terreno.position.y = -0.8;
             terreno.position.z = z_offset;
             terreno.setParent(parent_mesh);
-        }
+        }*/
         
         //creazione pali
         if(z_offset % (5*chunk_size) == 0) {  //creo i pali ogni 5 chunks
@@ -238,7 +244,16 @@ function createTerrain(scene) {
         }
         
         //creazione ringhiera (se non sono presenti stazioni)
-        for(let i=-(chunk_size/2); i<=(chunk_size/2); i+=2) {   //sezione verticale della ringhiera
+        for(let x_offset=-48; x_offset<=48; x_offset+=96) {
+            ringhiera.forEach(x => {
+                let element = x.clone('ringhiera');
+                element.position.x = x_offset;
+                element.position.z = z_offset;
+                element.setParent(parent_mesh);
+            });
+        }
+        
+        /*for(let i=-(chunk_size/2); i<=(chunk_size/2); i+=2) {   //sezione verticale della ringhiera
             for(let x_offset=-48; x_offset<=48; x_offset+=96) {
                 let sbarra_v = BABYLON.MeshBuilder.CreateBox('sbarra_h', {width: 0.25, depth: 0.25, height: 10}, scene);
                 sbarra_v.material = rusted_steel;
@@ -268,7 +283,7 @@ function createTerrain(scene) {
             blocco.position.y = -0.8 + 0.5;
             blocco.position.z = z_offset;
             blocco.setParent(parent_mesh);
-        }
+        }*/
     }
     return parent_mesh;
 }
