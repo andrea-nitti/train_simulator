@@ -32,8 +32,8 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
                 BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "ringhiera.obj", scene, (meshes) => {
                     ringhiera = meshes;
                     setupScene(engine, camera, scene);
-                    //ringhiera.dispose();
-                    //terrain_chunk.position.y = -1000;
+                    ringhiera.forEach(x => x.dispose() );
+                    terrain_chunk.forEach(x => x.dispose() );
                     wire.dispose();
                 });
             });
