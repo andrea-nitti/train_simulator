@@ -15,7 +15,7 @@ function createTerrain(scene) {
         
         //creazione pali
         if(z_offset % (5*chunk_size) == 0) {  //creo i pali ogni 5 chunks
-            for(let x_offset=-24; x_offset<=24; x_offset+=48) {
+            /*for(let x_offset=-24; x_offset<=24; x_offset+=48) {
                 let cilindro1 = BABYLON.MeshBuilder.CreateCylinder('cilindro1', {height: 15, diameter: 2.0}, scene);  //sezione verticale
                 let cilindro2 = BABYLON.MeshBuilder.CreateCylinder('cilindro2', {height: 15, diameter: 1.5}, scene);  //sezione verticale superiore ristretta
                 let troncodicono = BABYLON.MeshBuilder.CreateCylinder('troncodicono', {diameterTop: 1.5, diameterBottom: 2.0, height: 1.0}, scene); //restringimento più dolce del palo
@@ -142,6 +142,8 @@ function createTerrain(scene) {
                     disco2.position.z = z_offset;
                     disco2.setParent(parent_mesh);
                 }
+                
+                console.log("------end------");
                 let filo_sup = wire.clone('wire');
                 filo_sup.material = colrosso;
                 if(x_offset < 0) filo_sup.position.x = -8;
@@ -149,7 +151,19 @@ function createTerrain(scene) {
                 filo_sup.position.y = 22.5 + 1.125/2 + 3.0 + 0.125;
                 filo_sup.position.z = z_offset + 2.5 * chunk_size;
                 filo_sup.setParent(parent_mesh);
-            }
+            }*/
+            leftPole.forEach(x => {
+                let palo = x.clone('palo');
+                palo.position.x = -24;
+                palo.position.z = z_offset;
+                palo.setParent(parent_mesh);
+            });
+            rightPole.forEach(x => {
+                let palo = x.clone('palo');
+                palo.position.x = +24;
+                palo.position.z = z_offset;
+                palo.setParent(parent_mesh);
+            });
         }
         
         //creazione fili

@@ -2,7 +2,6 @@
 //Istituto: Liceo G. M. Colombini
 //Progetto: Train Simulator
 //Descrizione: Un simulatore di guida di treni, in cui la velocità del mezzo, lungo una rotaia infinita, potrà essere decisa e modificata in corsa
-//Documentazione approfondita della libreria: https://doc.babylonjs.com/typedoc
 
 const chunk_size = 32;  //chunk = unità di terreno usata per la generazione procedurale
 const segment_size = 10;    //segment = numero di chunk di blocco di ferrovia generata dalla funzione cretaeTerrain()
@@ -31,10 +30,18 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
                 terrain_chunk = meshes;
                 BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "ringhiera.obj", scene, (meshes) => {
                     ringhiera = meshes;
-                    setupScene(engine, camera, scene);
-                    ringhiera.forEach(x => x.dispose() );
-                    terrain_chunk.forEach(x => x.dispose() );
-                    wire.dispose();
+                    BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "paloL.obj", scene, (meshes) => {
+                        leftPole = meshes;
+                        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "paloR.obj", scene, (meshes) => {
+                            rightPole = meshes;
+                            setupScene(engine, camera, scene);
+                            ringhiera.forEach(x => x.dispose() );
+                            terrain_chunk.forEach(x => x.dispose() );
+                            leftPole.forEach(x => x.dispose() );
+                            rightPole.forEach(x => x.dispose() );
+                            wire.dispose();
+                        });
+                    });
                 });
             });
         });
@@ -63,7 +70,7 @@ function setupScene(engine, camera, scene) {
         const velocitaOverlay = document.getElementById('velocita');
         const spazioOverlay = document.getElementById('spazio');
         const aiutoOverlay = document.getElementById('aiuto2');
-        //creazione della skybox (tratto da https://doc.babylonjs.com/divingDeeper/environment/skybox)
+        //creazione della skybox
         let skybox = BABYLON.Mesh.CreateBox("skybox", 10000.0, scene);
         let skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
         skyboxMaterial.diffuseColor = new BABYLON.Color3(1, 1, 0);
@@ -72,7 +79,7 @@ function setupScene(engine, camera, scene) {
         skybox.material = skyboxMaterial;
         skybox.infinteDistance = true;
         skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox", scene);
-        //skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v2", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
+        //skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v2--", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         
         let segments = [];  //array che contiene 5 segmenti da 10 chunks l'uno di terreno ferroviario
