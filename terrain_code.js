@@ -15,6 +15,15 @@ function createTerrain(scene) {
         
         //creazione pali
         if(z_offset % (5*chunk_size) == 0) {  //creo i pali ogni 5 chunks
+            for(let x_offset=-24; x_offset<=24; x_offset+=48) {
+                let filo_sup = wire.clone('wire');
+                filo_sup.material = colrosso;
+                if(x_offset < 0) filo_sup.position.x = -8;
+                else filo_sup.position.x = +8;
+                filo_sup.position.y = 22.5 + 1.125/2 + 3.0 + 0.125;
+                filo_sup.position.z = z_offset + 2.5 * chunk_size;
+                filo_sup.setParent(parent_mesh);
+            }   
             leftPole.forEach(x => {
                 let palo = x.clone('palo');
                 palo.position.x = -24;
