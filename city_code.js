@@ -231,11 +231,6 @@ function casaAlta(scene, posx, posz) {
         palazzo.position.y = 30;
         palazzo.position.z = posz+32;
     });
-    //casaAltaLato(scene, posx+32, 30, posz, 0, 0);   //fronte
-    //casaAltaLato(scene, posx, 30, posz+32, Math.PI/2, 0);   //sinistra
-    //casaAltaLato(scene, posx+32, 30, posz+64, Math.PI, 0);
-    //casaAltaLato(scene, posx+64, 30, posz+32, (Math.PI/2)*3, 0);    //destra
-    //casaAltaLato(scene, posx+32, 62, posz+32, 0, Math.PI/2);    //tetto
 }
 
 function casaBassa(scene, posx, posz, parent_mesh) {
@@ -245,59 +240,6 @@ function casaBassa(scene, posx, posz, parent_mesh) {
         casa.position.y = 14;
         casa.position.z = posz+25;
     });
-    //casaBassaLato(scene, posx+25, posz, 0, parent_mesh);    //retro
-    //casaBassaLato(scene, posx, posz+25, Math.PI/2, parent_mesh);    //sinistra
-    //casaBassaLato(scene, posx+25, posz+50, Math.PI, parent_mesh);   //fronte
-    //casaBassaLato(scene, posx+50, posz+25, (Math.PI/2)*3, parent_mesh); //destra
-
-    /*casaBassaTetto(scene, posx+25, posz+12.4, 0, parent_mesh);
-    casaBassaTetto(scene, posx+25, posz+37.1, Math.PI, parent_mesh);
-
-    casaBassaTriangolo(scene, posx, posz+24.8, Math.PI/2, parent_mesh);
-    casaBassaTriangolo(scene, posx+50, posz+24.8, (Math.PI/2)*3, parent_mesh);*/
-}
-
-function casaAltaLato(scene, posx, posy, posz, rotazioney, rotazionex) {
-    var casaAltaLato = BABYLON.MeshBuilder.CreatePlane('casaAltaLato', {width: 64, height: 64} ,scene);
-    //casaAltaLato.material = palazzo;
-    casaAltaLato.position.x = posx;
-    casaAltaLato.position.y = posy;
-    casaAltaLato.position.z = posz;
-    casaAltaLato.rotation.y = rotazioney;
-    casaAltaLato.rotation.x = rotazionex;
-}
-
-function casaBassaLato(scene, posx, posz, rotazione, parent_mesh) {
-    var casaBassaLato = BABYLON.MeshBuilder.CreatePlane('casaBassaLato', {width: 50, height: 30} ,scene);
-    casaBassaLato.material = wall;
-    casaBassaLato.position.x = posx;
-    casaBassaLato.position.y = 14;
-    casaBassaLato.position.z = posz;
-    casaBassaLato.rotation.y = rotazione;
-    casaBassaLato.setParent(parent_mesh);
-}
-
-function casaBassaTetto(scene, posx, posz, rotazione, parent_mesh) {
-    var casaBassaTetto = BABYLON.MeshBuilder.CreatePlane('casaBassaTetto', {width: 50, height: 35} ,scene);
-    casaBassaTetto.position.x = posx;
-    casaBassaTetto.position.y = 41.2;
-    casaBassaTetto.position.z = posz;
-    casaBassaTetto.rotation.y = rotazione;
-    casaBassaTetto.rotation.x = Math.PI/4;
-    casaBassaTetto.material = station_roof_1;
-    casaBassaTetto.setParent(parent_mesh);
-}
-
-function casaBassaTriangolo(scene, posx, posz, rotazione, parent_mesh) {
-    var casaBassaTriangolo = BABYLON.MeshBuilder.CreatePlane('casaBassaTriangolo', {width: 35, height: 35} ,scene);
-    if(posx < 0) casaBassaTriangolo.position.x = posx - 0.04;
-    else casaBassaTriangolo.position.x = posx + 0.04;
-    casaBassaTriangolo.position.y = 29;
-    casaBassaTriangolo.position.z = posz;
-    casaBassaTriangolo.rotation.y = rotazione;
-    casaBassaTriangolo.rotation.z = Math.PI/4;
-    casaBassaTriangolo.material = station_roof_1;
-    casaBassaTriangolo.setParent(parent_mesh);
 }
 
 function terrenoCitta(scene, posx, posz) {
