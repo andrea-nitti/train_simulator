@@ -6,6 +6,7 @@
 const chunk_size = 32;  //chunk = unità di terreno usata per la generazione procedurale
 const segment_size = 10;    //segment = numero di chunk di blocco di ferrovia generata dalla funzione cretaeTerrain()
 let wire, terrain_chunk, ringhiera;
+let light;
 
 window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe sono state riadattate a partire da MYLIB.js
         const barra = document.getElementById('bar');
@@ -17,8 +18,12 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         const camera = new BABYLON.UniversalCamera('cam',new BABYLON.Vector3(-8,7.5,0), scene);
         camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
         camera.attachControl(canvas,true);
-        let light1 = new BABYLON.PointLight('light1',new BABYLON.Vector3(0,1,0), scene);
-        light1.parent = camera;
+
+        light = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
+        light.setDirectionToTarget(BABYLON.Vector3.Zero());
+	    light.intensity = 1;
+        light.diffuse = new BABYLON.Color3(1, 1, 1);
+        light.parent = camera;
         
         inizializzaColori(scene);
         
@@ -34,12 +39,20 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
                         leftPole = meshes;
                         BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "paloR.obj", scene, (meshes) => {
                             rightPole = meshes;
-                            setupScene(engine, camera, scene);
-                            ringhiera.forEach(x => x.dispose() );
-                            terrain_chunk.forEach(x => x.dispose() );
-                            leftPole.forEach(x => x.dispose() );
-                            rightPole.forEach(x => x.dispose() );
-                            wire.dispose();
+                            BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "casaAlta.obj", scene, (meshes) => {
+                                palazzo = meshes;
+                                BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "casaBassa.obj", scene, (meshes) => {
+                                    casa = meshes;
+                                    setupScene(engine, camera, scene);
+                                    ringhiera.forEach(x => x.dispose() );
+                                    terrain_chunk.forEach(x => x.dispose() );
+                                    leftPole.forEach(x => x.dispose() );
+                                    rightPole.forEach(x => x.dispose() );
+                                    //palazzo.forEach(x => x.dispose() );
+                                    //casa.forEach(x => x.dispose() );
+                                    wire.dispose();
+                                });
+                            });
                         });
                     });
                 });
@@ -75,11 +88,11 @@ function setupScene(engine, camera, scene) {
         let skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
         skyboxMaterial.diffuseColor = new BABYLON.Color3(1, 1, 0);
         skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.disableLighting = true;
+        //skyboxMaterial.disableLighting = true;
         skybox.material = skyboxMaterial;
         skybox.infinteDistance = true;
-        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox", scene);
-        //skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v2--", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
+        //skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox", scene);
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v4", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         
         let segments = [];  //array che contiene 5 segmenti da 10 chunks l'uno di terreno ferroviario
@@ -98,10 +111,10 @@ function setupScene(engine, camera, scene) {
         let velocita = 0;
         
         //manipolo la nebbia
-        scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
+        /*scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
         scene.fogDensity = 0.005;
-        scene.fogColor = new BABYLON.Color3(0.494, 0.604, 0.686);
-        skybox.applyFog = false;
+        scene.fogColor = new BABYLON.Color3(0.494, 0.604, 0.686);*/
+        //skybox.applyFog = false;
         
         horn = new BABYLON.Sound("horn", "./assets/sounds/horn.ogg", scene);    //sirena
         
@@ -120,8 +133,14 @@ function setupScene(engine, camera, scene) {
         masterPlane.position.y = -0.875;
         
         //animazione
+        var angoloLuce = 0;
         scene.registerBeforeRender(() => {
             skybox.position.z = camera.position.z;
+            light.position.x =+ Math.sin(angoloLuce)*500;
+            light.position.y =+ Math.cos(angoloLuce)*500;
+            //light.setDirectionToTarget(BABYLON.Vector3.Zero());
+            angoloLuce += .005;
+            
             masterPlane.position.z = camera.position.z;
             velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
             if(velocita < 0) velocita = 0;

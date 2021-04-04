@@ -224,29 +224,42 @@ function muro(scene, posx, posz, rotazione) {
 }
 
 function casaAlta(scene, posx, posz) {
-    casaAltaLato(scene, posx+32, 30, posz, 0, 0);
-    casaAltaLato(scene, posx, 30, posz+32, Math.PI/2, 0);
-    casaAltaLato(scene, posx+32, 30, posz+64, Math.PI, 0);
-    casaAltaLato(scene, posx+64, 30, posz+32, (Math.PI/2)*3, 0);
-    casaAltaLato(scene, posx+32, 62, posz+32, 0, Math.PI/2);
+    //console.log({x:posx, z:posz});
+    palazzo.forEach(x => {
+        let palazzo = x.clone('palazzo');
+        palazzo.position.x = posx+32;
+        palazzo.position.y = 30;
+        palazzo.position.z = posz+32;
+    });
+    //casaAltaLato(scene, posx+32, 30, posz, 0, 0);   //fronte
+    //casaAltaLato(scene, posx, 30, posz+32, Math.PI/2, 0);   //sinistra
+    //casaAltaLato(scene, posx+32, 30, posz+64, Math.PI, 0);
+    //casaAltaLato(scene, posx+64, 30, posz+32, (Math.PI/2)*3, 0);    //destra
+    //casaAltaLato(scene, posx+32, 62, posz+32, 0, Math.PI/2);    //tetto
 }
 
 function casaBassa(scene, posx, posz, parent_mesh) {
-    casaBassaLato(scene, posx+25, posz, 0, parent_mesh);
-    casaBassaLato(scene, posx, posz+25, Math.PI/2, parent_mesh);
-    casaBassaLato(scene, posx+25, posz+50, Math.PI, parent_mesh);
-    casaBassaLato(scene, posx+50, posz+25, (Math.PI/2)*3, parent_mesh);
+    casa.forEach(x => {
+        let casa = x.clone('casa');
+        casa.position.x = posx+25;
+        casa.position.y = 14;
+        casa.position.z = posz+25;
+    });
+    //casaBassaLato(scene, posx+25, posz, 0, parent_mesh);    //retro
+    //casaBassaLato(scene, posx, posz+25, Math.PI/2, parent_mesh);    //sinistra
+    //casaBassaLato(scene, posx+25, posz+50, Math.PI, parent_mesh);   //fronte
+    //casaBassaLato(scene, posx+50, posz+25, (Math.PI/2)*3, parent_mesh); //destra
 
-    casaBassaTetto(scene, posx+25, posz+12.4, 0, parent_mesh);
+    /*casaBassaTetto(scene, posx+25, posz+12.4, 0, parent_mesh);
     casaBassaTetto(scene, posx+25, posz+37.1, Math.PI, parent_mesh);
 
     casaBassaTriangolo(scene, posx, posz+24.8, Math.PI/2, parent_mesh);
-    casaBassaTriangolo(scene, posx+50, posz+24.8, (Math.PI/2)*3, parent_mesh);
+    casaBassaTriangolo(scene, posx+50, posz+24.8, (Math.PI/2)*3, parent_mesh);*/
 }
 
 function casaAltaLato(scene, posx, posy, posz, rotazioney, rotazionex) {
     var casaAltaLato = BABYLON.MeshBuilder.CreatePlane('casaAltaLato', {width: 64, height: 64} ,scene);
-    casaAltaLato.material = palazzo;
+    //casaAltaLato.material = palazzo;
     casaAltaLato.position.x = posx;
     casaAltaLato.position.y = posy;
     casaAltaLato.position.z = posz;
