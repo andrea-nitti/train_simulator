@@ -6,7 +6,7 @@
 const chunk_size = 32;  //chunk = unità di terreno usata per la generazione procedurale
 const segment_size = 10;    //segment = numero di chunk di blocco di ferrovia generata dalla funzione cretaeTerrain()
 let wire, terrain_chunk, ringhiera;
-let light;
+let sun;
 
 window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe sono state riadattate a partire da MYLIB.js
         const barra = document.getElementById('bar');
@@ -19,15 +19,15 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
         camera.attachControl(canvas,true);
 
-        light = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
-        light.setDirectionToTarget(BABYLON.Vector3.Zero());
-	    light.intensity = 1;
-        light.diffuse = new BABYLON.Color3(1, 1, 1);
-        light.parent = camera;
+        sun = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
+        sun.setDirectionToTarget(BABYLON.Vector3.Zero());
+	    sun.intensity = 1;
+        sun.diffuse = new BABYLON.Color3(1, 1, 0.8);
+        //sun.parent = camera;
         
         inizializzaColori(scene);
         
-        scene.clearColor = new BABYLON.Color3(0, 0, 0); //imposto il colore esterno alla skybox (nero)
+        scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
         
         BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "filo.gltf", scene, (meshes) => {
             wire = meshes[0];
@@ -86,11 +86,12 @@ function setupScene(engine, camera, scene) {
         //creazione della skybox
         let skybox = BABYLON.Mesh.CreateBox("skybox", 10000.0, scene);
         let skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
-        skyboxMaterial.diffuseColor = new BABYLON.Color3(1, 1, 0);
+        //skyboxMaterial.diffuseColor = new BABYLON.Color3(1, 1, 0);
         skyboxMaterial.backFaceCulling = false;
-        //skyboxMaterial.disableLighting = true;
+        skyboxMaterial.disableLighting = true;
+        skyboxMaterial.alpha = 1;
         skybox.material = skyboxMaterial;
-        skybox.infinteDistance = true;
+        skybox.infiniteDistance = true;
         //skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox", scene);
         skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v4", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
@@ -135,11 +136,17 @@ function setupScene(engine, camera, scene) {
         //animazione
         var angoloLuce = 0;
         scene.registerBeforeRender(() => {
-            skybox.position.z = camera.position.z;
-            light.position.x =+ Math.sin(angoloLuce)*500;
-            light.position.y =+ Math.cos(angoloLuce)*500;
-            //light.setDirectionToTarget(BABYLON.Vector3.Zero());
+            sun.position.x =+ Math.cos(angoloLuce)*500;
+            sun.position.y =+ Math.sin(angoloLuce)*500;
+            sun.position.z = camera.position.z;
+            //console.log({x:sun.position.x, y:sun.position.y});
             angoloLuce += .005;
+            if(angoloLuce > 2*Math.PI) angoloLuce = 0;
+            if(angoloLuce < Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * angoloLuce + 0.1; //alba-mattina
+            else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1;   //pomeriggio-sera
+            else if(angoloLuce > Math.PI) skyboxMaterial.alpha = 0.1;   //notte
+            if(sun.position.y < 0 && sun.intensity != 0) sun.intensity -= 0.01;   //tramonto
+            else if(sun.position.y > -10 && sun.intensity <= 1) sun.intensity += 0.025; //alba
             
             masterPlane.position.z = camera.position.z;
             velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
