@@ -86,7 +86,6 @@ function setupScene(engine, camera, scene) {
         //creazione della skybox
         let skybox = BABYLON.Mesh.CreateBox("skybox", 10000.0, scene);
         let skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
-        //skyboxMaterial.diffuseColor = new BABYLON.Color3(1, 1, 0);
         skyboxMaterial.backFaceCulling = false;
         skyboxMaterial.disableLighting = true;
         skyboxMaterial.alpha = 1;
@@ -133,20 +132,41 @@ function setupScene(engine, camera, scene) {
         masterPlane.rotation.x = Math.PI/2;
         masterPlane.position.y = -0.875;
         
+        let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
+        
         //animazione
         var angoloLuce = 0;
         scene.registerBeforeRender(() => {
+            if(modalitaTempo == 0) {    //modalità reale
+                let day = new Date();
+                let time = day.getHours() * 60 + day.getMinutes();  //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
+                angoloLuce = time / (24 * 60) * 2 * Math.PI;    //calcolo l'angolo in base alla proporzione con i minuti contenuti in un giorno
+                angoloLuce -= Math.PI/2;    //-pi/2 è l'offset che esiste tra gli angoli calcolati ed il ciclo giorno-notte
+                if(angoloLuce < 0) angoloLuce = 2 * Math.PI + angoloLuce;   //converto in positivo gli angoli compresi tra le 0:00 e le 6:00
+            }
+            else if(modalitaTempo == 1) {   //tempo accelerato
+                angoloLuce += .005;
+                if(angoloLuce > 2*Math.PI) angoloLuce = 0;
+            }
+            else if(modalitaTempo == 2) {   //alba fissa
+                angoloLuce = 0;
+            }
+            else if(modalitaTempo == 3) {   //mezzogiorno fisso
+                angoloLuce = Math.PI/2;
+            }
+            else if(modalitaTempo == 4) {   //tramonto fisso
+                angoloLuce = Math.PI;
+            }
+            else if(modalitaTempo == 5) {   //mezzanotte fissa
+                angoloLuce = 3 / 2 * Math.PI;
+            }
             sun.position.x =+ Math.cos(angoloLuce)*500;
             sun.position.y =+ Math.sin(angoloLuce)*500;
             sun.position.z = camera.position.z;
-            //console.log({x:sun.position.x, y:sun.position.y});
-            angoloLuce += .005;
-            if(angoloLuce > 2*Math.PI) angoloLuce = 0;
-            if(angoloLuce < Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * angoloLuce + 0.1; //alba-mattina
+            if(angoloLuce <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * angoloLuce + 0.1; //alba-mattina
             else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1;   //pomeriggio-sera
-            else if(angoloLuce > Math.PI) skyboxMaterial.alpha = 0.1;   //notte
-            if(sun.position.y < 0 && sun.intensity != 0) sun.intensity -= 0.01;   //tramonto
-            else if(sun.position.y > -10 && sun.intensity <= 1) sun.intensity += 0.025; //alba
+            else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
+            
             
             masterPlane.position.z = camera.position.z;
             velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
@@ -192,6 +212,9 @@ function setupScene(engine, camera, scene) {
             }
             if(evt.keyCode === 32) {    //barra spaziatrice
                 horn.play();
+            }
+            if(evt.keyCode === 71) {    //tasto G
+                modalitaTempo = (modalitaTempo + 1) % 6;    //scrittura alternativa: modalitaTempo += 1; if(modalitaTempo > 5) modalitaTempo = 0;
             }
             if(evt.keyCode === 72 && aiutoOverlay.style.display === "") {
                 aiutoOverlay.style.display = "block";
