@@ -57,7 +57,7 @@ function createStation(scene) {
             else rampa.position.z = (z_offset + chunk_size) + ramp_z_offset / 2;
             rampa.setParent(parent_mesh);
         }
-        //creazione di cartelli di pericolo (solo presso alcune stazioni)
+        //creazione di cartelli di pericolo (solo presso le stazioni)
         let pannello = BABYLON.MeshBuilder.CreatePlane('pannello', {width: 6, height: 2}, scene);
         if(x_offset < 0) pannello.rotation.y = Math.PI;
         pannello.material = hv;

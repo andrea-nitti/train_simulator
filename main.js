@@ -118,7 +118,14 @@ function setupScene(engine, camera, scene) {
         
         horn = new BABYLON.Sound("horn", "./assets/sounds/horn.ogg", scene);    //sirena
         
-        createEnvironment(scene, stazione.position.z);
+        let cities = [];    //array che contiene la lista delle parentMesh di 5*3*2 città
+        for(let i=0; i<5; i++) {
+            let city = createEnvironment(scene, 0);
+            city.position.z = -100000;
+            cities.push(city);
+        }
+        cities[0].position.z = stazione.position.z;
+        cities.push(cities.shift());
         
         let indice = Math.floor(Math.random() * listaCartelli.length);
         let cartello = listaCartelli[indice];
@@ -179,7 +186,8 @@ function setupScene(engine, camera, scene) {
             }
             if(camera.position.z > stazione.position.z + 2.5 * segment_size * chunk_size) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2/5 * segment_size * chunk_size)
                 stazione.position.z += segment_size * chunk_size * Math.floor((200 + Math.random() * 801) / chunk_size);  //sposto l'ultima stazione ad almeno 2 km di distanza dalla precedente; la massima distanza ammessa è 10 km
-                createEnvironment(scene, stazione.position.z);
+                cities[0].position.z = stazione.position.z;
+                cities.push(cities.shift());
                 let indice = Math.floor(Math.random() * listaCartelli.length);
                 let cartello = listaCartelli[indice];
                 if(cartello != undefined) {

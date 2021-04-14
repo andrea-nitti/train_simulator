@@ -34,6 +34,7 @@ function inizializzaColori(scene) {
     hv = new BABYLON.StandardMaterial('hv', scene);
     hv.diffuseTexture = new BABYLON.Texture("./assets/textures/hv.png", scene);
     hv.specularColor = new BABYLON.Color3(0, 0, 0);
+    hv.emissiveColor = new BABYLON.Color3(1, 1, 1);
     station_roof_1 = new BABYLON.StandardMaterial('station_roof_1', scene);
     station_roof_1.diffuseTexture = new BABYLON.Texture("./assets/textures/station_roof_1.jpg", scene);
     station_roof_2 = new BABYLON.StandardMaterial('station_roof_2', scene);

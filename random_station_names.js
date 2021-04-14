@@ -14,6 +14,7 @@ function createSigns(scene) {
         let parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro il cartello
         parent_mesh.isVisible = false;  //rendo l'ancora invisibile
         const material = new BABYLON.StandardMaterial("material", scene);
+        material.emissiveColor = new BABYLON.Color3(1, 1, 1);
         const planeWidth = 10;
         const planeHeight = 3;
         let DTWidth = planeWidth * 60;      //i moltiplicatori sono uguali per mantenere l'aspect ratio
