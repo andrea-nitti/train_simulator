@@ -29,8 +29,8 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
         
         scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
         
-        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "filo.gltf", scene, (meshes) => {
-            wire = meshes[0];
+        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "filo.obj", scene, (meshes) => {
+            wire = meshes;
             BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "chunk_binario.obj", scene, (meshes) => {
                 terrain_chunk = meshes;
                 BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "ringhiera.obj", scene, (meshes) => {
@@ -50,7 +50,7 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
                                     rightPole.forEach(x => x.dispose() );
                                     //palazzo.forEach(x => x.dispose() );
                                     //casa.forEach(x => x.dispose() );
-                                    wire.dispose();
+                                    wire.forEach(x => x.dispose() );
                                 });
                             });
                         });
