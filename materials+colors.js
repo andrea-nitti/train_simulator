@@ -41,12 +41,10 @@ function inizializzaColori(scene) {
     station_roof_2.diffuseTexture = new BABYLON.Texture("./assets/textures/station_roof_2.jpg", scene);
     ground = new BABYLON.StandardMaterial('ground', scene);
     ground.diffuseTexture = new BABYLON.Texture("./assets/textures/ground.jpg", scene);
-    fogliame = new BABYLON.StandardMaterial('fogliame', scene);
-    fogliame.diffuseTexture = new BABYLON.Texture("./assets/textures/pine1.jpg", scene);
     palazzo = new BABYLON.StandardMaterial('palazzo', scene);
     palazzo.diffuseTexture = new BABYLON.Texture("./assets/textures/palazzo.jpg", scene);
     erba = new BABYLON.StandardMaterial('erba', scene);
-    erba.diffuseColor = new BABYLON.Color3(0.078, 0.760, 0.145);
+    erba.diffuseTexture = new BABYLON.Texture("./assets/textures/erba.jpg", scene);
     wall = new BABYLON.StandardMaterial('wall', scene);
     wall.diffuseTexture = new BABYLON.Texture("./assets/textures/wall.jpg", scene);
     campo = new BABYLON.StandardMaterial('campo', scene);

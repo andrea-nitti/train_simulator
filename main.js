@@ -6,7 +6,7 @@
 const chunk_size = 32;  //chunk = unità di terreno usata per la generazione procedurale
 const segment_size = 10;    //segment = numero di chunk di blocco di ferrovia generata dalla funzione cretaeTerrain()
 let wire, terrain_chunk, ringhiera;
-let sun;
+let sun, vegetali;
 
 window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe sono state riadattate a partire da MYLIB.js
         const barra = document.getElementById('bar');
@@ -43,14 +43,22 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
                                 palazzo = meshes;
                                 BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "casaBassa.obj", scene, (meshes) => {
                                     casa = meshes;
-                                    setupScene(engine, camera, scene);
-                                    ringhiera.forEach(x => x.dispose() );
-                                    terrain_chunk.forEach(x => x.dispose() );
-                                    leftPole.forEach(x => x.dispose() );
-                                    rightPole.forEach(x => x.dispose() );
-                                    //palazzo.forEach(x => x.dispose() );
-                                    //casa.forEach(x => x.dispose() );
-                                    wire.forEach(x => x.dispose() );
+                                    BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "albero1.obj", scene, (meshes) => {
+                                        albero1 = meshes;
+                                        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "albero2.obj", scene, (meshes) => {
+                                            albero2 = meshes;
+                                            setupScene(engine, camera, scene);
+                                            ringhiera.forEach(x => x.dispose() );
+                                            terrain_chunk.forEach(x => x.dispose() );
+                                            leftPole.forEach(x => x.dispose() );
+                                            rightPole.forEach(x => x.dispose() );
+                                            palazzo.forEach(x => x.dispose() );
+                                            casa.forEach(x => x.dispose() );
+                                            wire.forEach(x => x.dispose() );
+                                            albero1.forEach(x => x.dispose() );
+                                            albero2.forEach(x => x.dispose() );
+                                        });
+                                    });
                                 });
                             });
                         });
@@ -94,6 +102,8 @@ function setupScene(engine, camera, scene) {
         //skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox", scene);
         skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v4", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+        
+        vegetali = [albero1, albero2];
         
         let segments = [];  //array che contiene 5 segmenti da 10 chunks l'uno di terreno ferroviario
         for(let i=0; i<5; i++) {

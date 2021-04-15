@@ -266,26 +266,15 @@ function prato(scene, posx, posz, citiesParentMesh) {
 }
 
 function albero(scene, posx, posz, parent_mesh) {
-    tronco(scene, posx, posz, parent_mesh);
-    foglie(scene, posx, posz, parent_mesh);
-}
-
-function tronco(scene, posx, posz, parent_mesh) {
-    var tronco = BABYLON.MeshBuilder.CreateCylinder('tronco', {height: 18, diameter: 6}, scene);
-    tronco.material = wood;
-    tronco.position.y = 8;
-    tronco.position.x = posx;
-    tronco.position.z = posz;
-    tronco.setParent(parent_mesh);
-}
-
-function foglie(scene, posx, posz, parent_mesh) {
-    var foglie = BABYLON.MeshBuilder.CreateCylinder('foglie', {height: 70, diameterTop: 4, diameterBottom: 30, tesselation: 50}, scene);
-    foglie.material = fogliame;
-    foglie.position.y = 48;
-    foglie.position.x = posx;
-    foglie.position.z = posz;
-    foglie.setParent(parent_mesh);
+    let x = Math.floor(Math.random() * 2);
+    alberoscelto = vegetali[x];
+    alberoscelto.forEach(x => {
+        let pianta1 = x.clone('alberoscelto');
+        pianta1.position.x = posx;
+        pianta1.position.y = 0;
+        pianta1.position.z = posz;
+        pianta1.setParent(parent_mesh);
+    });
 }
 
 function foresta(scene, posx, posz) {
