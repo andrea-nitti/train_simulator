@@ -19,7 +19,8 @@ function createTerrain(scene) {
                 wire.forEach(x => {
                     let filo_sup = x.clone('wire');
                     filo_sup.position.x = x_offset;
-                    filo_sup.position.y = 22.5 + 1.125/2 + 3.0 + 0.125;
+                    //filo_sup.position.y = 22.5 + 1.125/2 + 3.0 + 0.125;
+                    filo_sup.position.y = 38;
                     filo_sup.position.z = z_offset + 2.5 * chunk_size;
                     filo_sup.setParent(parent_mesh);
                 });
@@ -44,7 +45,8 @@ function createTerrain(scene) {
             filo_inf.material = colnero;
             filo_inf.rotation.x = Math.PI/2;
             filo_inf.position.x = x_offset;
-            filo_inf.position.y = 18.35;
+            //filo_inf.position.y = 18.35;
+            filo_inf.position.y = 27.75;
             filo_inf.position.z = z_offset;
             filo_inf.setParent(parent_mesh);
             let tirante2 = BABYLON.MeshBuilder.CreateCylinder('tirante2', {height: chunk_size, diameter: 0.35}, scene); //tirante situato tra un palo ed il successivo
