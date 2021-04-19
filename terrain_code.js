@@ -1,27 +1,27 @@
 //Funzione per creare il terreno della ferrovia
 function createTerrain(scene) {
+    const chunk_size = 32;
     let parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro tutto il terreno
     parent_mesh.isVisible = false;  //rendo l'ancora invisbile
+          
+    //creazione binari e terreno
+    terrain_chunk.forEach(x => {
+        let terrain = x.clone('terrain_chunk');
+        terrain.position.z = 3.5 * 32;
+        terrain.setParent(parent_mesh);
+    });
     
-    for(let i=0; i<10; i++) {   //numero di chunk da generare per ogni segmento
+    for(let i=0; i<8; i++) {   //numero di chunk da generare per ogni segmento
         z_offset = i * chunk_size;
         
-        //creazione binari e terreno
-        terrain_chunk.forEach(x => {
-            let terrain = x.clone('terrain_chunk');
-            terrain.position.z = z_offset;
-            terrain.setParent(parent_mesh);
-        });
-        
         //creazione pali
-        if(z_offset % (5*chunk_size) == 0) {  //creo i pali ogni 5 chunks
+        if(z_offset % (4*chunk_size) == 0) {  //creo i pali ogni 5 chunks
             for(let x_offset=-8; x_offset<=8; x_offset+=16) {
                 wire.forEach(x => {
                     let filo_sup = x.clone('wire');
                     filo_sup.position.x = x_offset;
-                    //filo_sup.position.y = 22.5 + 1.125/2 + 3.0 + 0.125;
                     filo_sup.position.y = 38;
-                    filo_sup.position.z = z_offset + 2.5 * chunk_size;
+                    filo_sup.position.z = z_offset + 2 * chunk_size;
                     filo_sup.setParent(parent_mesh);
                 });
             }

@@ -1,5 +1,6 @@
 //Funzione per creare la stazione
 function createStation(scene) {
+    const chunk_size = 32;
     let parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro tutta la stazione
     parent_mesh.isVisible = false;  //rendo l'ancora invisibile
     
@@ -62,7 +63,7 @@ function createStation(scene) {
         if(x_offset < 0) pannello.rotation.y = Math.PI;
         pannello.material = hv;
         pannello.position.x = -18.5;
-        pannello.position.y = 21;
+        pannello.position.y = 32.75;
         pannello.position.z = 0;
         pannello.setParent(parent_mesh);
     }

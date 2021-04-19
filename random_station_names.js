@@ -34,7 +34,6 @@ function createSigns(scene) {
             plane.material = material;
             plane.position.x = -30;
             plane.position.y = 12.8;
-            //plane.position.z = (z_offset + chunk_size) - 20;
             if(n==2) plane.rotation.y = Math.PI;
             plane.setParent(parent_mesh);
         }

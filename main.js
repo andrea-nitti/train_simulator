@@ -3,8 +3,6 @@
 //Progetto: Train Simulator
 //Descrizione: Un simulatore di guida di treni, in cui la velocità del mezzo, lungo una rotaia infinita, potrà essere decisa e modificata in corsa
 
-const chunk_size = 32;  //chunk = unità di terreno usata per la generazione procedurale
-const segment_size = 10;    //segment = numero di chunk di blocco di ferrovia generata dalla funzione cretaeTerrain()
 let wire, terrain_chunk, ringhiera;
 let sun, vegetali;
 
@@ -105,10 +103,10 @@ function setupScene(engine, camera, scene) {
         
         vegetali = [albero1, albero2];
         
-        let segments = [];  //array che contiene 5 segmenti da 10 chunks l'uno di terreno ferroviario
-        for(let i=0; i<5; i++) {
+        let segments = [];  //array che contiene 4 modelli di terreno ferroviario
+        for(let i=0; i<16; i++) {
             let Terrain = createTerrain(scene);
-            Terrain.position.z = i * chunk_size * segment_size;
+            Terrain.position.z = i * 256;
             segments.push(Terrain);
         }
         
@@ -148,6 +146,7 @@ function setupScene(engine, camera, scene) {
         masterPlane.material = campo;
         masterPlane.rotation.x = Math.PI/2;
         masterPlane.position.y = -0.875;
+        //masterPlane.position.y = -0.8;
         
         let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
         
@@ -190,12 +189,13 @@ function setupScene(engine, camera, scene) {
             if(velocita < 0) velocita = 0;
             spazio += velocita;
             camera.position.z = spazio;
-            if(camera.position.z > (2.5 * segment_size * chunk_size) + segments[0].position.z) {   //sposto il primo segmento di terreno se ho superato la metà del secondo
-                segments[0].position.z += segments.length * segment_size * chunk_size;
+            if(camera.position.z > (2 * 256) + segments[0].position.z) {   //sposto il primo modello di terreno se ho superato l'inizio del terzo
+                segments[0].position.z += segments.length * 256;
                 segments.push(segments.shift());    //il primo elemento diventa l'ultimo
             }
-            if(camera.position.z > stazione.position.z + 2.5 * segment_size * chunk_size) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2/5 * segment_size * chunk_size)
-                stazione.position.z += segment_size * chunk_size * Math.floor((200 + Math.random() * 801) / chunk_size);  //sposto l'ultima stazione ad almeno 2 km di distanza dalla precedente; la massima distanza ammessa è 10 km
+            if(camera.position.z > stazione.position.z + 2 * 256) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
+                //stazione.position.z += 256 * Math.floor(200 + Math.random() * 801);  //sposto l'ultima stazione ad almeno 2 km di distanza dalla precedente; la massima distanza ammessa è 10 km
+                stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);
                 cities[0].position.z = stazione.position.z;
                 cities.push(cities.shift());
                 let indice = Math.floor(Math.random() * listaCartelli.length);
@@ -205,7 +205,7 @@ function setupScene(engine, camera, scene) {
                     listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
                 }
             }
-            if(camera.position.z > Foresta1.position.z + 5 * segment_size * chunk_size) {
+            if(camera.position.z > Foresta1.position.z + 5 * 256) {
                 Foresta1.position.z += stazione.position.z + 1024;
                 Foresta2.position.z += stazione.position.z + 1024;
             }
