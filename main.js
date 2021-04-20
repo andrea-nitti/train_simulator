@@ -6,6 +6,10 @@
 let wire, terrain_chunk, ringhiera;
 let sun, vegetali;
 
+//parametri per la larghezza e l'altezza di ciascun cartello per ogni stazione
+const planeWidth = 10;
+const planeHeight = 3;
+
 window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe sono state riadattate a partire da MYLIB.js
         const barra = document.getElementById('bar');
         const progresso = document.getElementById('progress');

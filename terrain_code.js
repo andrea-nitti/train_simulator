@@ -45,7 +45,6 @@ function createTerrain(scene) {
             filo_inf.material = colnero;
             filo_inf.rotation.x = Math.PI/2;
             filo_inf.position.x = x_offset;
-            //filo_inf.position.y = 18.35;
             filo_inf.position.y = 27.75;
             filo_inf.position.z = z_offset;
             filo_inf.setParent(parent_mesh);

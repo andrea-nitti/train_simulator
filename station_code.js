@@ -4,8 +4,6 @@ function createStation(scene) {
     let parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro tutta la stazione
     parent_mesh.isVisible = false;  //rendo l'ancora invisibile
     
-    const planeWidth = 10;
-    const planeHeight = 3;
     z_offset = 0 * chunk_size;
     
     let sostegno_v = BABYLON.MeshBuilder.CreateCylinder('sostegno_v', {diameter: 0.8, height: 8}, scene);   //palo di sostegno per il cartello

@@ -15,8 +15,6 @@ function createSigns(scene) {
         parent_mesh.isVisible = false;  //rendo l'ancora invisibile
         const material = new BABYLON.StandardMaterial("material", scene);
         material.emissiveColor = new BABYLON.Color3(1, 1, 1);
-        const planeWidth = 10;
-        const planeHeight = 3;
         let DTWidth = planeWidth * 60;      //i moltiplicatori sono uguali per mantenere l'aspect ratio
         let DTHeight = planeHeight * 60;
         let nome_stazione = listaCitta[i];
