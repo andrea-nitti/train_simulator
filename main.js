@@ -11,54 +11,61 @@ const planeWidth = 10;
 const planeHeight = 3;
 
 window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe sono state riadattate a partire da MYLIB.js
-        const barra = document.getElementById('bar');
-        const progresso = document.getElementById('progress');
+        const caricamento = document.getElementById('loadingScreen');
         const canvas = document.getElementById('renderCanvas');
         canvas.addEventListener('wheel', evt => evt.preventDefault());
         const engine = new BABYLON.Engine(canvas, true);
-        const scene = new BABYLON.Scene(engine);
-        const camera = new BABYLON.UniversalCamera('cam',new BABYLON.Vector3(-8,7.5,0), scene);
-        camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
-        camera.attachControl(canvas,true);
+        function schermoDiCaricamento() {}
+        schermoDiCaricamento.prototype.displayLoadingUI = function() {caricamento.innerHTML = "Loading";}  //".prototype" consente di aggiungere una nuova proprietà (displayLoadingUI) al costruttore di un oggetto (schermoDiCaricamento)
+        schermoDiCaricamento.prototype.hideLoadingUI = function() {caricamento.style.display = "none";}
+        engine.loadingScreen = new schermoDiCaricamento();
+        engine.displayLoadingUI();
+        let ritardaCreazioneScena = function() {
+            const scene = new BABYLON.Scene(engine);
+            const camera = new BABYLON.UniversalCamera('cam',new BABYLON.Vector3(-8,7.5,0), scene);
+            camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
+            camera.attachControl(canvas,true);
 
-        sun = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
-        sun.setDirectionToTarget(BABYLON.Vector3.Zero());
-	    sun.intensity = 1;
-        sun.diffuse = new BABYLON.Color3(1, 1, 0.8);
-        //sun.parent = camera;
-        
-        inizializzaColori(scene);
-        
-        scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
-        
-        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "filo.obj", scene, (meshes) => {
-            wire = meshes;
-            BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "chunk_binario.obj", scene, (meshes) => {
-                terrain_chunk = meshes;
-                BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "ringhiera.obj", scene, (meshes) => {
-                    ringhiera = meshes;
-                    BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "paloL.obj", scene, (meshes) => {
-                        leftPole = meshes;
-                        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "paloR.obj", scene, (meshes) => {
-                            rightPole = meshes;
-                            BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "casaAlta.obj", scene, (meshes) => {
-                                palazzo = meshes;
-                                BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "casaBassa.obj", scene, (meshes) => {
-                                    casa = meshes;
-                                    BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "albero1.obj", scene, (meshes) => {
-                                        albero1 = meshes;
-                                        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "albero2.obj", scene, (meshes) => {
-                                            albero2 = meshes;
-                                            setupScene(engine, camera, scene);
-                                            ringhiera.forEach(x => x.dispose() );
-                                            terrain_chunk.forEach(x => x.dispose() );
-                                            leftPole.forEach(x => x.dispose() );
-                                            rightPole.forEach(x => x.dispose() );
-                                            palazzo.forEach(x => x.dispose() );
-                                            casa.forEach(x => x.dispose() );
-                                            wire.forEach(x => x.dispose() );
-                                            albero1.forEach(x => x.dispose() );
-                                            albero2.forEach(x => x.dispose() );
+            sun = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
+            sun.setDirectionToTarget(BABYLON.Vector3.Zero());
+	        sun.intensity = 1;
+            sun.diffuse = new BABYLON.Color3(1, 1, 0.8);
+            //sun.parent = camera;
+            
+            inizializzaColori(scene);
+            
+            scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
+            
+            BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "filo.obj", scene, (meshes) => {
+                wire = meshes;
+                BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "chunk_binario.obj", scene, (meshes) => {
+                    terrain_chunk = meshes;
+                    BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "ringhiera.obj", scene, (meshes) => {
+                        ringhiera = meshes;
+                        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "paloL.obj", scene, (meshes) => {
+                            leftPole = meshes;
+                            BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "paloR.obj", scene, (meshes) => {
+                                rightPole = meshes;
+                                BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "casaAlta.obj", scene, (meshes) => {
+                                    palazzo = meshes;
+                                    BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "casaBassa.obj", scene, (meshes) => {
+                                        casa = meshes;
+                                        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "albero1.obj", scene, (meshes) => {
+                                            albero1 = meshes;
+                                            BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "albero2.obj", scene, (meshes) => {
+                                                albero2 = meshes;
+                                                setupScene(engine, camera, scene);
+                                                ringhiera.forEach(x => x.dispose() );
+                                                terrain_chunk.forEach(x => x.dispose() );
+                                                leftPole.forEach(x => x.dispose() );
+                                                rightPole.forEach(x => x.dispose() );
+                                                palazzo.forEach(x => x.dispose() );
+                                                casa.forEach(x => x.dispose() );
+                                                wire.forEach(x => x.dispose() );
+                                                albero1.forEach(x => x.dispose() );
+                                                albero2.forEach(x => x.dispose() );
+                                                engine.hideLoadingUI();
+                                            });
                                         });
                                     });
                                 });
@@ -67,26 +74,9 @@ window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe
                     });
                 });
             });
-        });
-        
-        var i = 0;  //barra di caricamento (tratta da https://www.w3schools.com/howto/howto_js_progressbar.asp)
-        var width = 10;
-        if (i == 0) {
-            i = 1;
-            var id = setInterval(frame, 10);
-            function frame() {
-                if (width >= 100) {
-                    clearInterval(id);
-                    i = 0;
-                    barra.style.display = "none";
-                    progresso.style.display = "none";
-                } else {
-                    width++;
-                    barra.style.width = width + "%";
-                    barra.innerHTML = "Loading: " + width + "%";
-                }
-            }
+            return scene
         }
+        let scene = ritardaCreazioneScena();
 });
 
 function setupScene(engine, camera, scene) {
@@ -187,12 +177,14 @@ function setupScene(engine, camera, scene) {
             else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1;   //pomeriggio-sera
             else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
             
+            masterPlane.position.z = camera.position.z; //aggiorno la posizione del terreno
             
-            masterPlane.position.z = camera.position.z;
             velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
             if(velocita < 0) velocita = 0;
+            
             spazio += velocita;
             camera.position.z = spazio;
+            
             if(camera.position.z > (2 * 256) + segments[0].position.z) {   //sposto il primo modello di terreno se ho superato l'inizio del terzo
                 segments[0].position.z += segments.length * 256;
                 segments.push(segments.shift());    //il primo elemento diventa l'ultimo
@@ -213,12 +205,12 @@ function setupScene(engine, camera, scene) {
                 Foresta1.position.z += stazione.position.z + 1024;
                 Foresta2.position.z += stazione.position.z + 1024;
             }
+            
             velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);  //il fattore 10 serve a rendere più realistici i valori
             spazioOverlay.innerText = "Spazio: " + Math.floor(spazio * 10);
         });
         engine.runRenderLoop(()=>scene.render());
         window.addEventListener("resize", () => engine.resize());
-        
         window.addEventListener("keydown", function(evt) {
             if(evt.keyCode === 87 && velocita < 32) { //rilevo la pressione del tasto W
                 velocita += 0.025;    //accelerazione
