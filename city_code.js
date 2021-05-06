@@ -37,16 +37,16 @@ function cittaP1(scene, posx, posz, citiesParentMesh) {
 
     terrenoCitta(scene, posx+302.5, posz+240, citiesParentMesh);
 
-    muro(scene, posx+48, posz+240, Math.PI/2, citiesParentMesh);
-    muro(scene, posx+560, posz+240, Math.PI/2, citiesParentMesh);
+    muro(scene, posx+48, posz+240, citiesParentMesh);
+    muro(scene, posx+560, posz+240, citiesParentMesh);
     
     albero(scene, posx+100, posz+300, citiesParentMesh);
     albero(scene, posx+120, posz+340, citiesParentMesh);
     albero(scene, posx+165, posz+310, citiesParentMesh);
-    albero(scene, posx+170, posz+360, citiesParentMesh);
+    //albero(scene, posx+170, posz+360, citiesParentMesh);
 
     albero(scene, posx+290, posz+135, citiesParentMesh);
-    albero(scene, posx+310, posz+175, citiesParentMesh);
+    //albero(scene, posx+310, posz+175, citiesParentMesh);
     albero(scene, posx+355, posz+145, citiesParentMesh);
     albero(scene, posx+360, posz+195, citiesParentMesh);
 }
@@ -78,8 +78,8 @@ function cittaP2(scene, posx, posz, citiesParentMesh) {
 
     terrenoCitta(scene, posx+302.5, posz+240, citiesParentMesh);
 
-    muro(scene, posx+48, posz+240, Math.PI/2, citiesParentMesh);
-    muro(scene, posx+560, posz+240, Math.PI/2, citiesParentMesh);
+    muro(scene, posx+48, posz+240, citiesParentMesh);
+    muro(scene, posx+560, posz+240, citiesParentMesh);
     
     for(let r=200; r<401; r+=50) {
         for(let i=10; i<461; i+=50) {
@@ -145,8 +145,8 @@ function cittaP3(scene, posx, posz, citiesParentMesh) {
 
     terrenoCitta(scene, posx+302.5, posz+240, citiesParentMesh);
 
-    muro(scene, posx+48, posz+240, Math.PI/2, citiesParentMesh);
-    muro(scene, posx+560, posz+240, Math.PI/2, citiesParentMesh);
+    muro(scene, posx+48, posz+240, citiesParentMesh);
+    muro(scene, posx+560, posz+240, citiesParentMesh);
 }
 
 function cittaP4(scene, posx, posz, citiesParentMesh) {
@@ -199,25 +199,25 @@ function cittaP4(scene, posx, posz, citiesParentMesh) {
 
     terrenoCitta(scene, posx+302.5, posz+240, citiesParentMesh);
 
-    muro(scene, posx+48, posz+240, Math.PI/2, citiesParentMesh);
-    muro(scene, posx+560, posz+240, Math.PI/2, citiesParentMesh);
+    muro(scene, posx+48, posz+240, citiesParentMesh);
+    muro(scene, posx+560, posz+240, citiesParentMesh);
     
     albero(scene, posx+66, posz+4, citiesParentMesh);
-    albero(scene, posx+70, posz+54, citiesParentMesh);
+    //albero(scene, posx+70, posz+54, citiesParentMesh);
     albero(scene, posx+70, posz+96, citiesParentMesh);
-    albero(scene, posx+68, posz+148, citiesParentMesh);
+    //albero(scene, posx+68, posz+148, citiesParentMesh);
     albero(scene, posx+70, posz+208, citiesParentMesh);
-    albero(scene, posx+74, posz+250, citiesParentMesh);
+    //albero(scene, posx+74, posz+250, citiesParentMesh);
     albero(scene, posx+72, posz+304, citiesParentMesh);
-    albero(scene, posx+70, posz+348, citiesParentMesh);
+    //albero(scene, posx+70, posz+348, citiesParentMesh);
     albero(scene, posx+70, posz+403, citiesParentMesh);
-    albero(scene, posx+68, posz+458, citiesParentMesh);
+    //albero(scene, posx+68, posz+458, citiesParentMesh);
 }
 
-function muro(scene, posx, posz, rotazione, citiesParentMesh) {
+function muro(scene, posx, posz, citiesParentMesh) {
     var muro = BABYLON.MeshBuilder.CreateBox('muro', {width: 512, height: 16, depth: 3},scene);
     muro.material = bricks_rotated;
-    muro.rotation.y = rotazione;
+    muro.rotation.y = Math.PI/2;
     muro.position.x = posx;
     muro.position.y = 7;
     muro.position.z = posz;
@@ -281,7 +281,7 @@ function foresta(scene, posx, posz) {
     let parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro tutta la foresta
     parent_mesh.isVisible = false;  //rendo l'ancora invisibile
 
-    albero(scene, posx+160, posz+40, parent_mesh);
+    /*albero(scene, posx+160, posz+40, parent_mesh);
     albero(scene, posx+324, posz+388, parent_mesh);
     albero(scene, posx+176, posz+216, parent_mesh);
     albero(scene, posx+103, posz+300, parent_mesh);
@@ -298,7 +298,8 @@ function foresta(scene, posx, posz) {
     albero(scene, posx+282, posz+148, parent_mesh);
     albero(scene, posx+260, posz+440, parent_mesh);
     albero(scene, posx+470, posz+140, parent_mesh);
-    albero(scene, posx+88, posz+158, parent_mesh);
+    albero(scene, posx+88, posz+158, parent_mesh);*/
+    for(let i=0; i<500; i+=50) albero(scene, posx+65, posz+i, parent_mesh);
 
     casaBassa(scene, posx+170, posz+380, parent_mesh);
     casaBassa(scene, posx+290, posz+20, parent_mesh);

@@ -10,7 +10,7 @@ let sun, vegetali;
 const planeWidth = 10;
 const planeHeight = 3;
 
-window.addEventListener('DOMContentLoaded', (event) => {    //queste prime righe sono state riadattate a partire da MYLIB.js
+window.addEventListener('DOMContentLoaded', (event) => {
         const caricamento = document.getElementById('loadingScreen');
         const canvas = document.getElementById('renderCanvas');
         canvas.addEventListener('wheel', evt => evt.preventDefault());

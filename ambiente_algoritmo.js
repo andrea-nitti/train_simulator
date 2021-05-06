@@ -16,7 +16,8 @@ function createEnvironment(scene, posz) {
 }
 
 function cittaRandom(scene, posx, posz, citiesParentMesh) {
-    var random = Math.round(Math.random()*100);
+    cittaP4(scene, posx, posz, citiesParentMesh);
+    /*var random = Math.round(Math.random()*100);
     switch (true) {
         case random < 100 && random > 73:
           cittaP1(scene, posx, posz, citiesParentMesh);
@@ -30,5 +31,5 @@ function cittaRandom(scene, posx, posz, citiesParentMesh) {
         case random < 24 && random > -1:
           cittaP4(scene, posx, posz, citiesParentMesh);
           break;
-    }
+    }*/
 }

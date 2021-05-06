@@ -7,7 +7,7 @@ const listaCitta = ["Agrigento","Alessandria","Ancona","Aosta","Arezzo","Ascoli 
                   "Verona","Vibo Valentia","Vicenza","Viterbo","Tokyo","La citta' incantata","Akihabara","Namek","Valhalla","Asgard","Inferno","Purgatorio","Paradiso","Mosca","Via Lattea","Andromeda","Proxima Centauri","Luna","Marte",
                   "Cortemaggiore","Regno dei funghi","Essecorta"];
 
-//scritte sul cartello (tratto da https://doc.babylonjs.com/divingDeeper/materials/using/dynamicTexture)
+//scritte sul cartello
 function createSigns(scene) {
     let listaCartelli = []; //salvo in un array tutte le parent_mesh dei cartelli
     for(let i=0; i<listaCitta.length; i++) {
