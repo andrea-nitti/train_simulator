@@ -54,17 +54,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                             albero1 = meshes;
                                             BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "albero2.obj", scene, (meshes) => {
                                                 albero2 = meshes;
-                                                setupScene(engine, camera, scene);
-                                                ringhiera.forEach(x => x.dispose() );
-                                                terrain_chunk.forEach(x => x.dispose() );
-                                                leftPole.forEach(x => x.dispose() );
-                                                rightPole.forEach(x => x.dispose() );
-                                                palazzo.forEach(x => x.dispose() );
-                                                casa.forEach(x => x.dispose() );
-                                                wire.forEach(x => x.dispose() );
-                                                albero1.forEach(x => x.dispose() );
-                                                albero2.forEach(x => x.dispose() );
-                                                engine.hideLoadingUI();
+                                                BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "stazione0.obj", scene, (meshes) => {
+                                                    stazione0 = meshes;
+                                                    setupScene(engine, camera, scene);
+                                                    ringhiera.forEach(x => x.dispose() );
+                                                    terrain_chunk.forEach(x => x.dispose() );
+                                                    leftPole.forEach(x => x.dispose() );
+                                                    rightPole.forEach(x => x.dispose() );
+                                                    palazzo.forEach(x => x.dispose() );
+                                                    casa.forEach(x => x.dispose() );
+                                                    wire.forEach(x => x.dispose() );
+                                                    albero1.forEach(x => x.dispose() );
+                                                    albero2.forEach(x => x.dispose() );
+                                                    stazione0.forEach(x => x.dispose() );
+                                                    engine.hideLoadingUI();
+                                                });
                                             });
                                         });
                                     });

@@ -88,5 +88,10 @@ function createStation(scene) {
     tetto.position.y = 25 - 0.8;
     tetto.position.z = z_offset - chunk_size/2;
     tetto.setParent(parent_mesh);
+    stazione0.forEach(x => {
+        let staz0 = x.clone('terrain_chunk');
+        if(staz0.material.diffuseTexture != null) staz0.material.diffuseTexture.hasAlpha = true;
+        //terrain.setParent(parent_mesh);
+    });
     return parent_mesh;
 }
