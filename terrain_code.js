@@ -1,14 +1,13 @@
 //Funzione per creare il terreno della ferrovia
 function createTerrain(scene) {
-    const chunk_size = 32;
-    let parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro tutto il terreno
-    parent_mesh.isVisible = false;  //rendo l'ancora invisbile
-          
+    const chunk_size = 32;    
+    let arrayOfTerrainMeshes = [];
+    
     //creazione binari e terreno
     terrain_chunk.forEach(x => {
-        let terrain = x.clone('terrain_chunk');
-        terrain.position.z = 3.5 * 32;
-        terrain.setParent(parent_mesh);
+        let parteTerreno = x.clone('terrain_chunk');
+        parteTerreno.position.z = 3.5 * 32;
+        arrayOfTerrainMeshes.push(parteTerreno);
     });
     
     for(let i=0; i<8; i++) {   //numero di chunk da generare per ogni segmento
@@ -22,20 +21,20 @@ function createTerrain(scene) {
                     filo_sup.position.x = x_offset;
                     filo_sup.position.y = 38;
                     filo_sup.position.z = z_offset + 2 * chunk_size;
-                    filo_sup.setParent(parent_mesh);
+                    arrayOfTerrainMeshes.push(filo_sup);
                 });
             }
             leftPole.forEach(x => {
-                let palo = x.clone('palo');
-                palo.position.x = -24;
-                palo.position.z = z_offset;
-                palo.setParent(parent_mesh);
+                let partePalo = x.clone('palo');
+                partePalo.position.x = -24;
+                partePalo.position.z = z_offset;
+                arrayOfTerrainMeshes.push(partePalo);
             });
             rightPole.forEach(x => {
-                let palo = x.clone('palo');
-                palo.position.x = +24;
-                palo.position.z = z_offset;
-                palo.setParent(parent_mesh);
+                let partePalo = x.clone('palo');
+                partePalo.position.x = +24;
+                partePalo.position.z = z_offset;
+                arrayOfTerrainMeshes.push(partePalo);
             });
         }
         
@@ -47,26 +46,27 @@ function createTerrain(scene) {
             filo_inf.position.x = x_offset;
             filo_inf.position.y = 27.75;
             filo_inf.position.z = z_offset;
-            filo_inf.setParent(parent_mesh);
-            let tirante2 = BABYLON.MeshBuilder.CreateCylinder('tirante2', {height: chunk_size, diameter: 0.35}, scene); //tirante situato tra un palo ed il successivo
-            tirante2.material = metal;
-            tirante2.rotation.x = Math.PI/2;
-            if(x_offset < 0) tirante2.position.x = -24;
-            else tirante2.position.x = 24;
-            tirante2.position.y = 22.5;
-            tirante2.position.z = z_offset;
-            tirante2.setParent(parent_mesh);
+            arrayOfTerrainMeshes.push(filo_inf);
+            let tirante = BABYLON.MeshBuilder.CreateCylinder('tirante2', {height: chunk_size, diameter: 0.35}, scene);  //tirante situato tra ogni palo ed il successivo
+            tirante.material = metal;
+            tirante.rotation.x = Math.PI/2;
+            if(x_offset < 0) tirante.position.x = -24;
+            else tirante.position.x = 24;
+            tirante.position.y = 22.5;
+            tirante.position.z = z_offset;
+            arrayOfTerrainMeshes.push(tirante);
         }
         
         //creazione ringhiera (se non sono presenti stazioni)
         for(let x_offset=-48; x_offset<=48; x_offset+=96) {
             ringhiera.forEach(x => {
-                let element = x.clone('ringhiera');
-                element.position.x = x_offset;
-                element.position.z = z_offset;
-                element.setParent(parent_mesh);
+                let parteRinghiera = x.clone('ringhiera');
+                parteRinghiera.position.x = x_offset;
+                parteRinghiera.position.z = z_offset;
+                arrayOfTerrainMeshes.push(parteRinghiera);
             });
         }
     }
-    return parent_mesh;
+    var terrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTerrainMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di terreno (per motivi di efficienza)
+    return terrainMesh;
 }
