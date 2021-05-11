@@ -12,12 +12,16 @@ const planeHeight = 3;
 
 window.addEventListener('DOMContentLoaded', (event) => {
         const caricamento = document.getElementById('loadingScreen');
+        const avanzamento = document.getElementById('objectToBeLoaded');
         const canvas = document.getElementById('renderCanvas');
         canvas.addEventListener('wheel', evt => evt.preventDefault());
         const engine = new BABYLON.Engine(canvas, true);
         function schermoDiCaricamento() {}
-        schermoDiCaricamento.prototype.displayLoadingUI = function() {caricamento.innerHTML = "Loading";}  //".prototype" consente di aggiungere una nuova proprietà (displayLoadingUI) al costruttore di un oggetto (schermoDiCaricamento)
-        schermoDiCaricamento.prototype.hideLoadingUI = function() {caricamento.style.display = "none";}
+        schermoDiCaricamento.prototype.displayLoadingUI = function() {caricamento.innerHTML = "Loading assets...";} //".prototype" consente di aggiungere una nuova proprietà (displayLoadingUI) al costruttore di un oggetto (schermoDiCaricamento)
+        schermoDiCaricamento.prototype.hideLoadingUI = function() {
+        caricamento.style.display = "none";
+        avanzamento.style.display = "none";
+        }
         engine.loadingScreen = new schermoDiCaricamento();
         engine.displayLoadingUI();
         let ritardaCreazioneScena = function() {
@@ -35,27 +39,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
             inizializzaColori(scene);
             
             scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
-            
-            BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "filo.obj", scene, (meshes) => {
+            baseURL = "./assets/models/";
+            BABYLON.SceneLoader.ImportMesh('', baseURL, "filo.obj", scene, (meshes) => {
                 wire = meshes;
-                BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "chunk_binario.obj", scene, (meshes) => {
+                avanzamento.innerHTML = "(" + baseURL + "filo.obj)";
+                BABYLON.SceneLoader.ImportMesh('', baseURL, "chunk_binario.obj", scene, (meshes) => {
                     terrain_chunk = meshes;
-                    BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "ringhiera.obj", scene, (meshes) => {
+                    avanzamento.innerHTML = "(" + baseURL + "chunk_binario.obj)";
+                    BABYLON.SceneLoader.ImportMesh('', baseURL, "ringhiera.obj", scene, (meshes) => {
                         ringhiera = meshes;
-                        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "paloL.obj", scene, (meshes) => {
+                        avanzamento.innerHTML = "(" + baseURL + "ringhiera.obj)";
+                        BABYLON.SceneLoader.ImportMesh('', baseURL, "paloL.obj", scene, (meshes) => {
                             leftPole = meshes;
-                            BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "paloR.obj", scene, (meshes) => {
+                            avanzamento.innerHTML = "(" + baseURL + "paloL.obj)";
+                            BABYLON.SceneLoader.ImportMesh('', baseURL, "paloR.obj", scene, (meshes) => {
                                 rightPole = meshes;
-                                BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "casaAlta.obj", scene, (meshes) => {
+                                avanzamento.innerHTML = "(" + baseURL + "paloR.obj)";
+                                BABYLON.SceneLoader.ImportMesh('', baseURL, "casaAlta.obj", scene, (meshes) => {
                                     palazzo = meshes;
-                                    BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "casaBassa.obj", scene, (meshes) => {
+                                    avanzamento.innerHTML = "(" + baseURL + "casaAlta.obj)";
+                                    BABYLON.SceneLoader.ImportMesh('', baseURL, "casaBassa.obj", scene, (meshes) => {
                                         casa = meshes;
-                                        BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "albero1.obj", scene, (meshes) => {
+                                        avanzamento.innerHTML = "(" + baseURL + "casaBassa.obj)";
+                                        BABYLON.SceneLoader.ImportMesh('', baseURL, "albero1.obj", scene, (meshes) => {
                                             albero1 = meshes;
-                                            BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "albero2.obj", scene, (meshes) => {
+                                            avanzamento.innerHTML = "(" + baseURL + "albero1.obj)";
+                                            BABYLON.SceneLoader.ImportMesh('', baseURL, "albero2.obj", scene, (meshes) => {
                                                 albero2 = meshes;
-                                                BABYLON.SceneLoader.ImportMesh('',"./assets/models/", "stazione0.obj", scene, (meshes) => {
+                                                avanzamento.innerHTML = "(" + baseURL + "albero2.obj)";
+                                                BABYLON.SceneLoader.ImportMesh('', baseURL, "stazione0.obj", scene, (meshes) => {
                                                     stazione0 = meshes;
+                                                    avanzamento.innerHTML = "(" + baseURL + "stazione0.obj)";
                                                     setupScene(engine, camera, scene);
                                                     ringhiera.forEach(x => x.dispose() );
                                                     terrain_chunk.forEach(x => x.dispose() );

@@ -72,7 +72,17 @@
                 font-size:100px;
                 text-align:center;
                 background-color:rgb(0,0,0);
-                z-index:99; /* posiziono la schermata di caricamento davanti a tutti gli altri elementi */
+                z-index:90; /* posiziono la schermata di caricamento davanti a tutti gli altri elementi */
+            }
+            #objectToBeLoaded {
+                position:absolute;
+                top:150px;
+                width:100%;
+                height:100%;
+                color:white;
+                font-size:50px;
+                text-align:center;
+                z-index:99;
             }
         </style>
         <script src="https://cdn.babylonjs.com/babylon.js"></script>
@@ -90,6 +100,7 @@
     <body>
         <canvas id="renderCanvas" touch-action="none"></canvas>
         <div id="loadingScreen">ERROR</div>
+        <div id="objectToBeLoaded"></div>
         <div id="velocita"></div>
         <div id="spazio"></div>
         <div id="aiuto1">Premi H per mostrare/nascondere la lista dei comandi</div>
