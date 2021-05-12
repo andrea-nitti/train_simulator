@@ -40,36 +40,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
             
             scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
             baseURL = "./assets/models/";
+            avanzamento.innerHTML = "(" + baseURL + "filo.obj)";
             BABYLON.SceneLoader.ImportMesh('', baseURL, "filo.obj", scene, (meshes) => {
                 wire = meshes;
-                avanzamento.innerHTML = "(" + baseURL + "filo.obj)";
+                avanzamento.innerHTML = "(" + baseURL + "chunk_binario.obj)";
                 BABYLON.SceneLoader.ImportMesh('', baseURL, "chunk_binario.obj", scene, (meshes) => {
                     terrain_chunk = meshes;
-                    avanzamento.innerHTML = "(" + baseURL + "chunk_binario.obj)";
+                    avanzamento.innerHTML = "(" + baseURL + "ringhiera.obj)";
                     BABYLON.SceneLoader.ImportMesh('', baseURL, "ringhiera.obj", scene, (meshes) => {
                         ringhiera = meshes;
-                        avanzamento.innerHTML = "(" + baseURL + "ringhiera.obj)";
+                        avanzamento.innerHTML = "(" + baseURL + "paloL.obj)";
                         BABYLON.SceneLoader.ImportMesh('', baseURL, "paloL.obj", scene, (meshes) => {
                             leftPole = meshes;
-                            avanzamento.innerHTML = "(" + baseURL + "paloL.obj)";
+                            avanzamento.innerHTML = "(" + baseURL + "paloR.obj)";
                             BABYLON.SceneLoader.ImportMesh('', baseURL, "paloR.obj", scene, (meshes) => {
                                 rightPole = meshes;
-                                avanzamento.innerHTML = "(" + baseURL + "paloR.obj)";
+                                avanzamento.innerHTML = "(" + baseURL + "casaAlta.obj)";
                                 BABYLON.SceneLoader.ImportMesh('', baseURL, "casaAlta.obj", scene, (meshes) => {
                                     palazzo = meshes;
-                                    avanzamento.innerHTML = "(" + baseURL + "casaAlta.obj)";
+                                    avanzamento.innerHTML = "(" + baseURL + "casaBassa.obj)";
                                     BABYLON.SceneLoader.ImportMesh('', baseURL, "casaBassa.obj", scene, (meshes) => {
                                         casa = meshes;
-                                        avanzamento.innerHTML = "(" + baseURL + "casaBassa.obj)";
+                                        avanzamento.innerHTML = "(" + baseURL + "albero1.obj)";
                                         BABYLON.SceneLoader.ImportMesh('', baseURL, "albero1.obj", scene, (meshes) => {
                                             albero1 = meshes;
-                                            avanzamento.innerHTML = "(" + baseURL + "albero1.obj)";
+                                            avanzamento.innerHTML = "(" + baseURL + "albero2.obj)";
                                             BABYLON.SceneLoader.ImportMesh('', baseURL, "albero2.obj", scene, (meshes) => {
                                                 albero2 = meshes;
-                                                avanzamento.innerHTML = "(" + baseURL + "albero2.obj)";
+                                                avanzamento.innerHTML = "(" + baseURL + "stazione0.obj)";
                                                 BABYLON.SceneLoader.ImportMesh('', baseURL, "stazione0.obj", scene, (meshes) => {
                                                     stazione0 = meshes;
-                                                    avanzamento.innerHTML = "(" + baseURL + "stazione0.obj)";
+                                                    avanzamento.innerHTML = "Finalizing...";
                                                     setupScene(engine, camera, scene);
                                                     ringhiera.forEach(x => x.dispose() );
                                                     terrain_chunk.forEach(x => x.dispose() );
@@ -92,7 +93,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     });
                 });
             });
-            return scene
+            return scene;
         }
         let scene = ritardaCreazioneScena();
 });
@@ -207,7 +208,7 @@ function setupScene(engine, camera, scene) {
                 segments[0].position.z += segments.length * 256;
                 segments.push(segments.shift());    //il primo elemento diventa l'ultimo
             }
-            if(camera.position.z > stazione.position.z + 2 * 256) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
+            if(camera.position.z > stazione.position.z + 2 * 256) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256) [oppure all'origine degli assi]
                 //stazione.position.z += 256 * Math.floor(200 + Math.random() * 801);  //sposto l'ultima stazione ad almeno 2 km di distanza dalla precedente; la massima distanza ammessa è 10 km
                 stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);
                 cities[0].position.z = stazione.position.z;

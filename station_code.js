@@ -90,6 +90,7 @@ function createStation(scene) {
     tetto.setParent(parent_mesh);
     stazione0.forEach(x => {
         let staz0 = x.clone('terrain_chunk');
+        staz0.position.z = 112;
         if(staz0.material.diffuseTexture != null) staz0.material.diffuseTexture.hasAlpha = true;
         //terrain.setParent(parent_mesh);
     });
