@@ -123,7 +123,8 @@ function setupScene(engine, camera, scene) {
             segments.push(Terrain);
         }
         
-        let stazione = createStation(scene); //stazione indica la parent_mesh di tutto il complesso
+        let stazione = createStation(scene);
+        stazione.isVisible = false;
         let listaCartelli = createSigns(scene);
         let Foresta1 = foresta(scene, 20, 1024);    //Foresta1 indica la parent_mesh di tutto il complesso
         let Foresta2 = foresta(scene, -629.5, 1024);    //Foresta2 indica la parent_mesh di tutto il complesso
@@ -210,6 +211,7 @@ function setupScene(engine, camera, scene) {
             }
             if(camera.position.z > stazione.position.z + 2 * 256) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256) [oppure all'origine degli assi]
                 //stazione.position.z += 256 * Math.floor(200 + Math.random() * 801);  //sposto l'ultima stazione ad almeno 2 km di distanza dalla precedente; la massima distanza ammessa è 10 km
+                stazione.isVisible = true;
                 stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);
                 cities[0].position.z = stazione.position.z;
                 cities.push(cities.shift());
