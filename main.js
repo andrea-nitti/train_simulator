@@ -70,19 +70,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                                 avanzamento.innerHTML = "(" + baseURL + "stazione0.obj)";
                                                 BABYLON.SceneLoader.ImportMesh('', baseURL, "stazione0.obj", scene, (meshes) => {
                                                     stazione0 = meshes;
-                                                    avanzamento.innerHTML = "Finalizing...";
-                                                    setupScene(engine, camera, scene);
-                                                    ringhiera.forEach(x => x.dispose() );
-                                                    terrain_chunk.forEach(x => x.dispose() );
-                                                    leftPole.forEach(x => x.dispose() );
-                                                    rightPole.forEach(x => x.dispose() );
-                                                    palazzo.forEach(x => x.dispose() );
-                                                    casa.forEach(x => x.dispose() );
-                                                    wire.forEach(x => x.dispose() );
-                                                    albero1.forEach(x => x.dispose() );
-                                                    albero2.forEach(x => x.dispose() );
-                                                    stazione0.forEach(x => x.dispose() );
-                                                    engine.hideLoadingUI();
+                                                    avanzamento.innerHTML = "(" + baseURL + "carrozza.obj)";
+                                                    BABYLON.SceneLoader.ImportMesh('', baseURL, "carrozza.obj", scene, (meshes) => {
+                                                        carrozza = meshes;
+                                                        avanzamento.innerHTML = "Finalizing...";
+                                                        setupScene(engine, camera, scene);
+                                                        ringhiera.forEach(x => x.dispose() );
+                                                        terrain_chunk.forEach(x => x.dispose() );
+                                                        leftPole.forEach(x => x.dispose() );
+                                                        rightPole.forEach(x => x.dispose() );
+                                                        palazzo.forEach(x => x.dispose() );
+                                                        casa.forEach(x => x.dispose() );
+                                                        wire.forEach(x => x.dispose() );
+                                                        albero1.forEach(x => x.dispose() );
+                                                        albero2.forEach(x => x.dispose() );
+                                                        stazione0.forEach(x => x.dispose() );
+                                                        carrozza.forEach(x => x.dispose() );
+                                                        engine.hideLoadingUI();
+                                                    });
                                                 });
                                             });
                                         });
@@ -156,6 +161,8 @@ function setupScene(engine, camera, scene) {
             listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
         }
         
+        treno = train(scene);
+        
         let masterPlane = BABYLON.MeshBuilder.CreatePlane('masterPlane', {size: 1024}, scene);
         masterPlane.material = campo;
         masterPlane.rotation.x = Math.PI/2;
@@ -198,6 +205,8 @@ function setupScene(engine, camera, scene) {
             else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
             
             masterPlane.position.z = camera.position.z; //aggiorno la posizione del terreno
+            
+            treno.position.z = camera.position.z;
             
             velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
             if(velocita < 0) velocita = 0;

@@ -113,3 +113,15 @@ function musolat(scene, posx, posz, colore) {
     musolat.position.z = posz;
     musolat.material = colore;
 }
+
+function train(scene) {
+    arrayOfTrainMeshes = [];
+    carrozza.forEach(x => {
+        let parteTreno = x.clone('carrozza');
+        parteTreno.position.x = 8;
+        //parteTreno.material.wireframe = true;
+        arrayOfTrainMeshes.push(parteTreno);
+    });
+    var trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
+    return trainMesh;
+}
