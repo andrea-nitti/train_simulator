@@ -122,7 +122,7 @@ function setupScene(engine, camera, scene) {
         vegetali = [albero1, albero2];
         
         let segments = [];  //array che contiene 4 modelli di terreno ferroviario
-        for(let i=0; i<16; i++) {
+        for(let i=0; i<12; i++) {
             let Terrain = createTerrain(scene);
             Terrain.position.z = i * 256;
             segments.push(Terrain);

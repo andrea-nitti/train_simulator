@@ -121,6 +121,11 @@ function train(scene) {
         parteTreno.position.x = 8;
         //parteTreno.material.wireframe = true;
         arrayOfTrainMeshes.push(parteTreno);
+        if(parteTreno.material.diffuseTexture != null) {
+            parteTreno.material.diffuseTexture.hasAlpha = true;
+            //parteTreno.material.useAlphaFromDiffuseTexture = true;
+            parteTreno.material.backFaceCulling = false;
+        }
     });
     var trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
     return trainMesh;
