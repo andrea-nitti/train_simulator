@@ -138,10 +138,10 @@ function setupScene(engine, camera, scene) {
         let velocita = 0;
         
         //manipolo la nebbia
-        /*scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
-        scene.fogDensity = 0.005;
-        scene.fogColor = new BABYLON.Color3(0.494, 0.604, 0.686);*/
-        //skybox.applyFog = false;
+        scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
+        scene.fogDensity = 0.001;
+        scene.fogColor = new BABYLON.Color3(0.494, 0.604, 0.686);
+        skybox.applyFog = false;
         
         horn = new BABYLON.Sound("horn", "./assets/sounds/horn.ogg", scene);    //sirena
         
@@ -214,7 +214,7 @@ function setupScene(engine, camera, scene) {
             spazio += velocita;
             camera.position.z = spazio;
             
-            if(camera.position.z > (2 * 256) + segments[0].position.z) {   //sposto il primo modello di terreno se ho superato l'inizio del terzo
+            if(camera.position.z > (4 * 256) + segments[0].position.z) {   //sposto il primo modello di terreno se ho superato l'inizio del terzo
                 segments[0].position.z += segments.length * 256;
                 segments.push(segments.shift());    //il primo elemento diventa l'ultimo
             }
