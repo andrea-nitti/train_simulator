@@ -127,6 +127,12 @@ function train(scene) {
             parteTreno.material.backFaceCulling = false;
         }
     });
+    carrovuoto.forEach(x => {
+        let parteCarro = x.clone('carrovuoto');
+        parteCarro.position.x = 8;
+        parteCarro.position.z = 70;
+        arrayOfTrainMeshes.push(parteCarro);
+    });
     var trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
     return trainMesh;
 }
