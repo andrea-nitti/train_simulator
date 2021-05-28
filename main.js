@@ -5,6 +5,7 @@
 
 let wire, terrain_chunk, ringhiera;
 let sun, vegetali;
+const importedModelsList = ["filo.obj","chunk_binario.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj"];
 
 //parametri per la larghezza e l'altezza di ciascun cartello per ogni stazione
 const planeWidth = 10;
@@ -34,75 +35,47 @@ window.addEventListener('DOMContentLoaded', (event) => {
             sun.setDirectionToTarget(BABYLON.Vector3.Zero());
 	        sun.intensity = 1;
             sun.diffuse = new BABYLON.Color3(1, 1, 0.8);
-            //sun.parent = camera;
             
             inizializzaColori(scene);
             
             scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
-            baseURL = "./assets/models/";
-            avanzamento.innerHTML = "(" + baseURL + "filo.obj)";
-            BABYLON.SceneLoader.ImportMesh('', baseURL, "filo.obj", scene, (meshes) => {
-                wire = meshes;
-                avanzamento.innerHTML = "(" + baseURL + "chunk_binario.obj)";
-                BABYLON.SceneLoader.ImportMesh('', baseURL, "chunk_binario.obj", scene, (meshes) => {
-                    terrain_chunk = meshes;
-                    avanzamento.innerHTML = "(" + baseURL + "ringhiera.obj)";
-                    BABYLON.SceneLoader.ImportMesh('', baseURL, "ringhiera.obj", scene, (meshes) => {
-                        ringhiera = meshes;
-                        avanzamento.innerHTML = "(" + baseURL + "paloL.obj)";
-                        BABYLON.SceneLoader.ImportMesh('', baseURL, "paloL.obj", scene, (meshes) => {
-                            leftPole = meshes;
-                            avanzamento.innerHTML = "(" + baseURL + "paloR.obj)";
-                            BABYLON.SceneLoader.ImportMesh('', baseURL, "paloR.obj", scene, (meshes) => {
-                                rightPole = meshes;
-                                avanzamento.innerHTML = "(" + baseURL + "casaAlta.obj)";
-                                BABYLON.SceneLoader.ImportMesh('', baseURL, "casaAlta.obj", scene, (meshes) => {
-                                    palazzo = meshes;
-                                    avanzamento.innerHTML = "(" + baseURL + "casaBassa.obj)";
-                                    BABYLON.SceneLoader.ImportMesh('', baseURL, "casaBassa.obj", scene, (meshes) => {
-                                        casa = meshes;
-                                        avanzamento.innerHTML = "(" + baseURL + "albero1.obj)";
-                                        BABYLON.SceneLoader.ImportMesh('', baseURL, "albero1.obj", scene, (meshes) => {
-                                            albero1 = meshes;
-                                            avanzamento.innerHTML = "(" + baseURL + "albero2.obj)";
-                                            BABYLON.SceneLoader.ImportMesh('', baseURL, "albero2.obj", scene, (meshes) => {
-                                                albero2 = meshes;
-                                                avanzamento.innerHTML = "(" + baseURL + "stazione0.obj)";
-                                                BABYLON.SceneLoader.ImportMesh('', baseURL, "stazione0.obj", scene, (meshes) => {
-                                                    stazione0 = meshes;
-                                                    avanzamento.innerHTML = "(" + baseURL + "carrozza.obj)";
-                                                    BABYLON.SceneLoader.ImportMesh('', baseURL, "carrozza.obj", scene, (meshes) => {
-                                                        carrozza = meshes;
-                                                        avanzamento.innerHTML = "(" + baseURL + "carrovuoto.obj)";
-                                                        BABYLON.SceneLoader.ImportMesh('', baseURL, "carrovuoto.obj", scene, (meshes) => {
-                                                            carrovuoto = meshes;
-                                                            avanzamento.innerHTML = "Finalizing...";
-                                                            setupScene(engine, camera, scene);
-                                                            ringhiera.forEach(x => x.dispose() );
-                                                            terrain_chunk.forEach(x => x.dispose() );
-                                                            leftPole.forEach(x => x.dispose() );
-                                                            rightPole.forEach(x => x.dispose() );
-                                                            palazzo.forEach(x => x.dispose() );
-                                                            casa.forEach(x => x.dispose() );
-                                                            wire.forEach(x => x.dispose() );
-                                                            albero1.forEach(x => x.dispose() );
-                                                            albero2.forEach(x => x.dispose() );
-                                                            stazione0.forEach(x => x.dispose() );
-                                                            carrozza.forEach(x => x.dispose() );
-                                                            carrovuoto.forEach(x => x.dispose() );
-                                                            engine.hideLoadingUI();
-                                                        });
-                                                    });
-                                                });
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
+            var assetsManager = new BABYLON.AssetsManager(scene);
+            importedModelsList.forEach(x => {
+                let importMesh = assetsManager.addMeshTask("task", "", "./assets/models/", x);
+                importMesh.onSuccess = function(task) {
+                    avanzamento.innerHTML = "(./assets/models/" + x + ")";
+                    switch(x) {
+                        case "filo.obj": wire = task.loadedMeshes; break;
+                        case "chunk_binario.obj": terrain_chunk = task.loadedMeshes; break;
+                        case "ringhiera.obj": ringhiera = task.loadedMeshes; break;
+                        case "paloL.obj": leftPole = task.loadedMeshes; break;
+                        case "paloR.obj": rightPole = task.loadedMeshes; break;
+                        case "casaAlta.obj": palazzo = task.loadedMeshes; break;
+                        case "casaBassa.obj": casa = task.loadedMeshes; break;
+                        case "albero1.obj": albero1 = task.loadedMeshes; break;
+                        case "albero2.obj": albero2 = task.loadedMeshes; break;
+                        case "stazione0.obj": stazione0 = task.loadedMeshes; break;
+                        case "carrozza.obj": carrozza = task.loadedMeshes; break;
+                        case "carrovuoto.obj": carrovuoto = task.loadedMeshes; break;
+                    }
+                }
             });
+            assetsManager.onFinish = function (tasks) {
+                setupScene(engine, camera, scene);
+                ringhiera.forEach(x => x.dispose() );
+                terrain_chunk.forEach(x => x.dispose() );
+                leftPole.forEach(x => x.dispose() );
+                rightPole.forEach(x => x.dispose() );
+                palazzo.forEach(x => x.dispose() );
+                casa.forEach(x => x.dispose() );
+                wire.forEach(x => x.dispose() );
+                albero1.forEach(x => x.dispose() );
+                albero2.forEach(x => x.dispose() );
+                stazione0.forEach(x => x.dispose() );
+                carrozza.forEach(x => x.dispose() );
+                carrovuoto.forEach(x => x.dispose() );
+            }
+            assetsManager.load();
             return scene;
         }
         let scene = ritardaCreazioneScena();
