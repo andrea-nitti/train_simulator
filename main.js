@@ -20,65 +20,62 @@ window.addEventListener('DOMContentLoaded', (event) => {
         function schermoDiCaricamento() {}
         schermoDiCaricamento.prototype.displayLoadingUI = function() {caricamento.innerHTML = "Loading assets...";} //".prototype" consente di aggiungere una nuova proprietà (displayLoadingUI) al costruttore di un oggetto (schermoDiCaricamento)
         schermoDiCaricamento.prototype.hideLoadingUI = function() {
-        caricamento.style.display = "none";
-        avanzamento.style.display = "none";
+            caricamento.style.display = "none";
+            avanzamento.style.display = "none";
         }
         engine.loadingScreen = new schermoDiCaricamento();
         engine.displayLoadingUI();
-        let ritardaCreazioneScena = function() {
-            const scene = new BABYLON.Scene(engine);
-            const camera = new BABYLON.UniversalCamera('cam',new BABYLON.Vector3(-8,7.5,0), scene);
-            camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
-            camera.attachControl(canvas,true);
+        const scene = new BABYLON.Scene(engine);
+        const camera = new BABYLON.UniversalCamera('cam',new BABYLON.Vector3(-8,7.5,0), scene);
+        camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
+        camera.attachControl(canvas,true);
 
-            sun = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
-            sun.setDirectionToTarget(BABYLON.Vector3.Zero());
-	        sun.intensity = 1;
-            sun.diffuse = new BABYLON.Color3(1, 1, 0.8);
-            
-            inizializzaColori(scene);
-            
-            scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
-            var assetsManager = new BABYLON.AssetsManager(scene);
-            importedModelsList.forEach(x => {
-                let importMesh = assetsManager.addMeshTask("task", "", "./assets/models/", x);
-                importMesh.onSuccess = function(task) {
-                    avanzamento.innerHTML = "(./assets/models/" + x + ")";
-                    switch(x) {
-                        case "filo.obj": wire = task.loadedMeshes; break;
-                        case "chunk_binario.obj": terrain_chunk = task.loadedMeshes; break;
-                        case "ringhiera.obj": ringhiera = task.loadedMeshes; break;
-                        case "paloL.obj": leftPole = task.loadedMeshes; break;
-                        case "paloR.obj": rightPole = task.loadedMeshes; break;
-                        case "casaAlta.obj": palazzo = task.loadedMeshes; break;
-                        case "casaBassa.obj": casa = task.loadedMeshes; break;
-                        case "albero1.obj": albero1 = task.loadedMeshes; break;
-                        case "albero2.obj": albero2 = task.loadedMeshes; break;
-                        case "stazione0.obj": stazione0 = task.loadedMeshes; break;
-                        case "carrozza.obj": carrozza = task.loadedMeshes; break;
-                        case "carrovuoto.obj": carrovuoto = task.loadedMeshes; break;
-                    }
+        sun = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
+        sun.setDirectionToTarget(BABYLON.Vector3.Zero());
+	    sun.intensity = 1;
+        sun.diffuse = new BABYLON.Color3(1, 1, 0.8);
+        
+        inizializzaColori(scene);
+        
+        scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
+        var assetsManager = new BABYLON.AssetsManager(scene);
+        assetsManager.useDefaultLoadingScreen = false;
+        importedModelsList.forEach(x => {
+            let importMesh = assetsManager.addMeshTask("task", "", "./assets/models/", x);
+            importMesh.onSuccess = function(task) {
+                avanzamento.innerHTML = "(./assets/models/" + x + ")";
+                switch(x) {
+                    case "filo.obj": wire = task.loadedMeshes; break;
+                    case "chunk_binario.obj": terrain_chunk = task.loadedMeshes; break;
+                    case "ringhiera.obj": ringhiera = task.loadedMeshes; break;
+                    case "paloL.obj": leftPole = task.loadedMeshes; break;
+                    case "paloR.obj": rightPole = task.loadedMeshes; break;
+                    case "casaAlta.obj": palazzo = task.loadedMeshes; break;
+                    case "casaBassa.obj": casa = task.loadedMeshes; break;
+                    case "albero1.obj": albero1 = task.loadedMeshes; break;
+                    case "albero2.obj": albero2 = task.loadedMeshes; break;
+                    case "stazione0.obj": stazione0 = task.loadedMeshes; break;
+                    case "carrozza.obj": carrozza = task.loadedMeshes; break;
+                    case "carrovuoto.obj": carrovuoto = task.loadedMeshes; break;
                 }
-            });
-            assetsManager.onFinish = function (tasks) {
-                setupScene(engine, camera, scene);
-                ringhiera.forEach(x => x.dispose() );
-                terrain_chunk.forEach(x => x.dispose() );
-                leftPole.forEach(x => x.dispose() );
-                rightPole.forEach(x => x.dispose() );
-                palazzo.forEach(x => x.dispose() );
-                casa.forEach(x => x.dispose() );
-                wire.forEach(x => x.dispose() );
-                albero1.forEach(x => x.dispose() );
-                albero2.forEach(x => x.dispose() );
-                stazione0.forEach(x => x.dispose() );
-                carrozza.forEach(x => x.dispose() );
-                carrovuoto.forEach(x => x.dispose() );
             }
-            assetsManager.load();
-            return scene;
+        });
+        assetsManager.onFinish = function(tasks) {
+            setupScene(engine, camera, scene);
+            ringhiera.forEach(x => x.dispose() );
+            terrain_chunk.forEach(x => x.dispose() );
+            leftPole.forEach(x => x.dispose() );
+            rightPole.forEach(x => x.dispose() );
+            palazzo.forEach(x => x.dispose() );
+            casa.forEach(x => x.dispose() );
+            wire.forEach(x => x.dispose() );
+            albero1.forEach(x => x.dispose() );
+            albero2.forEach(x => x.dispose() );
+            stazione0.forEach(x => x.dispose() );
+            carrozza.forEach(x => x.dispose() );
+            carrovuoto.forEach(x => x.dispose() );
         }
-        let scene = ritardaCreazioneScena();
+        assetsManager.load();
 });
 
 function setupScene(engine, camera, scene) {
