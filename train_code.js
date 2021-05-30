@@ -4,7 +4,7 @@
 
 //////////////////////////// ! ! ! ! ! ZONA TRENO ! ! ! ! ! ////////////////////////////
 
-function treno(scene) {
+/*function treno(scene) {
     carrozza(scene, 8, 100);
     carrozza(scene, 8, 170);
     locomotiva(scene, 8, 30, 3, -3, 33, Math.PI/16*5.7);
@@ -112,27 +112,35 @@ function musolat(scene, posx, posz, colore) {
     musolat.position.y = 6;
     musolat.position.z = posz;
     musolat.material = colore;
-}
+}*/
 
 function train(scene) {
     arrayOfTrainMeshes = [];
-    carrozza.forEach(x => {
-        let parteTreno = x.clone('carrozza');
-        parteTreno.position.x = 8;
-        //parteTreno.material.wireframe = true;
-        arrayOfTrainMeshes.push(parteTreno);
-        if(parteTreno.material.diffuseTexture != null) {
-            parteTreno.material.diffuseTexture.hasAlpha = true;
-            //parteTreno.material.useAlphaFromDiffuseTexture = true;
-            parteTreno.material.backFaceCulling = false;
-        }
-    });
-    carrovuoto.forEach(x => {
-        let parteCarro = x.clone('carrovuoto');
-        parteCarro.position.x = 8;
-        parteCarro.position.z = 70;
-        arrayOfTrainMeshes.push(parteCarro);
-    });
+    for(let i=0; i<9; i++) carro(scene, 8, i*67.6, arrayOfTrainMeshes);
     var trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
     return trainMesh;
+}
+
+function carrozza(scene, posx, posz, arrayOfTrainMeshes) {
+    carrozza.forEach(x => {
+    let parteCarrozza = x.clone('carrozza');
+    parteCarrozza.position.x = posx;
+    parteCarrozza.position.z = posz;
+    arrayOfTrainMeshes.push(parteCarrozza);
+    //parteCarrozza.material.wireframe = true;
+    if(parteCarrozza.material.diffuseTexture != null) {
+        parteCarrozza.material.diffuseTexture.hasAlpha = true;
+        //parteCarrozza.material.useAlphaFromDiffuseTexture = true;
+        parteCarrozza.material.backFaceCulling = false;
+    }
+    });
+}
+
+function carro(scene, posx, posz, arrayOfTrainMeshes) {
+    carrovuoto.forEach(x => {
+        let parteCarro = x.clone('carrovuoto');
+        parteCarro.position.x = posx;
+        parteCarro.position.z = posz;
+        arrayOfTrainMeshes.push(parteCarro);
+    });
 }
