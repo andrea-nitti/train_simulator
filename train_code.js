@@ -116,23 +116,24 @@ function musolat(scene, posx, posz, colore) {
 
 function train(scene) {
     arrayOfTrainMeshes = [];
-    for(let i=0; i<9; i++) carro(scene, 8, i*67.6, arrayOfTrainMeshes);
+    //for(let i=0; i<9; i++) carro(scene, 8, i*67.6, arrayOfTrainMeshes);
+    locomotiva(scene, 8, 0, arrayOfTrainMeshes);
     var trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
     return trainMesh;
 }
 
 function carrozza(scene, posx, posz, arrayOfTrainMeshes) {
     carrozza.forEach(x => {
-    let parteCarrozza = x.clone('carrozza');
-    parteCarrozza.position.x = posx;
-    parteCarrozza.position.z = posz;
-    arrayOfTrainMeshes.push(parteCarrozza);
-    //parteCarrozza.material.wireframe = true;
-    if(parteCarrozza.material.diffuseTexture != null) {
-        parteCarrozza.material.diffuseTexture.hasAlpha = true;
-        //parteCarrozza.material.useAlphaFromDiffuseTexture = true;
-        parteCarrozza.material.backFaceCulling = false;
-    }
+        let parteCarrozza = x.clone('carrozza');
+        parteCarrozza.position.x = posx;
+        parteCarrozza.position.z = posz;
+        arrayOfTrainMeshes.push(parteCarrozza);
+        //parteCarrozza.material.wireframe = true;
+        if(parteCarrozza.material.diffuseTexture != null) {
+            parteCarrozza.material.diffuseTexture.hasAlpha = true;
+            //parteCarrozza.material.useAlphaFromDiffuseTexture = true;
+            parteCarrozza.material.backFaceCulling = false;
+        }
     });
 }
 
@@ -142,5 +143,20 @@ function carro(scene, posx, posz, arrayOfTrainMeshes) {
         parteCarro.position.x = posx;
         parteCarro.position.z = posz;
         arrayOfTrainMeshes.push(parteCarro);
+    });
+}
+
+function locomotiva(scene, posx, posz, arrayOfTrainMeshes) {
+    locomotore.forEach(x => {
+        let parteLocomotore = x.clone('locomotore');
+        parteLocomotore.position.x = posx;
+        parteLocomotore.position.z = posz;
+        arrayOfTrainMeshes.push(parteLocomotore);
+        //parteLocomotore.material.wireframe = true;
+        if(parteLocomotore.material.diffuseTexture != null) {
+            parteLocomotore.material.diffuseTexture.hasAlpha = true;
+            //parteLocomotore.material.useAlphaFromDiffuseTexture = true;
+            parteLocomotore.material.backFaceCulling = false;
+        }
     });
 }

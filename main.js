@@ -5,7 +5,7 @@
 
 let wire, terrain_chunk, ringhiera;
 let sun, vegetali;
-const importedModelsList = ["filo.obj","chunk_binario.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj"];
+const importedModelsList = ["filo.obj","chunk_binario.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj"];
 
 //parametri per la larghezza e l'altezza di ciascun cartello per ogni stazione
 const planeWidth = 10;
@@ -57,6 +57,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     case "stazione0.obj": stazione0 = task.loadedMeshes; break;
                     case "carrozza.obj": carrozza = task.loadedMeshes; break;
                     case "carrovuoto.obj": carrovuoto = task.loadedMeshes; break;
+                    case "locomotore.obj": locomotore = task.loadedMeshes; break;
                 }
             }
         });
@@ -74,6 +75,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             stazione0.forEach(x => x.dispose() );
             carrozza.forEach(x => x.dispose() );
             carrovuoto.forEach(x => x.dispose() );
+            locomotore.forEach(x => x.dispose() );
         }
         assetsManager.load();
 });
