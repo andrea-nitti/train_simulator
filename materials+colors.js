@@ -32,6 +32,8 @@ function inizializzaColori(scene) {
     erba.diffuseTexture = new BABYLON.Texture("./assets/textures/erba.jpg", scene);
     campo = new BABYLON.StandardMaterial('campo', scene);
     campo.diffuseTexture = new BABYLON.Texture("./assets/textures/campo3.jpg", scene);
+    
+    droplet = new BABYLON.Texture("./assets/textures/rain--2.png");
 }
 
 function colori(scene, numerocol) {

@@ -138,7 +138,20 @@ function setupScene(engine, camera, scene) {
             listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
         }
         
-        treno = train(scene);
+        //treno = train(scene);
+        
+        const rainParticleSystem = new BABYLON.GPUParticleSystem('rain', {capacity: 100000, randomTextureSize: 4096}, scene);
+        rainParticleSystem.particleTexture = droplet;
+        let emitter = rainParticleSystem.createBoxEmitter(new BABYLON.Vector3(0, -150, 0), new BABYLON.Vector3(0, -250, 0), new BABYLON.Vector3(-75, 0, -400), new BABYLON.Vector3(75, 0, 400));
+        rainParticleSystem.emitter = new BABYLON.Vector3(0, 75, 0);
+        rainParticleSystem.minLifeTime = 4;
+        rainParticleSystem.maxLifeTime = 7;
+        rainParticleSystem.minSize = 0.5;
+        rainParticleSystem.maxSize = 2.0;
+        rainParticleSystem.minScaleX = 0.05;
+        rainParticleSystem.maxScaleX = 0.1;
+        rainParticleSystem.emitRate = 6500;
+        rainParticleSystem.start();
         
         let masterPlane = BABYLON.MeshBuilder.CreatePlane('masterPlane', {size: 1024}, scene);
         masterPlane.material = campo;
@@ -181,9 +194,11 @@ function setupScene(engine, camera, scene) {
             else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1;   //pomeriggio-sera
             else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
             
-            masterPlane.position.z = camera.position.z; //aggiorno la posizione del terreno
+            masterPlane.position.z = camera.position.z + 300; //aggiorno la posizione del terreno
             
-            treno.position.z = camera.position.z;
+            rainParticleSystem.emitter.z = camera.position.z;
+            
+            //treno.position.z = camera.position.z;
             
             velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
             if(velocita < 0) velocita = 0;
@@ -228,7 +243,7 @@ function setupScene(engine, camera, scene) {
             if(evt.keyCode === 38 && camera.position.y <= 64) {    //freccia superiore (la telecamera può salire di un'altezza limitata rispetto al terreno)
                 camera.position.y += 0.5;            
             }
-            if(evt.keyCode === 40 && camera.position.y > 0.5) { //freccia inferiore (non consento alla telecamera di scendere sotto il terreno)
+            if(evt.keyCode === 40 && camera.position.y > -0.5) { //freccia inferiore (non consento alla telecamera di scendere sotto il terreno)
                 camera.position.y -= 0.5;
             }
             if(evt.keyCode === 32) {    //barra spaziatrice
