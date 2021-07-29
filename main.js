@@ -92,7 +92,6 @@ function setupScene(engine, camera, scene) {
         skyboxMaterial.alpha = 1;
         skybox.material = skyboxMaterial;
         skybox.infiniteDistance = true;
-        //skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox", scene);
         skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v4", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         
@@ -150,8 +149,19 @@ function setupScene(engine, camera, scene) {
         rainParticleSystem.maxSize = 2.0;
         rainParticleSystem.minScaleX = 0.05;
         rainParticleSystem.maxScaleX = 0.1;
-        rainParticleSystem.emitRate = 6500;
-        rainParticleSystem.start();
+        
+        let lightningPlane = BABYLON.MeshBuilder.CreatePlane('lightningPlane', {size: 256}, scene);
+        lightningPlane.material = lightning1;
+        lightningPlane.position.z = 400;
+        lightningPlane.position.y = 100;
+        lightningPlane.applyFog = false;
+        lightningPlane.infiniteDistance = true;
+        lightningPlane.isVisible = false;
+        
+        let globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
+        weather(rainParticleSystem, lightningPlane, globalWeatherState);
+        //let finishTimeStamp = values[0];
+        //let weatherState = values[1];
         
         let masterPlane = BABYLON.MeshBuilder.CreatePlane('masterPlane', {size: 1024}, scene);
         masterPlane.material = campo;
@@ -197,6 +207,7 @@ function setupScene(engine, camera, scene) {
             masterPlane.position.z = camera.position.z + 300; //aggiorno la posizione del terreno
             
             rainParticleSystem.emitter.z = camera.position.z;
+            weather(rainParticleSystem, lightningPlane, globalWeatherState);
             
             //treno.position.z = camera.position.z;
             

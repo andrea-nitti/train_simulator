@@ -226,7 +226,6 @@ function muro(scene, posx, posz, arrayOfCityMeshes) {
 }
 
 function casaAlta(scene, posx, posz, arrayOfCityMeshes) {
-    //console.log({x:posx, z:posz});
     palazzo.forEach(x => {
         let partePalazzo = x.clone('palazzo');
         partePalazzo.position.x = posx+32;
