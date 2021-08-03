@@ -151,9 +151,15 @@ function setupScene(engine, camera, scene) {
         rainParticleSystem.maxScaleX = 0.1;
         
         lightningPlanes = createLightning(scene);
+        thunder1 = new BABYLON.Sound("thunder1", "./assets/sounds/thunder1.ogg", scene);
+        thunder2 = new BABYLON.Sound("thunder2", "./assets/sounds/thunder2.ogg", scene);
+        thunder3 = new BABYLON.Sound("thunder3", "./assets/sounds/thunder3.ogg", scene);
+        thunder4 = new BABYLON.Sound("thunder4", "./assets/sounds/thunder4.ogg", scene);
+        thunder5 = new BABYLON.Sound("thunder5", "./assets/sounds/thunder5.ogg", scene);
+        thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
         
         let globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
-        weather(rainParticleSystem, lightningPlanes, globalWeatherState);
+        weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeatherState);
         
         let masterPlane = BABYLON.MeshBuilder.CreatePlane('masterPlane', {size: 1024}, scene);
         masterPlane.material = campo;
@@ -199,7 +205,7 @@ function setupScene(engine, camera, scene) {
             masterPlane.position.z = camera.position.z + 300; //aggiorno la posizione del terreno
             
             rainParticleSystem.emitter.z = camera.position.z;
-            weather(rainParticleSystem, lightningPlanes, globalWeatherState);
+            weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeatherState);
             
             //treno.position.z = camera.position.z;
             

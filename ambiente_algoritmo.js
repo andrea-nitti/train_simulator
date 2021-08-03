@@ -33,7 +33,7 @@ function cittaRandom(scene, posx, posz, arrayOfCityMeshes) {
 }
 
 //Funzione per il tempo atmosferico
-function weather(rainParticleSystem, lightningPlanes, globalWeatherState) {
+function weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeatherState) {
     let timeStamp = new Date().valueOf() / 1000;    //valueOf() --> millisecondi trascorsi dall'01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
         globalWeatherState.weatherState = Math.floor(Math.random()*3);   //numero intero compreso tra 0 (incluso) e 3 (escluso)
@@ -58,9 +58,13 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState) {
     }
     else if(globalWeatherState.weatherState == 2) {
         if(Math.floor(Math.random()*500) == 1) {
-            selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length) //scelgo un fulmine a caso dall'array da "illuminare"
+            selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length);    //scelgo un fulmine a caso dall'array da "illuminare"
+            selectedThunderSound = Math.floor(Math.random() * thunderSounds.length);    //scelgo un tuono a caso dall'array da riprodurre
             lightningPlanes[selectedLightningPlane].isVisible = true;
-            setTimeout(function() {lightningPlanes[selectedLightningPlane].isVisible = false;}, 200);    //il fulmine rimane visibile per 0,2 secondi
+            setTimeout(function() {
+                lightningPlanes[selectedLightningPlane].isVisible = false;
+                thunderSounds[selectedThunderSound].play();
+            }, 200);    //il fulmine rimane visibile per 0,2 secondi
         }
     }
 }
