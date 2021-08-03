@@ -33,10 +33,6 @@ function inizializzaColori(scene) {
     campo = new BABYLON.StandardMaterial('campo', scene);
     campo.diffuseTexture = new BABYLON.Texture("./assets/textures/campo3.jpg", scene);
     droplet = new BABYLON.Texture("./assets/textures/rain--2.png");
-    lightning1 = new BABYLON.StandardMaterial('lightning1', scene);
-    lightning1.diffuseTexture = new BABYLON.Texture("./assets/textures/lightning1.png");
-    lightning1.diffuseTexture.hasAlpha = true;
-    lightning1.emissiveColor = new BABYLON.Color3(8, 8, 8);
 }
 
 function colori(scene, numerocol) {

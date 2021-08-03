@@ -33,7 +33,7 @@ function cittaRandom(scene, posx, posz, arrayOfCityMeshes) {
 }
 
 //Funzione per il tempo atmosferico
-function weather(rainParticleSystem, lightningPlane, globalWeatherState) {
+function weather(rainParticleSystem, lightningPlanes, globalWeatherState) {
     let timeStamp = new Date().valueOf() / 1000;    //valueOf() --> millisecondi trascorsi dall'01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
         globalWeatherState.weatherState = Math.floor(Math.random()*3);   //numero intero compreso tra 0 (incluso) e 3 (escluso)
@@ -55,14 +55,33 @@ function weather(rainParticleSystem, lightningPlane, globalWeatherState) {
         duration = 60 * (1 + Math.round(Math.random()*4));    //la durata prima di ogni transizione è misurata in minuti
         console.log(duration);
         globalWeatherState.finishTimeStamp = timeStamp+duration;
-        //return {finishTimeStamp: timeStamp+duration, weatherState: weatherState};
     }
     else if(globalWeatherState.weatherState == 2) {
-        //console.log('dentro la funzione del fulmine');
         if(Math.floor(Math.random()*500) == 1) {
-            lightningPlane.isVisible = true;
-            setTimeout(function() {lightningPlane.isVisible = false;}, 200);
+            selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length) //scelgo un fulmine a caso dall'array da "illuminare"
+            lightningPlanes[selectedLightningPlane].isVisible = true;
+            setTimeout(function() {lightningPlanes[selectedLightningPlane].isVisible = false;}, 200);    //il fulmine rimane visibile per 0,2 secondi
         }
     }
-    //return {finishTimeStamp: finishTimeStamp, weatherState: weatherState};
+}
+
+//funzione per i fulmini
+function createLightning(scene) {
+    let lightningImages = ["lightning1","lightning2","lightning3","lightning4","lightning5"];
+    let lightningPlanes = [];
+    lightningImages.forEach(x => {
+        let lightningPlane = BABYLON.MeshBuilder.CreatePlane('lightningPlane', {size: 256}, scene);
+        lightningTexture = new BABYLON.StandardMaterial('lightningTexture', scene);
+        lightningTexture.diffuseTexture = new BABYLON.Texture("./assets/textures/" + x + ".png");
+        lightningTexture.diffuseTexture.hasAlpha = true;
+        lightningTexture.emissiveColor = new BABYLON.Color3(8, 8, 8);
+        lightningPlane.material = lightningTexture;
+        lightningPlane.position.z = 400;
+        lightningPlane.position.y = 100;
+        lightningPlane.applyFog = false;
+        lightningPlane.infiniteDistance = true;
+        lightningPlane.isVisible = false;
+        lightningPlanes.push(lightningPlane);
+    })
+    return lightningPlanes;
 }
