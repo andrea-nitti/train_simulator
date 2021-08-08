@@ -33,21 +33,27 @@ function cittaRandom(scene, posx, posz, arrayOfCityMeshes) {
 }
 
 //Funzione per il tempo atmosferico
-function weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeatherState) {
+function weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeatherState,  rain, thunderstorm) {
     let timeStamp = new Date().valueOf() / 1000;    //valueOf() --> millisecondi trascorsi dall'01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
         globalWeatherState.weatherState = Math.floor(Math.random()*3);   //numero intero compreso tra 0 (incluso) e 3 (escluso)
         console.log(globalWeatherState.weatherState);
         switch(globalWeatherState.weatherState) {
             case 0:  //sereno
+                rain.stop();
+                thunderstorm.stop();
                 rainParticleSystem.stop();
                 rainParticleSystem.reset();
                 break;
             case 1:  //pioggia
+                thunderstorm.stop();
+                rain.play();
                 rainParticleSystem.emitRate = 6500;
                 rainParticleSystem.start();
                 break;
             case 2:  //temporale
+                rain.stop();
+                thunderstorm.play();
                 rainParticleSystem.emitRate = 8500;
                 rainParticleSystem.start();
                 break;
@@ -69,7 +75,7 @@ function weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeath
     }
 }
 
-//funzione per i fulmini
+//Funzione per i fulmini
 function createLightning(scene) {
     let lightningImages = ["lightning1","lightning2","lightning3","lightning4","lightning5"];
     let lightningPlanes = [];

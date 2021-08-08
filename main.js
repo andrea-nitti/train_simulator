@@ -5,7 +5,9 @@
 
 let wire, terrain_chunk, ringhiera;
 let sun, vegetali;
+let rain, thunderstorm;
 const importedModelsList = ["filo.obj","chunk_binario.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj"];
+const importedSoundsList = ["rain.ogg","thunderstorm.ogg"];
 
 //parametri per la larghezza e l'altezza di ciascun cartello per ogni stazione
 const planeWidth = 10;
@@ -59,7 +61,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     case "carrovuoto.obj": carrovuoto = task.loadedMeshes; break;
                     case "locomotore.obj": locomotore = task.loadedMeshes; break;
                 }
-            }
+            };
+            importMesh.onError = function(task, message) {console.log(message);};
+        });
+        importedSoundsList.forEach(x => {
+            let importSound = assetsManager.addBinaryFileTask("task", "./assets/sounds/" + x);
+            importSound.onSuccess = function(task) {
+                avanzamento.innerHTML = "(./assets/sounds/" + x + ")";
+                switch(x) {
+                    case "rain.ogg": rain = new BABYLON.Sound("rain", task.data, scene); break;
+                    case "thunderstorm.ogg": thunderstorm = new BABYLON.Sound("thunderstorm", task.data, scene); break;
+                }
+            };
+            importSound.onError = function(task, message) {console.log(message);};
         });
         assetsManager.onFinish = function(tasks) {
             setupScene(engine, camera, scene);
@@ -157,9 +171,9 @@ function setupScene(engine, camera, scene) {
         thunder4 = new BABYLON.Sound("thunder4", "./assets/sounds/thunder4.ogg", scene);
         thunder5 = new BABYLON.Sound("thunder5", "./assets/sounds/thunder5.ogg", scene);
         thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
+        //BABYLON.Engine.audioEngine.unlock()
         
         let globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
-        weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeatherState);
         
         let masterPlane = BABYLON.MeshBuilder.CreatePlane('masterPlane', {size: 1024}, scene);
         masterPlane.material = campo;
@@ -205,7 +219,9 @@ function setupScene(engine, camera, scene) {
             masterPlane.position.z = camera.position.z + 300; //aggiorno la posizione del terreno
             
             rainParticleSystem.emitter.z = camera.position.z;
-            weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeatherState);
+            
+            if (rain.isReady() && thunderstorm.isReady())
+                weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeatherState, rain, thunderstorm);
             
             //treno.position.z = camera.position.z;
             
