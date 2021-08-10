@@ -35,6 +35,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
         const camera = new BABYLON.UniversalCamera('cam',new BABYLON.Vector3(-8,7.5,0), scene);
         camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
         camera.attachControl(canvas,true);
+        //camera.maxZ = 4096; la skybox diventa invisibile
 
         sun = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
         sun.setDirectionToTarget(BABYLON.Vector3.Zero());
@@ -87,6 +88,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
         });
         assetsManager.onFinish = function(tasks) {
             setupScene(engine, camera, scene, cities_boolean, forests_boolean, trains_boolean);
+            scene.blockfreeActiveMeshesAndRenderingGroups = true;
             ringhiera.forEach(x => x.dispose() );
             terrain_chunk.forEach(x => x.dispose() );
             leftPole.forEach(x => x.dispose() );
@@ -100,6 +102,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
             carrozza.forEach(x => x.dispose() );
             carrovuoto.forEach(x => x.dispose() );
             locomotore.forEach(x => x.dispose() );
+            scene.blockfreeActiveMeshesAndRenderingGroups = false;
         }
         assetsManager.load();
 }
