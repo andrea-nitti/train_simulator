@@ -88,7 +88,7 @@
                 display:none;
             }
             #config {
-                position:absolute;
+                /*position:absolute;*/
                 margin:0% 10%;
             }
             #config button {
@@ -97,14 +97,48 @@
                 text-align:center;
                 padding:15px 32px;
                 cursor:pointer;
-                background-color:#4CAF50;
+                background-color:#2196F3;
             }
             #config p {
                 font-size:20px;
                 font-weight:bold;
             }
+            #config ul {
+                padding-left:0;
+            }
             #config label {
                 font-size:20px;
+            }
+            #config input {
+                /*position:absolute;*/
+                opacity:0;
+                cursor:pointer;
+                height:   0;
+                width:   0;
+            }
+            #config label {
+                position:relative;
+                padding-left:  35px;
+                font-size:   22px;
+            }
+            .square {
+                position:absolute;
+                background-color:#f00;
+                height:   25px;
+                width:   25px;
+            }
+            .square:after {
+                position:absolute;
+                display:none;
+            }
+            #config li:hover input ~ .square {
+                background-color:#ddd;
+            }
+            #config input:checked ~ .square {
+                background-color:#0f0;
+            }
+            #config input:checked ~ .square:after {
+                display:block;
             }
         </style>
         <script src="https://cdn.babylonjs.com/babylon.js"></script>
@@ -134,13 +168,11 @@
     <body>
         <canvas id="renderCanvas" touch-action="none"></canvas>
         <div id="config">
-            <p>Seleziona quale funzionalità includere:</p>
-            <input type="checkbox" id="città"/>
-            <label for="città">abilita la formazione di città</label><br><br>
-            <input type="checkbox" id="foreste"/>
-            <label for="foreste">abilita la formazione di foreste</label><br><br>
-            <input type="checkbox" id="treno"/>
-            <label for="treno">abilita un convoglio</label><br><br>
+            <ul style="list-style-type:none"><p>Seleziona quale funzionalità includere:</p>
+                <li><input type="checkbox" id="città"/><span class="square"></span> <label for="città">abilita la formazione di città</label><br><br></li>
+                <li><input type="checkbox" id="foreste"/><span class="square"></span> <label for="foreste">abilita la formazione di foreste</label><br><br></li>
+                <li><input type="checkbox" id="treno"/><span class="square"></span> <label for="treno">abilita un convoglio</label><br><br></li>
+            </ul>
             <button id="avvia" tabindex="-1">Start!</button>
         </div>
         <div id="loadingScreen">ERROR</div>
