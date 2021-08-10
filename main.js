@@ -14,10 +14,13 @@ const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.o
 const planeWidth = 10;
 const planeHeight = 3;
 
-window.addEventListener('DOMContentLoaded', (event) => {
+function startEverything(cities_boolean, forests_boolean, trains_boolean) {
         const caricamento = document.getElementById('loadingScreen');
+        caricamento.style.display = "block";
         const avanzamento = document.getElementById('objectToBeLoaded');
+        avanzamento.style.display = "block";
         const canvas = document.getElementById('renderCanvas');
+        canvas.style.display = "block";
         canvas.addEventListener('wheel', evt => evt.preventDefault());
         const engine = new BABYLON.Engine(canvas, true);
         function schermoDiCaricamento() {}
@@ -83,7 +86,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             importSound.onError = function(task, message) {console.log(message);};
         });
         assetsManager.onFinish = function(tasks) {
-            setupScene(engine, camera, scene);
+            setupScene(engine, camera, scene, cities_boolean, forests_boolean, trains_boolean);
             ringhiera.forEach(x => x.dispose() );
             terrain_chunk.forEach(x => x.dispose() );
             leftPole.forEach(x => x.dispose() );
@@ -99,9 +102,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             locomotore.forEach(x => x.dispose() );
         }
         assetsManager.load();
-});
+}
 
-function setupScene(engine, camera, scene) {
+function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trains_boolean) {
         const velocitaOverlay = document.getElementById('velocita');
         const spazioOverlay = document.getElementById('spazio');
         const aiutoOverlay = document.getElementById('aiuto2');
@@ -128,8 +131,12 @@ function setupScene(engine, camera, scene) {
         let stazione = createStation(scene);
         stazione.isVisible = false;
         let listaCartelli = createSigns(scene);
-        let Foresta1 = foresta(scene, 20, 1024);    //Foresta1 indica la parent_mesh di tutto il complesso
-        let Foresta2 = foresta(scene, -629.5, 1024);    //Foresta2 indica la parent_mesh di tutto il complesso
+        
+        let Foresta1, Foresta2;
+        if(forests_boolean) {
+            Foresta1 = foresta(scene, 20, 1024);    //Foresta1 indica la parent_mesh di tutto il complesso
+            Foresta2 = foresta(scene, -629.5, 1024);    //Foresta2 indica la parent_mesh di tutto il complesso
+        }
         
         let spazio = 0;
         let velocita = 0;
@@ -141,13 +148,15 @@ function setupScene(engine, camera, scene) {
         skybox.applyFog = false;
         
         let cities = [];    //array che contiene la lista delle parentMesh di 5*3*2 città
-        for(let i=0; i<5; i++) {
-            let city = createEnvironment(scene, 0);
-            city.position.z = -100000;
-            cities.push(city);
+        if(cities_boolean) {
+            for(let i=0; i<5; i++) {
+                let city = createEnvironment(scene, 0);
+                city.position.z = -100000;
+                cities.push(city);
+            }
+            cities[0].position.z = stazione.position.z;
+            cities.push(cities.shift());
         }
-        cities[0].position.z = stazione.position.z;
-        cities.push(cities.shift());
         
         let indice = Math.floor(Math.random() * listaCartelli.length);
         let cartello = listaCartelli[indice];
@@ -156,7 +165,10 @@ function setupScene(engine, camera, scene) {
             listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
         }
         
-        //let treno = train(scene);
+        let treno;
+        if(trains_boolean) {
+            treno = train(scene);
+        }
         
         const rainParticleSystem = new BABYLON.GPUParticleSystem('rain', {capacity: 100000, randomTextureSize: 4096}, scene);
         rainParticleSystem.particleTexture = droplet;
@@ -170,8 +182,6 @@ function setupScene(engine, camera, scene) {
         rainParticleSystem.maxScaleX = 0.1;
         
         let lightningPlanes = createLightning(scene);
-        //BABYLON.Engine.audioEngine.unlock()
-        
         let globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
         
         let masterPlane = BABYLON.MeshBuilder.CreatePlane('masterPlane', {size: 1024}, scene);
@@ -222,7 +232,9 @@ function setupScene(engine, camera, scene) {
             if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady())
                 weather(rainParticleSystem, lightningPlanes, globalWeatherState, skyboxMaterial);
             
-            //treno.position.z = camera.position.z;
+            if(trains_boolean) {
+                treno.position.z = camera.position.z;
+            }
             
             velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
             if(velocita < 0) velocita = 0;
@@ -238,8 +250,10 @@ function setupScene(engine, camera, scene) {
                 //stazione.position.z += 256 * Math.floor(200 + Math.random() * 801);  //sposto l'ultima stazione ad almeno 2 km di distanza dalla precedente; la massima distanza ammessa è 10 km
                 stazione.isVisible = true;
                 stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);
-                cities[0].position.z = stazione.position.z;
-                cities.push(cities.shift());
+                if(cities_boolean) {
+                    cities[0].position.z = stazione.position.z;
+                    cities.push(cities.shift());
+                }
                 let indice = Math.floor(Math.random() * listaCartelli.length);
                 let cartello = listaCartelli[indice];
                 if(cartello != undefined) {
@@ -247,9 +261,11 @@ function setupScene(engine, camera, scene) {
                     listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
                 }
             }
-            if(camera.position.z > Foresta1.position.z + 5 * 256) {
-                Foresta1.position.z += stazione.position.z + 1024;
-                Foresta2.position.z += stazione.position.z + 1024;
+            if(forests_boolean) {
+                if(camera.position.z > Foresta1.position.z + 5 * 256) {
+                    Foresta1.position.z += stazione.position.z + 1024;
+                    Foresta2.position.z += stazione.position.z + 1024;
+                }
             }
             
             velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);  //il fattore 10 serve a rendere più realistici i valori
