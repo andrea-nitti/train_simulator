@@ -6,7 +6,12 @@ function createTerrain(scene) {
     
     //creazione binari e terreno
     terrain_chunk.forEach(x => {
-        let parteTerreno = x.clone('terrain_chunk');
+        let parteBinario = x.clone('terrain_chunk');
+        parteBinario.position.z = 3.5 * 32;
+        arrayOfTerrainMeshes.push(parteBinario);
+    });
+    gravelPlane.forEach(x => {
+        let parteTerreno = x.clone('gravelPlane');
         parteTerreno.position.z = 3.5 * 32;
         arrayOfTerrainMeshes.push(parteTerreno);
     });

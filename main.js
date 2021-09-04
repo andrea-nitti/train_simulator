@@ -4,10 +4,10 @@
 //Descrizione: Un simulatore di guida di treni, in cui la velocità del mezzo, lungo una rotaia infinita, potrà essere decisa e modificata in corsa
 
 "use strict";
-let wire, terrain_chunk, ringhiera, leftPole, rightPole, casa, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore;   //models
+let wire, terrain_chunk, gravelPlane, ringhiera, leftPole, rightPole, casa, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore;  //models
 let sun, vegetali;
 let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5; //sounds
-const importedModelsList = ["filo.obj","chunk_binario.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj"];
+const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj"];
 const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg"];
 
 //parametri per la larghezza e l'altezza di ciascun cartello per ogni stazione
@@ -54,6 +54,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
                 switch(x) {
                     case "filo.obj": wire = task.loadedMeshes; break;
                     case "chunk_binario.obj": terrain_chunk = task.loadedMeshes; break;
+                    case "ground.obj": gravelPlane = task.loadedMeshes; break;
                     case "ringhiera.obj": ringhiera = task.loadedMeshes; break;
                     case "paloL.obj": leftPole = task.loadedMeshes; break;
                     case "paloR.obj": rightPole = task.loadedMeshes; break;
@@ -91,6 +92,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
             scene.blockfreeActiveMeshesAndRenderingGroups = true;
             ringhiera.forEach(x => x.dispose() );
             terrain_chunk.forEach(x => x.dispose() );
+            gravelPlane.forEach(x => x.dispose() );
             leftPole.forEach(x => x.dispose() );
             rightPole.forEach(x => x.dispose() );
             palazzo.forEach(x => x.dispose() );
