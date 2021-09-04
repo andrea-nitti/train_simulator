@@ -76,3 +76,15 @@ function createTerrain(scene) {
     var terrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTerrainMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di terreno (per motivi di efficienza)
     return terrainMesh;
 }
+
+//Funzione per creare un ponte
+function createBridge(scene) {
+    ponte1.forEach(x => {
+        let partePonte = x.clone('ponte1');
+        partePonte.position.z = 1024;
+    })
+    ponte1.forEach(x => {
+        let partePonte = x.clone('ponte1');
+        partePonte.position.z = 1024 + 512;
+    })
+}
