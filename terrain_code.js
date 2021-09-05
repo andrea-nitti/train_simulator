@@ -17,6 +17,16 @@ function createTerrain(scene) {
         arrayOfDynamicTerrainMeshes.push(parteTerreno);
     });
     
+    //creazione ringhiera
+    for(let x_offset=-48; x_offset<=48; x_offset+=96) {
+        ringhiera.forEach(x => {
+            let parteRinghiera = x.clone('ringhiera');
+            parteRinghiera.position.x = x_offset;
+            parteRinghiera.position.z = 3.5 * 32;
+            arrayOfDynamicTerrainMeshes.push(parteRinghiera);
+        });
+    }
+    
     for(let i=0; i<8; i++) {   //numero di chunk da generare per ogni segmento
         let z_offset = i * chunk_size;
         
@@ -62,16 +72,6 @@ function createTerrain(scene) {
             tirante.position.y = 22.5;
             tirante.position.z = z_offset;
             arrayOfBaseTerrainMeshes.push(tirante);
-        }
-        
-        //creazione ringhiera (se non sono presenti stazioni)
-        for(let x_offset=-48; x_offset<=48; x_offset+=96) {
-            ringhiera.forEach(x => {
-                let parteRinghiera = x.clone('ringhiera');
-                parteRinghiera.position.x = x_offset;
-                parteRinghiera.position.z = z_offset;
-                arrayOfBaseTerrainMeshes.push(parteRinghiera);
-            });
         }
     }
     var baseTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfBaseTerrainMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di terreno (per motivi di efficienza)
