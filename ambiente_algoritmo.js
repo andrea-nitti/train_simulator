@@ -78,7 +78,6 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
     }
 }
 
-//Funzione per i fulmini
 function createLightning(scene) {
     let lightningImages = ["lightning1","lightning2","lightning3","lightning4","lightning5"];
     let lightningPlanes = [];

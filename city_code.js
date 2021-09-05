@@ -1,10 +1,4 @@
 "use strict";
-//////////////////////////// ! ! ! ! ! ZONA CITTÀ ! ! ! ! ! ////////////////////////////
-
-//////////////////////////// ! ! ! ! ! ZONA CITTÀ ! ! ! ! ! ////////////////////////////
-
-//////////////////////////// ! ! ! ! ! ZONA CITTÀ ! ! ! ! ! ////////////////////////////
-
 function cittaP1(scene, posx, posz, arrayOfCityMeshes) {
     casaAlta(scene, posx+64, posz, arrayOfCityMeshes);
     casaAlta(scene, posx+64, posz+80, arrayOfCityMeshes);

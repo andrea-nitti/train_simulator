@@ -233,7 +233,8 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1;   //pomeriggio-sera
             else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
             
-            masterPlane.position.z = camera.position.z + 300; //aggiorno la posizione del terreno
+            //masterPlane.position.z = camera.position.z + 300; //aggiorno la posizione del terreno
+            if(camera.position.z < ((1024-1024) + 1024*1/4) ^ camera.position.z > (1024+512+(1024*3/4))) masterPlane.position.z = camera.position.z;
             
             rainParticleSystem.emitter.z = camera.position.z;
             
