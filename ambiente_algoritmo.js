@@ -38,7 +38,6 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
     let timeStamp = new Date().valueOf() / 1000;    //valueOf() --> millisecondi trascorsi dall'01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
         globalWeatherState.weatherState = Math.floor(Math.random()*3);   //numero intero compreso tra 0 (incluso) e 3 (escluso)
-        console.log("Weather: " + globalWeatherState.weatherState);
         switch(globalWeatherState.weatherState) {
             case 0:  //sereno
                 rain.stop();
@@ -60,7 +59,7 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
                 break;
         }
         let duration = 60 * (1 + Math.round(Math.random()*4));    //la durata prima di ogni transizione è misurata in minuti
-        console.log("Duration: " + duration + " seconds");
+        console.log({Weather: globalWeatherState.weatherState, Duration: duration + " seconds"});
         globalWeatherState.finishTimeStamp = timeStamp+duration;
     }
     else if(globalWeatherState.weatherState == 2) {

@@ -131,7 +131,8 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
         let segments = [];  //array che contiene 4 modelli di terreno ferroviario
         for(let i=0; i<12; i++) {
             let Terrain = createTerrain(scene);
-            Terrain.position.z = i * 256;
+            Terrain.railRoad.position.z = i * 256;
+            Terrain.terrain.position.z = i * 256;
             segments.push(Terrain);
         }
         
@@ -192,12 +193,6 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
         let lightningPlanes = createLightning(scene);
         let globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
         
-        let masterPlane = BABYLON.MeshBuilder.CreatePlane('masterPlane', {size: 1024}, scene);
-        masterPlane.material = campo;
-        masterPlane.rotation.x = Math.PI/2;
-        masterPlane.position.y = -0.875;
-        //masterPlane.position.y = -0.8;
-        
         let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
         
         //animazione
@@ -234,7 +229,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
             
             //masterPlane.position.z = camera.position.z + 300; //aggiorno la posizione del terreno
-            if(camera.position.z < ((1024-1024) + 1024*1/4) ^ camera.position.z > (1024+512+(1024*3/4))) masterPlane.position.z = camera.position.z;
+            //if(camera.position.z < ((1024-1024) + 1024*1/4) ^ camera.position.z > (1024+512+(1024*3/4))) masterPlane.position.z = camera.position.z;
             
             rainParticleSystem.emitter.z = camera.position.z;
             
@@ -251,8 +246,9 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             spazio += velocita;
             camera.position.z = spazio;
             
-            if(camera.position.z > (4 * 256) + segments[0].position.z) {   //sposto il primo modello di terreno se ho superato l'inizio del terzo
-                segments[0].position.z += segments.length * 256;
+            if(camera.position.z > (4 * 256) + segments[0].railRoad.position.z) {   //sposto il primo modello di terreno se ho superato l'inizio del terzo
+                segments[0].railRoad.position.z += segments.length * 256;
+                segments[0].terrain.position.z += segments.length * 256;
                 segments.push(segments.shift());    //il primo elemento diventa l'ultimo
             }
             if(camera.position.z > stazione.position.z + 2 * 256) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256) [oppure all'origine degli assi]

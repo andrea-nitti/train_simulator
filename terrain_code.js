@@ -2,18 +2,19 @@
 //Funzione per creare il terreno della ferrovia
 function createTerrain(scene) {
     const chunk_size = 32;    
-    let arrayOfTerrainMeshes = [];
+    let arrayOfBaseTerrainMeshes = [];
+    let arrayOfDynamicTerrainMeshes = [];
     
     //creazione binari e terreno
     terrain_chunk.forEach(x => {
         let parteBinario = x.clone('terrain_chunk');
         parteBinario.position.z = 3.5 * 32;
-        arrayOfTerrainMeshes.push(parteBinario);
+        arrayOfBaseTerrainMeshes.push(parteBinario);
     });
     gravelPlane.forEach(x => {
         let parteTerreno = x.clone('gravelPlane');
         parteTerreno.position.z = 3.5 * 32;
-        arrayOfTerrainMeshes.push(parteTerreno);
+        arrayOfDynamicTerrainMeshes.push(parteTerreno);
     });
     
     for(let i=0; i<8; i++) {   //numero di chunk da generare per ogni segmento
@@ -27,20 +28,20 @@ function createTerrain(scene) {
                     filo_sup.position.x = x_offset;
                     filo_sup.position.y = 38;
                     filo_sup.position.z = z_offset + 2 * chunk_size;
-                    arrayOfTerrainMeshes.push(filo_sup);
+                    arrayOfBaseTerrainMeshes.push(filo_sup);
                 });
             }
             leftPole.forEach(x => {
                 let partePalo = x.clone('palo');
                 partePalo.position.x = -24;
                 partePalo.position.z = z_offset;
-                arrayOfTerrainMeshes.push(partePalo);
+                arrayOfBaseTerrainMeshes.push(partePalo);
             });
             rightPole.forEach(x => {
                 let partePalo = x.clone('palo');
                 partePalo.position.x = +24;
                 partePalo.position.z = z_offset;
-                arrayOfTerrainMeshes.push(partePalo);
+                arrayOfBaseTerrainMeshes.push(partePalo);
             });
         }
         
@@ -52,7 +53,7 @@ function createTerrain(scene) {
             filo_inf.position.x = x_offset;
             filo_inf.position.y = 27.75;
             filo_inf.position.z = z_offset;
-            arrayOfTerrainMeshes.push(filo_inf);
+            arrayOfBaseTerrainMeshes.push(filo_inf);
             let tirante = BABYLON.MeshBuilder.CreateCylinder('tirante2', {height: chunk_size, diameter: 0.35}, scene);  //tirante situato tra ogni palo ed il successivo
             tirante.material = metal;
             tirante.rotation.x = Math.PI/2;
@@ -60,7 +61,7 @@ function createTerrain(scene) {
             else tirante.position.x = 24;
             tirante.position.y = 22.5;
             tirante.position.z = z_offset;
-            arrayOfTerrainMeshes.push(tirante);
+            arrayOfBaseTerrainMeshes.push(tirante);
         }
         
         //creazione ringhiera (se non sono presenti stazioni)
@@ -69,12 +70,13 @@ function createTerrain(scene) {
                 let parteRinghiera = x.clone('ringhiera');
                 parteRinghiera.position.x = x_offset;
                 parteRinghiera.position.z = z_offset;
-                arrayOfTerrainMeshes.push(parteRinghiera);
+                arrayOfBaseTerrainMeshes.push(parteRinghiera);
             });
         }
     }
-    var terrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTerrainMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di terreno (per motivi di efficienza)
-    return terrainMesh;
+    var baseTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfBaseTerrainMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di terreno (per motivi di efficienza)
+    var dynamicTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfDynamicTerrainMeshes, true, true, undefined, false, true);
+    return {railRoad: baseTerrainMesh, terrain: dynamicTerrainMesh};
 }
 
 //Funzione per creare un ponte
