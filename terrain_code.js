@@ -83,10 +83,10 @@ function createTerrain(scene) {
 function createBridge(scene) {
     ponte1.forEach(x => {
         let partePonte = x.clone('ponte1');
-        partePonte.position.z = 1024;
+        partePonte.position.z = 1008;   //1024 - (1024*3/4 - 752)
     })
     ponte1.forEach(x => {
         let partePonte = x.clone('ponte1');
-        partePonte.position.z = 1024 + 512;
+        partePonte.position.z = 1008 + 512;
     })
 }

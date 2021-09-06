@@ -194,9 +194,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
         let globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
         
         let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
-        
-        //animazione
-        var angoloLuce = 0;
+        let angoloLuce = 0;
         scene.registerBeforeRender(() => {
             if(modalitaTempo == 0) {    //modalità reale
                 let day = new Date();
@@ -228,8 +226,10 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1;   //pomeriggio-sera
             else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
             
-            //masterPlane.position.z = camera.position.z + 300; //aggiorno la posizione del terreno
-            //if(camera.position.z < ((1024-1024) + 1024*1/4) ^ camera.position.z > (1024+512+(1024*3/4))) masterPlane.position.z = camera.position.z;
+            for(let i=0; i<12; i++) {
+                if(segments[i].terrain.position.z > (1024*2/4) && segments[i].terrain.position.z < (1008+512+(1024*1/4))) segments[i].terrain.isVisible = false;
+                else segments[i].terrain.isVisible = true;
+            }
             
             rainParticleSystem.emitter.z = camera.position.z;
             
