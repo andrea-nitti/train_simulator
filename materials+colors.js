@@ -1,6 +1,6 @@
 "use strict";
 //Funzioni per radunare tutti i colori e poterli richiamare a propria scelta
-let colnero, metal, giallo, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, palazzo, erba, wall, droplet;
+let colnero, metal, giallo, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba, droplet;
 
 function inizializzaColori(scene) {
     colnero = new BABYLON.StandardMaterial('nero', scene);
@@ -28,4 +28,5 @@ function inizializzaColori(scene) {
     erba = new BABYLON.StandardMaterial('erba', scene);
     erba.diffuseTexture = new BABYLON.Texture("./assets/textures/erba.jpg", scene);
     droplet = new BABYLON.Texture("./assets/textures/rain--2.png");
+    [colnero, metal, giallo, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba].forEach(material => {material.freeze();} );
 }
