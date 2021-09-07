@@ -80,15 +80,43 @@ function createTerrain(scene) {
 }
 
 //Funzione per creare un ponte
-function createBridge(scene) {
+function createBridge(skybox, scene) {
     let arrayOfBridgeMeshes = [];
     for(let i=0; i<=512; i+=512) {
         ponte1.forEach(x => {
             let partePonte = x.clone('ponte1');
             partePonte.position.z = 1008 + i;
+            if(i == 0) partePonte.rotation.y = Math.PI;
             arrayOfBridgeMeshes.push(partePonte);
-        })
+        });
     }
+    let river = BABYLON.MeshBuilder.CreatePlane('river', {size: 975}, scene);
+    river.rotation.x = Math.PI/2;
+    river.position.y = -80;
+    river.position.z = 1264;
+    let riverGround = BABYLON.MeshBuilder.CreatePlane('riverGround', {size: 975}, scene);
+    riverGround.rotation.x = Math.PI/2;
+    riverGround.position.y = -82.5;
+    riverGround.position.z = 1264;
+    let riverGroundMaterial = new BABYLON.StandardMaterial('riverGround', scene);
+    riverGroundMaterial.diffuseTexture = new BABYLON.Texture('./assets/textures/riverGround.jpg', scene);
+    riverGroundMaterial.diffuseTexture.uScale = riverGroundMaterial.diffuseTexture.vScale = 4;
+    let water = new BABYLON.WaterMaterial('water', scene);
+    water.backFaceCulling = true;
+    water.bumpTexture = new BABYLON.Texture('./assets/textures/water.png', scene);
+    water.windForce = 25;
+    water.waveHeight = 0.5;    
+    water.bumpHeight = 0.5;
+    water.windDirection = new BABYLON.Vector2(-5, 0);
+    water.waterColor = new BABYLON.Color3(0, 0, 0.867);
+    water.colorBlendFactor = 0.15;
+    water.addToRenderList(skybox);
+    water.addToRenderList(riverGround);
+    river.material = water;
+    riverGround.material = riverGroundMaterial;
+    water.freeze();
+    arrayOfBridgeMeshes.push(river);
+    arrayOfBridgeMeshes.push(riverGround);
     var bridgeMesh = BABYLON.Mesh.MergeMeshes(arrayOfBridgeMeshes, true, true, undefined, false, true);
     return bridgeMesh;
 }

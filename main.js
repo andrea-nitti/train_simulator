@@ -180,7 +180,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     if(trains_boolean) {
         treno = train(scene);
     }
-    let ponte = createBridge(scene);
+    let ponte = createBridge(skybox, scene);
     
     const rainParticleSystem = new BABYLON.GPUParticleSystem('rain', {capacity: 100000, randomTextureSize: 4096}, scene);
     rainParticleSystem.particleTexture = droplet;

@@ -58,13 +58,13 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
                 rainParticleSystem.start();
                 break;
         }
-        let duration = 60 * (1 + Math.round(Math.random()*4));    //la durata prima di ogni transizione è misurata in minuti
+        let duration = 60 * (1 + Math.round(Math.random() * 4));    //la durata prima di ogni transizione è misurata in minuti
         console.log({Weather: globalWeatherState.weatherState, Duration: duration + " seconds"});
         globalWeatherState.finishTimeStamp = timeStamp+duration;
     }
     else if(globalWeatherState.weatherState == 2) {
         skyboxMaterial.alpha -= 0.25;
-        if(Math.floor(Math.random()*500) == 1) {
+        if(Math.floor(Math.random() * 500) == 1) {
             let thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
             let selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length);    //scelgo un fulmine a caso dall'array da "illuminare"
             let selectedThunderSound = Math.floor(Math.random() * thunderSounds.length);    //scelgo un tuono a caso dall'array da riprodurre
