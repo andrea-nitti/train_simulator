@@ -180,7 +180,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     if(trains_boolean) {
         treno = train(scene);
     }
-    createBridge(scene);
+    let ponte = createBridge(scene);
     
     const rainParticleSystem = new BABYLON.GPUParticleSystem('rain', {capacity: 100000, randomTextureSize: 4096}, scene);
     rainParticleSystem.particleTexture = droplet;
@@ -229,8 +229,9 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
         else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1;   //pomeriggio-sera
         else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
         
+        //controllo se sia presente una sovrapposizione del terreno con la base del ponte (in tal caso rendo il segmento invisibile)
         for(let i=0; i<12; i++) {
-            if(segments[i].terrain.position.z > (1024*2/4) && segments[i].terrain.position.z < (1008+512+(1024*1/4))) segments[i].terrain.isVisible = false;
+            if(segments[i].terrain.position.z > (ponte.position.z + 1008 - 496) && segments[i].terrain.position.z < (ponte.position.z + 1008 + 512 + (1024*1/4))) segments[i].terrain.isVisible = false;
             else segments[i].terrain.isVisible = true;
         }
         
@@ -254,10 +255,9 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             segments[0].terrain.position.z += segments.length * 256;
             segments.push(segments.shift());    //il primo elemento diventa l'ultimo
         }
-        if(camera.position.z > stazione.position.z + 2 * 256) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256) [oppure all'origine degli assi]
-            //stazione.position.z += 256 * Math.floor(200 + Math.random() * 801);  //sposto l'ultima stazione ad almeno 2 km di distanza dalla precedente; la massima distanza ammessa è 10 km
+        if(camera.position.z > stazione.position.z + 2 * 256) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
+            stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);    //sposto l'ultima stazione ad almeno 2048 unità di distanza dalla precedente; la massima distanza ammessa è 10240 unità
             stazione.isVisible = true;
-            stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);
             if(cities_boolean) {
                 cities[0].position.z = stazione.position.z;
                 cities.push(cities.shift());
@@ -266,8 +266,11 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             let cartello = listaCartelli[indice];
             if(cartello != undefined) {
                 cartello.position.z = stazione.position.z + 12;
-                listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
+                listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
             }
+        }
+        if(camera.position.z > ponte.position.z + 4096) {
+            ponte.position.z += 512 * Math.floor(16 + Math.random() * 30);
         }
         if(forests_boolean) {
             if(camera.position.z > Foresta1.position.z + 5 * 256) {

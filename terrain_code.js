@@ -81,12 +81,14 @@ function createTerrain(scene) {
 
 //Funzione per creare un ponte
 function createBridge(scene) {
-    ponte1.forEach(x => {
-        let partePonte = x.clone('ponte1');
-        partePonte.position.z = 1008;   //1024 - (1024*3/4 - 752)
-    })
-    ponte1.forEach(x => {
-        let partePonte = x.clone('ponte1');
-        partePonte.position.z = 1008 + 512;
-    })
+    let arrayOfBridgeMeshes = [];
+    for(let i=0; i<=512; i+=512) {
+        ponte1.forEach(x => {
+            let partePonte = x.clone('ponte1');
+            partePonte.position.z = 1008 + i;
+            arrayOfBridgeMeshes.push(partePonte);
+        })
+    }
+    var bridgeMesh = BABYLON.Mesh.MergeMeshes(arrayOfBridgeMeshes, true, true, undefined, false, true);
+    return bridgeMesh;
 }
