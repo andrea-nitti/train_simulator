@@ -199,28 +199,22 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
     let angoloLuce = 0;
     scene.registerBeforeRender(() => {
-        if(modalitaTempo == 0) {    //modalità reale
-            let day = new Date();
-            let time = day.getHours() * 60 + day.getMinutes();  //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
-            angoloLuce = time / (24 * 60) * 2 * Math.PI;    //calcolo l'angolo in base alla proporzione con i minuti contenuti in un giorno
-            angoloLuce -= Math.PI/2;    //-pi/2 è l'offset che esiste tra gli angoli calcolati ed il ciclo giorno-notte
-            if(angoloLuce < 0) angoloLuce = 2 * Math.PI + angoloLuce;   //converto in positivo gli angoli compresi tra le 0:00 e le 6:00
-        }
-        else if(modalitaTempo == 1) {   //tempo accelerato
-            angoloLuce += .005;
-            if(angoloLuce > 2*Math.PI) angoloLuce = 0;
-        }
-        else if(modalitaTempo == 2) {   //alba fissa
-            angoloLuce = 0;
-        }
-        else if(modalitaTempo == 3) {   //mezzogiorno fisso
-            angoloLuce = Math.PI/2;
-        }
-        else if(modalitaTempo == 4) {   //tramonto fisso
-            angoloLuce = Math.PI;
-        }
-        else if(modalitaTempo == 5) {   //mezzanotte fissa
-            angoloLuce = 3 / 2 * Math.PI;
+        switch(modalitaTempo) {
+            case 0: //modalità reale
+                let day = new Date();
+                let time = day.getHours() * 60 + day.getMinutes();  //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
+                angoloLuce = time / (24 * 60) * 2 * Math.PI;    //calcolo l'angolo in base alla proporzione con i minuti contenuti in un giorno
+                angoloLuce -= Math.PI/2;    //-pi/2 è l'offset che esiste tra gli angoli calcolati ed il ciclo giorno-notte
+                if(angoloLuce < 0) angoloLuce = 2 * Math.PI + angoloLuce;   //converto in positivo gli angoli compresi tra le 0:00 e le 6:00
+                break;
+            case 1: //tempo accelerato
+                angoloLuce += .005;
+                if(angoloLuce > 2*Math.PI) angoloLuce = 0;
+                break;
+            case 2: angoloLuce = 0; break;  //alba fissa
+            case 3: angoloLuce = Math.PI/2; break;  //mezzogiorno fisso
+            case 4: angoloLuce = Math.PI; break;    //tramonto fisso
+            case 5: angoloLuce = 3 / 2 * Math.PI; break;    //mezzanotte fissa
         }
         sun.position.x =+ Math.cos(angoloLuce)*500;
         sun.position.y =+ Math.sin(angoloLuce)*500;
