@@ -183,6 +183,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     let ponte = createBridge(skybox, scene);
     
     const rainParticleSystem = new BABYLON.GPUParticleSystem('rain', {capacity: 100000, randomTextureSize: 4096}, scene);
+    let droplet = new BABYLON.Texture("./assets/textures/rain.png");
     rainParticleSystem.particleTexture = droplet;
     let emitter = rainParticleSystem.createBoxEmitter(new BABYLON.Vector3(0, -150, 0), new BABYLON.Vector3(0, -250, 0), new BABYLON.Vector3(-75, 0, -400), new BABYLON.Vector3(75, 0, 400));
     rainParticleSystem.emitter = new BABYLON.Vector3(0, 75, 0);
