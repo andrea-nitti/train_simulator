@@ -66,7 +66,7 @@ function createStation(scene) {
         pannello.position.z = 0;
         arrayOfStationMeshes.push(pannello);
     }
-    let x_offset = 30;
+    let x_offset = 10;
     let edificio = BABYLON.MeshBuilder.CreateBox('edificio', {height:25, width:30, depth: 3*chunk_size}, scene);
     edificio.material = bricks;
     edificio.position.x = x_offset + 30 + 25/2;

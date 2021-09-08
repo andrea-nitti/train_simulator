@@ -25,6 +25,5 @@ function inizializzaColori(scene) {
     ground.diffuseTexture = new BABYLON.Texture("./assets/textures/ground.jpg", scene);
     erba = new BABYLON.StandardMaterial('erba', scene);
     erba.diffuseTexture = new BABYLON.Texture("./assets/textures/erba.jpg", scene);
-    droplet = new BABYLON.Texture("./assets/textures/rain--2.png");
     [colnero, metal, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba].forEach(material => {material.freeze();} );
 }
