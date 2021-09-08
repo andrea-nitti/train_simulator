@@ -219,7 +219,8 @@ function setupScene(engine, camera, scene) {
             
             rainParticleSystem.emitter.z = camera.position.z;
             
-            if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady()) weather(rainParticleSystem, lightningPlanes, globalWeatherState);
+            if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady())
+                weather(rainParticleSystem, lightningPlanes, globalWeatherState, skyboxMaterial);
             
             //treno.position.z = camera.position.z;
             
