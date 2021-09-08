@@ -5,9 +5,9 @@
 
 let wire, terrain_chunk, ringhiera;
 let sun, vegetali;
-let rain, thunderstorm;
+let rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5;
 const importedModelsList = ["filo.obj","chunk_binario.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj"];
-const importedSoundsList = ["rain.ogg","thunderstorm.ogg"];
+const importedSoundsList = ["thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg"];
 
 //parametri per la larghezza e l'altezza di ciascun cartello per ogni stazione
 const planeWidth = 10;
@@ -69,6 +69,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
             importSound.onSuccess = function(task) {
                 avanzamento.innerHTML = "(./assets/sounds/" + x + ")";
                 switch(x) {
+                    case "thunder1.ogg": thunder1 = new BABYLON.Sound("thunder1", task.data, scene); break;
+                    case "thunder2.ogg": thunder2 = new BABYLON.Sound("thunder2", task.data, scene); break;
+                    case "thunder3.ogg": thunder3 = new BABYLON.Sound("thunder3", task.data, scene); break;
+                    case "thunder4.ogg": thunder4 = new BABYLON.Sound("thunder4", task.data, scene); break;
+                    case "thunder5.ogg": thunder5 = new BABYLON.Sound("thunder5", task.data, scene); break;
                     case "rain.ogg": rain = new BABYLON.Sound("rain", task.data, scene); break;
                     case "thunderstorm.ogg": thunderstorm = new BABYLON.Sound("thunderstorm", task.data, scene); break;
                 }
@@ -165,12 +170,12 @@ function setupScene(engine, camera, scene) {
         rainParticleSystem.maxScaleX = 0.1;
         
         lightningPlanes = createLightning(scene);
-        thunder1 = new BABYLON.Sound("thunder1", "./assets/sounds/thunder1.ogg", scene);
+        /*thunder1 = new BABYLON.Sound("thunder1", "./assets/sounds/thunder1.ogg", scene);
         thunder2 = new BABYLON.Sound("thunder2", "./assets/sounds/thunder2.ogg", scene);
         thunder3 = new BABYLON.Sound("thunder3", "./assets/sounds/thunder3.ogg", scene);
         thunder4 = new BABYLON.Sound("thunder4", "./assets/sounds/thunder4.ogg", scene);
-        thunder5 = new BABYLON.Sound("thunder5", "./assets/sounds/thunder5.ogg", scene);
-        thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
+        thunder5 = new BABYLON.Sound("thunder5", "./assets/sounds/thunder5.ogg", scene);*/
+        //let thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
         //BABYLON.Engine.audioEngine.unlock()
         
         let globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
@@ -220,8 +225,7 @@ function setupScene(engine, camera, scene) {
             
             rainParticleSystem.emitter.z = camera.position.z;
             
-            if (rain.isReady() && thunderstorm.isReady())
-                weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeatherState, rain, thunderstorm);
+            if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady()) weather(rainParticleSystem, lightningPlanes, globalWeatherState);
             
             //treno.position.z = camera.position.z;
             

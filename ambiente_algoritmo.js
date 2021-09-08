@@ -33,7 +33,7 @@ function cittaRandom(scene, posx, posz, arrayOfCityMeshes) {
 }
 
 //Funzione per il tempo atmosferico
-function weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeatherState,  rain, thunderstorm) {
+function weather(rainParticleSystem, lightningPlanes, globalWeatherState) {
     let timeStamp = new Date().valueOf() / 1000;    //valueOf() --> millisecondi trascorsi dall'01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
         globalWeatherState.weatherState = Math.floor(Math.random()*3);   //numero intero compreso tra 0 (incluso) e 3 (escluso)
@@ -64,6 +64,7 @@ function weather(rainParticleSystem, lightningPlanes, thunderSounds, globalWeath
     }
     else if(globalWeatherState.weatherState == 2) {
         if(Math.floor(Math.random()*500) == 1) {
+            let thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
             selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length);    //scelgo un fulmine a caso dall'array da "illuminare"
             selectedThunderSound = Math.floor(Math.random() * thunderSounds.length);    //scelgo un tuono a caso dall'array da riprodurre
             lightningPlanes[selectedLightningPlane].isVisible = true;
