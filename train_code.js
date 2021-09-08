@@ -1,3 +1,4 @@
+"use strict";
 //////////////////////////// ! ! ! ! ! ZONA TRENO ! ! ! ! ! ////////////////////////////
 
 //////////////////////////// ! ! ! ! ! ZONA TRENO ! ! ! ! ! ////////////////////////////
@@ -115,14 +116,14 @@ function musolat(scene, posx, posz, colore) {
 }*/
 
 function train(scene) {
-    arrayOfTrainMeshes = [];
-    //for(let i=0; i<9; i++) carro(scene, 8, i*67.6, arrayOfTrainMeshes);
-    locomotiva(scene, 8, 0, arrayOfTrainMeshes);
+    let arrayOfTrainMeshes = [];
+    for(let i=0; i<9; i++) vagone(scene, 8, i*67.6, arrayOfTrainMeshes);
+    //locomotiva(scene, 8, 0, arrayOfTrainMeshes);
     var trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
     return trainMesh;
 }
 
-function carrozza(scene, posx, posz, arrayOfTrainMeshes) {
+function vagone(scene, posx, posz, arrayOfTrainMeshes) {
     carrozza.forEach(x => {
         let parteCarrozza = x.clone('carrozza');
         parteCarrozza.position.x = posx;

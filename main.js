@@ -3,11 +3,12 @@
 //Progetto: Train Simulator
 //Descrizione: Un simulatore di guida di treni, in cui la velocità del mezzo, lungo una rotaia infinita, potrà essere decisa e modificata in corsa
 
-let wire, terrain_chunk, ringhiera;
+"use strict";
+let wire, terrain_chunk, ringhiera, leftPole, rightPole, casa, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore;   //models
 let sun, vegetali;
-let rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5;
+let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5; //sounds
 const importedModelsList = ["filo.obj","chunk_binario.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj"];
-const importedSoundsList = ["thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg"];
+const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg"];
 
 //parametri per la larghezza e l'altezza di ciascun cartello per ogni stazione
 const planeWidth = 10;
@@ -69,6 +70,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             importSound.onSuccess = function(task) {
                 avanzamento.innerHTML = "(./assets/sounds/" + x + ")";
                 switch(x) {
+                    case "horn.ogg": horn = new BABYLON.Sound("horn", task.data, scene); break;
                     case "thunder1.ogg": thunder1 = new BABYLON.Sound("thunder1", task.data, scene); break;
                     case "thunder2.ogg": thunder2 = new BABYLON.Sound("thunder2", task.data, scene); break;
                     case "thunder3.ogg": thunder3 = new BABYLON.Sound("thunder3", task.data, scene); break;
@@ -138,8 +140,6 @@ function setupScene(engine, camera, scene) {
         scene.fogColor = new BABYLON.Color3(0.494, 0.604, 0.686);
         skybox.applyFog = false;
         
-        horn = new BABYLON.Sound("horn", "./assets/sounds/horn.ogg", scene);    //sirena
-        
         let cities = [];    //array che contiene la lista delle parentMesh di 5*3*2 città
         for(let i=0; i<5; i++) {
             let city = createEnvironment(scene, 0);
@@ -156,7 +156,7 @@ function setupScene(engine, camera, scene) {
             listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
         }
         
-        //treno = train(scene);
+        //let treno = train(scene);
         
         const rainParticleSystem = new BABYLON.GPUParticleSystem('rain', {capacity: 100000, randomTextureSize: 4096}, scene);
         rainParticleSystem.particleTexture = droplet;
@@ -169,7 +169,7 @@ function setupScene(engine, camera, scene) {
         rainParticleSystem.minScaleX = 0.05;
         rainParticleSystem.maxScaleX = 0.1;
         
-        lightningPlanes = createLightning(scene);
+        let lightningPlanes = createLightning(scene);
         //BABYLON.Engine.audioEngine.unlock()
         
         let globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
@@ -271,7 +271,7 @@ function setupScene(engine, camera, scene) {
                 camera.position.y -= 0.5;
             }
             if(evt.keyCode === 32) {    //barra spaziatrice
-                horn.play();
+                horn.play();    //sirena
             }
             if(evt.keyCode === 71) {    //tasto G
                 modalitaTempo = (modalitaTempo + 1) % 6;    //scrittura alternativa: modalitaTempo += 1; if(modalitaTempo > 5) modalitaTempo = 0;

@@ -1,3 +1,4 @@
+"use strict";
 //Funzione per creare l'ambiente
 function createEnvironment(scene, posz) {
     let arrayOfCityMeshes = [];
@@ -58,7 +59,7 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
                 rainParticleSystem.start();
                 break;
         }
-        duration = 60 * (1 + Math.round(Math.random()*4));    //la durata prima di ogni transizione è misurata in minuti
+        let duration = 60 * (1 + Math.round(Math.random()*4));    //la durata prima di ogni transizione è misurata in minuti
         console.log(duration);
         globalWeatherState.finishTimeStamp = timeStamp+duration;
     }
@@ -66,8 +67,8 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
         skyboxMaterial.alpha -= 0.25;
         if(Math.floor(Math.random()*500) == 1) {
             let thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
-            selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length);    //scelgo un fulmine a caso dall'array da "illuminare"
-            selectedThunderSound = Math.floor(Math.random() * thunderSounds.length);    //scelgo un tuono a caso dall'array da riprodurre
+            let selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length);    //scelgo un fulmine a caso dall'array da "illuminare"
+            let selectedThunderSound = Math.floor(Math.random() * thunderSounds.length);    //scelgo un tuono a caso dall'array da riprodurre
             lightningPlanes[selectedLightningPlane].isVisible = true;
             setTimeout(function() {
                 lightningPlanes[selectedLightningPlane].isVisible = false;
@@ -83,7 +84,7 @@ function createLightning(scene) {
     let lightningPlanes = [];
     lightningImages.forEach(x => {
         let lightningPlane = BABYLON.MeshBuilder.CreatePlane('lightningPlane', {size: 256}, scene);
-        lightningTexture = new BABYLON.StandardMaterial('lightningTexture', scene);
+        let lightningTexture = new BABYLON.StandardMaterial('lightningTexture', scene);
         lightningTexture.diffuseTexture = new BABYLON.Texture("./assets/textures/" + x + ".png");
         lightningTexture.diffuseTexture.hasAlpha = true;
         lightningTexture.emissiveColor = new BABYLON.Color3(8, 8, 8);

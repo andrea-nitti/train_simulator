@@ -1,5 +1,6 @@
+"use strict";
 //Funzioni per radunare tutti i colori e poterli richiamare a propria scelta
-let colgrigio, colrosso, colnero, metal, giallo, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, palazzo, erba, wall, campo;
+let colgrigio, colrosso, colnero, metal, giallo, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, palazzo, erba, wall, campo, droplet;
 
 function inizializzaColori(scene) {
     colgrigio = new BABYLON.StandardMaterial('grigio', scene); //0
@@ -35,7 +36,7 @@ function inizializzaColori(scene) {
     droplet = new BABYLON.Texture("./assets/textures/rain--2.png");
 }
 
-function colori(scene, numerocol) {
+/*function colori(scene, numerocol) {
     if (numerocol == 0) {
       return colgrigio;
     } else if (numerocol == 1) {
@@ -43,4 +44,4 @@ function colori(scene, numerocol) {
     } else if (numerocol == 2) {
       return colnero;
     }
-}
+}*/

@@ -1,6 +1,8 @@
+"use strict";
 //Funzione per creare la stazione
 function createStation(scene) {
     const chunk_size = 32;
+
     /*let parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro tutta la stazione
     parent_mesh.isVisible = false;  //rendo l'ancora invisibile */
     let arrayOfStationMeshes = [];
@@ -18,18 +20,18 @@ function createStation(scene) {
     sostegno_h.position.z = chunk_size - 20;
     arrayOfStationMeshes.push(sostegno_h);
     
-    for(x_offset=-(planeWidth/2); x_offset<=(planeWidth/2); x_offset+=planeWidth) {
+    for(let local_x_offset=-(planeWidth/2); local_x_offset<=(planeWidth/2); local_x_offset+=planeWidth) {
         let sost_v = BABYLON.MeshBuilder.CreateCylinder('sost_v', {diameter: 0.4, height: 3.2}, scene);   //bordi della scritta
-        sost_v.position.x = x_offset - 30;
+        sost_v.position.x = local_x_offset - 30;
         sost_v.position.y = 12.8;
         sost_v.position.z = chunk_size - 20;
         arrayOfStationMeshes.push(sost_v);
     }
     
-    for(let x_offset=-30; x_offset<=30; x_offset+=60) {
+    for(let local_x_offset=-30; local_x_offset<=30; local_x_offset+=60) {
         let pavimentazione = BABYLON.MeshBuilder.CreateBox('pavimentazione', {height:4, width:25, depth: 3*chunk_size}, scene);
         pavimentazione.material = ground;
-        pavimentazione.position.x = x_offset;
+        pavimentazione.position.x = local_x_offset;
         pavimentazione.position.y = 1.2;
         pavimentazione.position.z = chunk_size;
         arrayOfStationMeshes.push(pavimentazione);
@@ -45,8 +47,8 @@ function createStation(scene) {
         
         for(let ramp_z_offset=-3*chunk_size; ramp_z_offset<=3*chunk_size; ramp_z_offset+=6*chunk_size) {
             let rampa = BABYLON.MeshBuilder.CreatePolyhedron('rampa',{custom: {"vertex" : [[12,0,0],[-12,0,0],[12,0,50],[-12,0,50],[12,8,0],[-12,8,0]],"face" : [[1,0,2,3],[3,2,4,5],[5,4,0,1],[0,4,2],[1,3,5]]},size: 0.5},scene); //tratto dal file "shape_1.js"
-            if (x_offset < 0) rampa.position.x = x_offset + 6.5;
-            else rampa.position.x = x_offset - 6.5;
+            if (local_x_offset < 0) rampa.position.x = local_x_offset + 6.5;
+            else rampa.position.x = local_x_offset - 6.5;
             rampa.position.y = -0.8;
             if(ramp_z_offset < 0) {
                 rampa.rotation.y = Math.PI;
@@ -57,13 +59,14 @@ function createStation(scene) {
         }
         //creazione di cartelli di pericolo (solo presso le stazioni)
         let pannello = BABYLON.MeshBuilder.CreatePlane('pannello', {width: 6, height: 2}, scene);
-        if(x_offset < 0) pannello.rotation.y = Math.PI;
+        if(local_x_offset < 0) pannello.rotation.y = Math.PI;
         pannello.material = hv;
         pannello.position.x = -18.5;
         pannello.position.y = 32.75;
         pannello.position.z = 0;
         arrayOfStationMeshes.push(pannello);
     }
+    let x_offset = 30;
     let edificio = BABYLON.MeshBuilder.CreateBox('edificio', {height:25, width:30, depth: 3*chunk_size}, scene);
     edificio.material = bricks;
     edificio.position.x = x_offset + 30 + 25/2;

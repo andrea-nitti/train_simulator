@@ -1,3 +1,4 @@
+"use strict";
 //Funzione per creare il terreno della ferrovia
 function createTerrain(scene) {
     const chunk_size = 32;    
@@ -11,7 +12,7 @@ function createTerrain(scene) {
     });
     
     for(let i=0; i<8; i++) {   //numero di chunk da generare per ogni segmento
-        z_offset = i * chunk_size;
+        let z_offset = i * chunk_size;
         
         //creazione pali
         if(z_offset % (4*chunk_size) == 0) {  //creo i pali ogni 5 chunks
