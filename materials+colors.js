@@ -1,15 +1,11 @@
 "use strict";
 //Funzioni per radunare tutti i colori e poterli richiamare a propria scelta
-let colgrigio, colrosso, colnero, metal, giallo, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, palazzo, erba, wall, campo, droplet;
+let colnero, metal, giallo, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, palazzo, erba, wall, campo, droplet;
 
 function inizializzaColori(scene) {
-    colgrigio = new BABYLON.StandardMaterial('grigio', scene); //0
-    colgrigio.diffuseColor = new BABYLON.Color3(0.702, 0.702, 0.702);
-    colrosso = new BABYLON.StandardMaterial('rosso', scene); //1
-    colrosso.diffuseColor = new BABYLON.Color3(1, 0.176, 0.176);
-    colnero = new BABYLON.StandardMaterial('nero', scene); //2
+    colnero = new BABYLON.StandardMaterial('nero', scene);
     colnero.diffuseColor = new BABYLON.Color3(0.078, 0.078, 0.078);
-    metal = new BABYLON.StandardMaterial('metal', scene); //3
+    metal = new BABYLON.StandardMaterial('metal', scene);
     metal.diffuseColor = new BABYLON.Color3(0.447, 0.474, 0.447);
     giallo = new BABYLON.StandardMaterial('giallo', scene); 
     giallo.diffuseColor = new BABYLON.Color3(1, 1, 0);
@@ -35,13 +31,3 @@ function inizializzaColori(scene) {
     campo.diffuseTexture = new BABYLON.Texture("./assets/textures/campo3.jpg", scene);
     droplet = new BABYLON.Texture("./assets/textures/rain--2.png");
 }
-
-/*function colori(scene, numerocol) {
-    if (numerocol == 0) {
-      return colgrigio;
-    } else if (numerocol == 1) {
-      return colrosso;
-    } else if (numerocol == 2) {
-      return colnero;
-    }
-}*/
