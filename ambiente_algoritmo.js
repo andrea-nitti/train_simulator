@@ -48,13 +48,13 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
             case 1:  //pioggia
                 thunderstorm.stop();
                 rain.play();
-                rainParticleSystem.emitRate = 6500;
+                rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
                 break;
             case 2:  //temporale
                 rain.stop();
                 thunderstorm.play();
-                rainParticleSystem.emitRate = 8500;
+                rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
                 break;
         }
@@ -75,6 +75,8 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
             }, 200);    //il fulmine rimane visibile per 0,2 secondi
         }
     }
+    if(globalWeatherState.weatherState == 1 && rainParticleSystem.emitRate <= 6500) rainParticleSystem.emitRate += 10;
+    else if(globalWeatherState.weatherState == 2 && rainParticleSystem.emitRate <= 8500) rainParticleSystem.emitRate += 25;
 }
 
 function createLightning(scene) {
