@@ -260,7 +260,7 @@ function prato(scene, posx, posz, arrayOfCityMeshes) {
     arrayOfCityMeshes.push(prato);
 }
 
-function albero(scene, posx, posz, parent_mesh) {
+/*function albero(scene, posx, posz, parent_mesh) {
     let x = Math.floor(Math.random() * 2);
     vegetali[x].forEach(x => {
         let partePianta = x.clone('alberoscelto');
@@ -269,11 +269,9 @@ function albero(scene, posx, posz, parent_mesh) {
         partePianta.position.z = posz;
         partePianta.setParent(parent_mesh);
     });
-}
+}*/
 
-function foresta(scene, posx, posz) {
-    let parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro tutta la foresta
-    parent_mesh.isVisible = false;  //rendo l'ancora invisibile
+function createForest(scene, posx, posz) {
 
     /*albero(scene, posx+160, posz+40, parent_mesh);
     albero(scene, posx+324, posz+388, parent_mesh);
@@ -293,10 +291,26 @@ function foresta(scene, posx, posz) {
     albero(scene, posx+260, posz+440, parent_mesh);
     albero(scene, posx+470, posz+140, parent_mesh);
     albero(scene, posx+88, posz+158, parent_mesh);*/
-    for(let i=0; i<500; i+=50) albero(scene, posx+65, posz+i, parent_mesh);
-
+    let arrayOfTrees = [];
+    for(let x=0; x<256; x+=50) {
+        for(let z=0; z<256; z+=50) {
+            if(Math.random() < 0.75) {
+                let matrix = BABYLON.Matrix.Translation(posx+65+x, 0, posz+z);
+                arrayOfTrees.push(matrix);
+            }
+        }
+    }
+    let arrayOfTreeMeshes = [];
+    albero1.forEach(x => {
+        let partePianta = x.clone('albero1');
+        arrayOfTreeMeshes.push(partePianta);
+    });
+    var pianta = BABYLON.Mesh.MergeMeshes(arrayOfTreeMeshes, true, true, undefined, false, true);
+    pianta.alwaysSelectAsActiveMesh = true; //sempre visibile
+    pianta.thinInstanceAdd(arrayOfTrees);
+    
     //casaBassa(scene, posx+170, posz+380, parent_mesh);
     //casaBassa(scene, posx+290, posz+20, parent_mesh);
     
-    return parent_mesh;
+    return pianta;
 }

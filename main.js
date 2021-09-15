@@ -5,7 +5,7 @@
 
 "use strict";
 let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore; //models
-let sun, vegetali;
+let sun, vegetali, displacement;
 let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5; //sounds
 const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj"];
 const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg"];
@@ -131,7 +131,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     
     vegetali = [albero1, albero2];
     
-    let segments = [];  //array che contiene 4 modelli di terreno ferroviario
+    let segments = [];  //array che contiene 12 modelli di terreno ferroviario (lunghi ciascuno 256 unità)
     for(let i=0; i<12; i++) {
         let Terrain = createTerrain(scene);
         Terrain.railRoad.position.z = i * 256;
@@ -143,10 +143,14 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     stazione.isVisible = false;
     let listaCartelli = createSigns(scene);
     
-    let Foresta1, Foresta2;
+    let forests = [];
     if(forests_boolean) {
-        Foresta1 = foresta(scene, 20, 1024);    //Foresta1 indica la parent_mesh di tutto il complesso
-        Foresta2 = foresta(scene, -629.5, 1024);    //Foresta2 indica la parent_mesh di tutto il complesso
+        for(let i=0; i<2; i++) {
+            let Forest = createForest(scene, 20, i * 256);
+            forests.push(Forest);
+            Forest = createForest(scene, -420, i * 256);
+            forests.push(Forest);
+        }
     }
     
     let spazio = 0;
@@ -161,9 +165,9 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     let cities = [];    //array che contiene la lista delle parentMesh di 5*3*2 città
     if(cities_boolean) {
         for(let i=0; i<5; i++) {
-            let city = createEnvironment(scene, 0);
-            city.position.z = -100000;
-            cities.push(city);
+            let City = createEnvironment(scene, 0);
+            City.position.z = -100000;
+            cities.push(City);
         }
         cities[0].position.z = stazione.position.z;
         cities.push(cities.shift());
@@ -257,6 +261,13 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
                 cities[0].position.z = stazione.position.z;
                 cities.push(cities.shift());
             }
+            if(forests_boolean) {
+                displacement = 256 * Math.floor(16 + Math.random() * 35);
+                forests[0].position.z += displacement;
+                forests.push(forests.shift());
+                forests[2].position.z += displacement;
+                forests.push(forests.shift());
+            }
             let indice = Math.floor(Math.random() * listaCartelli.length);
             let cartello = listaCartelli[indice];
             if(cartello != undefined) {
@@ -266,12 +277,6 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
         }
         if(camera.position.z > ponte.position.z + 4096) {
             ponte.position.z += 512 * Math.floor(16 + Math.random() * 30);
-        }
-        if(forests_boolean) {
-            if(camera.position.z > Foresta1.position.z + 5 * 256) {
-                Foresta1.position.z += stazione.position.z + 1024;
-                Foresta2.position.z += stazione.position.z + 1024;
-            }
         }
         
         velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);  //il fattore 10 serve a rendere più realistici i valori
