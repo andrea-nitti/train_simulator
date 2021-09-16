@@ -244,7 +244,7 @@ function terrenoCitta(scene, posx, posz, arrayOfCityMeshes) {
     let terrenoCitta = BABYLON.MeshBuilder.CreatePlane('terrenoCitta', {width: 512, height: 512},scene);
     terrenoCitta.material = cemento;
     terrenoCitta.position.x = posx;
-    terrenoCitta.position.y = -0.79;
+    terrenoCitta.position.y = -0.8;
     terrenoCitta.position.z = posz;
     terrenoCitta.rotation.x = Math.PI/2;
     arrayOfCityMeshes.push(terrenoCitta);

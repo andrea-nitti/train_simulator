@@ -5,7 +5,7 @@
 
 "use strict";
 let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore; //models
-let sun, vegetali, displacement;
+let sun, vegetali;
 let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5; //sounds
 const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj"];
 const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg"];
@@ -146,11 +146,14 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     let forests = [];
     if(forests_boolean) {
         for(let i=0; i<2; i++) {
-            let Forest = createForest(scene, 20, i * 256);
-            forests.push(Forest);
-            Forest = createForest(scene, -420, i * 256);
+            let Forest = createForestGroup(scene);
+            Forest[0].position.z = -100000;
+            Forest[1].position.z = -100000;
             forests.push(Forest);
         }
+        forests[0][0].position.z = stazione.position.z + 1024;
+        forests[0][1].position.z = stazione.position.z + 1024;
+        forests.push(forests.shift());
     }
     
     let spazio = 0;
@@ -162,10 +165,10 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     scene.fogColor = new BABYLON.Color3(0.494, 0.604, 0.686);
     skybox.applyFog = false;
     
-    let cities = [];    //array che contiene la lista delle parentMesh di 5*3*2 città
+    let cities = [];    //array che contiene la lista delle mesh (fuse insieme) di 5*3*2 città
     if(cities_boolean) {
         for(let i=0; i<5; i++) {
-            let City = createEnvironment(scene, 0);
+            let City = createCityGroup(scene);
             City.position.z = -100000;
             cities.push(City);
         }
@@ -262,10 +265,8 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
                 cities.push(cities.shift());
             }
             if(forests_boolean) {
-                displacement = 256 * Math.floor(16 + Math.random() * 35);
-                forests[0].position.z += displacement;
-                forests.push(forests.shift());
-                forests[2].position.z += displacement;
+                forests[0][0].position.z = stazione.position.z + 1024;
+                forests[0][1].position.z = stazione.position.z + 1024;
                 forests.push(forests.shift());
             }
             let indice = Math.floor(Math.random() * listaCartelli.length);
@@ -287,7 +288,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     window.addEventListener("keydown", function(evt) {  //interazioni con la tastiera
         switch(evt.keyCode) {
             case 87: if(velocita < 32) velocita += 0.025; break;    //W --> accelerazione
-            case 83: velocita -= 0.25; break;   //S --> frenata
+            case 83: velocita -= 0.1; break;    //S --> frenata
             case 38: if(camera.position.y <= 64) camera.position.y += 0.5; break;   //↑ --> salita della visuale
             case 40: if(camera.position.y > -0.5) camera.position.y -= 0.5; break;  //↓ --> discesa della visuale
             case 32: horn.play(); break;    //spacebar --> sirena

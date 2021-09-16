@@ -1,20 +1,17 @@
 "use strict";
-//Funzione per creare l'ambiente
-function createEnvironment(scene, posz) {
+//Funzione per creare un gruppo di 6 città
+function createCityGroup(scene) {
     let arrayOfCityMeshes = [];
     
-    cittaRandom(scene, 20, posz, arrayOfCityMeshes);
-    cittaRandom(scene, -629.5, posz, arrayOfCityMeshes);
-
-    cittaRandom(scene, 20, posz+512, arrayOfCityMeshes);
-    cittaRandom(scene, -629.5, posz+512, arrayOfCityMeshes);
-
-    cittaRandom(scene, 20, posz-512, arrayOfCityMeshes);
-    cittaRandom(scene, -629.5, posz-512, arrayOfCityMeshes);
+    for(let posz=-512; posz<=512; posz+=512) {
+        cittaRandom(scene, 20, posz, arrayOfCityMeshes);
+        cittaRandom(scene, -629.5, posz, arrayOfCityMeshes);
+    }
     
     var cityMesh = BABYLON.Mesh.MergeMeshes(arrayOfCityMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di città
     return cityMesh;
 }
+
 function cittaRandom(scene, posx, posz, arrayOfCityMeshes) {
     let random = Math.round(Math.random()*100);
     switch (true) {
@@ -33,11 +30,19 @@ function cittaRandom(scene, posx, posz, arrayOfCityMeshes) {
     }
 }
 
+//Funzione per creare un gruppo di x foreste
+function createForestGroup(scene) {
+    let Forest1 = createForest(scene, 20, 0);
+    let Forest2 = createForest(scene, -420, 0);
+    let arrayOfForestMeshes = [Forest1, Forest2];
+    return arrayOfForestMeshes;
+}
+
 //Funzione per il tempo atmosferico
 function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skyboxMaterial) {
     let timeStamp = new Date().valueOf() / 1000;    //valueOf() --> millisecondi trascorsi dall'01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
-        globalWeatherState.weatherState = Math.floor(Math.random()*3);   //numero intero compreso tra 0 (incluso) e 3 (escluso)
+        globalWeatherState.weatherState = Math.floor(Math.random() * 3);    //numero intero compreso tra 0 (incluso) e 3 (escluso)
         switch(globalWeatherState.weatherState) {
             case 0:  //sereno
                 rain.stop();
