@@ -39,8 +39,10 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
 
     sun = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
     sun.setDirectionToTarget(BABYLON.Vector3.Zero());
-        sun.intensity = 1;
+    //sun = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, -1, 0), scene);
+    sun.intensity = 1;
     sun.diffuse = new BABYLON.Color3(1, 1, 0.8);
+    //sun.groundColor = new BABYLON.Color3(1, 1, 0.8);
     
     inizializzaColori(scene);
     
