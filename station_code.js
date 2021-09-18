@@ -93,7 +93,10 @@ function createStation(scene) {
     stazione0.forEach(x => {
         let staz0 = x.clone('terrain_chunk');
         staz0.position.z = 112;
-        if(staz0.material.diffuseTexture != null) staz0.material.diffuseTexture.hasAlpha = true;
+        if(staz0.material.diffuseTexture != null) {
+            staz0.material.diffuseTexture.hasAlpha = true;
+            staz0.material.backFaceCulling = false;
+        }
     });
     var stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);   //mesh che raggruppa un'intera stazione
     return stationMesh;
