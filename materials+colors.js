@@ -26,6 +26,7 @@ function inizializzaColori(scene) {
     erba = new BABYLON.StandardMaterial('erba', scene);
     erba.diffuseTexture = new BABYLON.Texture("./assets/textures/erba.jpg", scene);
     moonSurface = new BABYLON.StandardMaterial('moonSurface', scene);
-    moonSurface.emissiveColor = new BABYLON.Color3(1, 1, 1);
+    moonSurface.diffuseTexture = new BABYLON.Texture("./assets/textures/moon_surface.jpg", scene);
+    moonSurface.emissiveColor = new BABYLON.Color3(0.6, 0.6, 0.6);
     [colnero, metal, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba, moonSurface].forEach(material => {material.freeze();} );
 }

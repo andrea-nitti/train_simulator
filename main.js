@@ -46,9 +46,15 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     sun.diffuse = new BABYLON.Color3(1, 1, 0.8);
     //sun.groundColor = new BABYLON.Color3(1, 1, 0.8);
     
-    /*moon = BABYLON.MeshBuilder.CreateSphere('moon', {diameter: 10}, scene);
+    moon = BABYLON.MeshBuilder.CreateSphere('moon', {diameter: 10}, scene);
     moon.infiniteDistance = true;
-    moon.material = moonSurface;*/
+    moon.material = moonSurface;
+    let moonHalo = new BABYLON.GlowLayer("moonHalo", scene);
+    let moonTexture = new BABYLON.Texture("./assets/textures/moon_surface.jpg");
+    moonHalo.customEmissiveTextureSelector = (mesh, submesh, material) => {
+        return moonTexture;
+    };
+    moonHalo.addIncludedOnlyMesh(moon, BABYLON.Color3(1, 1, 1), true);
     
     scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
     var assetsManager = new BABYLON.AssetsManager(scene);
@@ -224,17 +230,19 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             case 4: angoloLuce = Math.PI; break;    //tramonto fisso
             case 5: angoloLuce = 3 / 2 * Math.PI; break;    //mezzanotte fissa
         }
-        sun.position.x =+ Math.cos(angoloLuce) * 500;
-        sun.position.y =+ Math.sin(angoloLuce) * 500;
+        sun.position.x = Math.cos(angoloLuce) * 500;
+        sun.position.y = Math.sin(angoloLuce) * 500;
         sun.position.z = camera.position.z;
         if(angoloLuce <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * angoloLuce + 0.1; //alba-mattina
         else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1;   //pomeriggio-sera
         else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
         
-        /*let moonTime = day.getDate();
+        //la Luna ruota in senso opposto rispetto al Sole
+        let moonTime = day.getDate();
+        if(moonTime > 28) moonTime = 28;
         moonAngle = moonTime / 28 * 2 * Math.PI;
-        moon.position.x += Math.sin(moonAngle) * 250;
-        moon.position.y += Math.cos(moonAngle) * 250;*/
+        moon.position.x = Math.sin(moonAngle) * 250;
+        moon.position.y = Math.cos(moonAngle) * 250;
         
         //controllo se sia presente una sovrapposizione del terreno con la base del ponte (in tal caso rendo il segmento invisibile)
         for(let i=0; i<12; i++) {
