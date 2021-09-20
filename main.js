@@ -24,11 +24,11 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     canvas.addEventListener('wheel', evt => evt.preventDefault());
     const engine = new BABYLON.Engine(canvas, true);
     function schermoDiCaricamento() {}
-    schermoDiCaricamento.prototype.displayLoadingUI = function() {caricamento.innerHTML = "Loading assets...";} //".prototype" consente di aggiungere una nuova proprietà (displayLoadingUI) al costruttore di un oggetto (schermoDiCaricamento)
+    schermoDiCaricamento.prototype.displayLoadingUI = function() {caricamento.innerHTML = "Loading...";};    //".prototype" consente di aggiungere una nuova proprietà (displayLoadingUI) al costruttore di un oggetto (schermoDiCaricamento)
     schermoDiCaricamento.prototype.hideLoadingUI = function() {
         caricamento.style.display = "none";
         avanzamento.style.display = "none";
-    }
+    };
     engine.loadingScreen = new schermoDiCaricamento();
     engine.displayLoadingUI();
     const scene = new BABYLON.Scene(engine);
@@ -36,7 +36,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
     camera.attachControl(canvas,true);
     //camera.maxZ = 4096; la skybox diventa invisibile
-    
+    //BABYLON.StandardMaterial.prototype.defaultAmbientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
     inizializzaColori(scene);
 
     sun = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
@@ -56,7 +56,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     importedModelsList.forEach(x => {
         let importMesh = assetsManager.addMeshTask("task", "", "./assets/models/", x);
         importMesh.onSuccess = function(task) {
-            avanzamento.innerHTML = "(./assets/models/" + x + ")";
+            //avanzamento.innerHTML = "(./assets/models/" + x + ")";
             switch(x) {
                 case "filo.obj": wire = task.loadedMeshes; break;
                 case "chunk_binario.obj": terrain_chunk = task.loadedMeshes; break;
@@ -80,7 +80,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     importedSoundsList.forEach(x => {
         let importSound = assetsManager.addBinaryFileTask("task", "./assets/sounds/" + x);
         importSound.onSuccess = function(task) {
-            avanzamento.innerHTML = "(./assets/sounds/" + x + ")";
+            //avanzamento.innerHTML = "(./assets/sounds/" + x + ")";
             switch(x) {
                 case "horn.ogg": horn = new BABYLON.Sound("horn", task.data, scene); break;
                 case "thunder1.ogg": thunder1 = new BABYLON.Sound("thunder1", task.data, scene); break;
@@ -94,6 +94,9 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
         };
         importSound.onError = function(task, message) {console.log(message);};
     });
+    assetsManager.onProgress = function(remaining, total) {
+        avanzamento.innerHTML = total - remaining + " of " + total + " assets loaded";
+    };
     assetsManager.onFinish = function(tasks) {
         scene.autoClearDepthAndStencil = false;
         setupScene(engine, camera, scene, cities_boolean, forests_boolean, trains_boolean);
@@ -104,7 +107,8 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
             });
         });
         scene.blockfreeActiveMeshesAndRenderingGroups = false;
-    }
+        engine.hideLoadingUI();
+    };
     assetsManager.load();
 }
 
