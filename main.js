@@ -5,7 +5,7 @@
 
 "use strict";
 let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore; //models
-let sun, vegetali;
+let sun, moon, day, vegetali;
 let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5; //sounds
 const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj"];
 const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg"];
@@ -36,6 +36,8 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
     camera.attachControl(canvas,true);
     //camera.maxZ = 4096; la skybox diventa invisibile
+    
+    inizializzaColori(scene);
 
     sun = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
     sun.setDirectionToTarget(BABYLON.Vector3.Zero());
@@ -44,7 +46,9 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     sun.diffuse = new BABYLON.Color3(1, 1, 0.8);
     //sun.groundColor = new BABYLON.Color3(1, 1, 0.8);
     
-    inizializzaColori(scene);
+    /*moon = BABYLON.MeshBuilder.CreateSphere('moon', {diameter: 10}, scene);
+    moon.infiniteDistance = true;
+    moon.material = moonSurface;*/
     
     scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
     var assetsManager = new BABYLON.AssetsManager(scene);
@@ -91,23 +95,14 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
         importSound.onError = function(task, message) {console.log(message);};
     });
     assetsManager.onFinish = function(tasks) {
+        scene.autoClearDepthAndStencil = false;
         setupScene(engine, camera, scene, cities_boolean, forests_boolean, trains_boolean);
         scene.blockfreeActiveMeshesAndRenderingGroups = true;
-        ringhiera.forEach(x => x.dispose() );
-        terrain_chunk.forEach(x => x.dispose() );
-        gravelPlane.forEach(x => x.dispose() );
-        ponte1.forEach(x => x.dispose() );
-        leftPole.forEach(x => x.dispose() );
-        rightPole.forEach(x => x.dispose() );
-        palazzo.forEach(x => x.dispose() );
-        casa.forEach(x => x.dispose() );
-        wire.forEach(x => x.dispose() );
-        albero1.forEach(x => x.dispose() );
-        albero2.forEach(x => x.dispose() );
-        stazione0.forEach(x => x.dispose() );
-        carrozza.forEach(x => x.dispose() );
-        carrovuoto.forEach(x => x.dispose() );
-        locomotore.forEach(x => x.dispose() );
+        [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
+            model.forEach(modelPiece => {
+                modelPiece.dispose();
+            });
+        });
         scene.blockfreeActiveMeshesAndRenderingGroups = false;
     }
     assetsManager.load();
@@ -118,10 +113,8 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     const spazioOverlay = document.getElementById('spazio');
     const aiutoOverlay = document.getElementById('aiuto2');
     
-    scene.autoClearDepthAndStencil = false;
-    
     //creazione della skybox
-    let skybox = BABYLON.Mesh.CreateBox("skybox", 10000.0, scene);
+    let skybox = BABYLON.Mesh.CreateBox("skybox", 10000, scene);
     let skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
     skyboxMaterial.backFaceCulling = false;
     skyboxMaterial.disableLighting = true;
@@ -208,10 +201,11 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     
     let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
     let angoloLuce = 0;
+    let moonAngle = 0;
     scene.registerBeforeRender(() => {
+        day = new Date();
         switch(modalitaTempo) {
             case 0: //modalità reale
-                let day = new Date();
                 let time = day.getHours() * 60 + day.getMinutes();  //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
                 angoloLuce = time / (24 * 60) * 2 * Math.PI;    //calcolo l'angolo in base alla proporzione con i minuti contenuti in un giorno
                 angoloLuce -= Math.PI/2;    //-pi/2 è l'offset che esiste tra gli angoli calcolati ed il ciclo giorno-notte
@@ -226,12 +220,17 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             case 4: angoloLuce = Math.PI; break;    //tramonto fisso
             case 5: angoloLuce = 3 / 2 * Math.PI; break;    //mezzanotte fissa
         }
-        sun.position.x =+ Math.cos(angoloLuce)*500;
-        sun.position.y =+ Math.sin(angoloLuce)*500;
+        sun.position.x =+ Math.cos(angoloLuce) * 500;
+        sun.position.y =+ Math.sin(angoloLuce) * 500;
         sun.position.z = camera.position.z;
         if(angoloLuce <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * angoloLuce + 0.1; //alba-mattina
         else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1;   //pomeriggio-sera
         else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
+        
+        /*let moonTime = day.getDate();
+        moonAngle = moonTime / 28 * 2 * Math.PI;
+        moon.position.x += Math.sin(moonAngle) * 250;
+        moon.position.y += Math.cos(moonAngle) * 250;*/
         
         //controllo se sia presente una sovrapposizione del terreno con la base del ponte (in tal caso rendo il segmento invisibile)
         for(let i=0; i<12; i++) {

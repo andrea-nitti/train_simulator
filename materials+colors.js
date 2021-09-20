@@ -1,6 +1,6 @@
 "use strict";
 //Funzioni per radunare tutti i colori e poterli richiamare a propria scelta
-let colnero, metal, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba;
+let colnero, metal, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba, moonSurface;
 
 function inizializzaColori(scene) {
     colnero = new BABYLON.StandardMaterial('nero', scene);
@@ -25,5 +25,7 @@ function inizializzaColori(scene) {
     ground.diffuseTexture = new BABYLON.Texture("./assets/textures/ground.jpg", scene);
     erba = new BABYLON.StandardMaterial('erba', scene);
     erba.diffuseTexture = new BABYLON.Texture("./assets/textures/erba.jpg", scene);
-    [colnero, metal, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba].forEach(material => {material.freeze();} );
+    moonSurface = new BABYLON.StandardMaterial('moonSurface', scene);
+    moonSurface.emissiveColor = new BABYLON.Color3(1, 1, 1);
+    [colnero, metal, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba, moonSurface].forEach(material => {material.freeze();} );
 }

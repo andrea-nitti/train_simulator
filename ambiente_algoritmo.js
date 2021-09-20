@@ -52,13 +52,17 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
                 break;
             case 1:  //pioggia
                 thunderstorm.stop();
+                rain.setVolume(0);
                 rain.play();
+                rain.setVolume(1, 10);  //syntax: (volume level, seconds to reach the specified volume)
                 rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
                 break;
             case 2:  //temporale
                 rain.stop();
+                thunderstorm.setVolume(0);
                 thunderstorm.play();
+                thunderstorm.setVolume(1, 6);
                 rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
                 break;
