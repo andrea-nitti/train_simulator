@@ -152,12 +152,10 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     if(forests_boolean) {
         for(let i=0; i<2; i++) {
             let Forest = createForestGroup(scene);
-            Forest[0].position.z = -100000;
-            Forest[1].position.z = -100000;
+            Forest.position.z = -100000;
             forests.push(Forest);
         }
-        forests[0][0].position.z = stazione.position.z + 1024;
-        forests[0][1].position.z = stazione.position.z + 1024;
+        forests[0].position.z = stazione.position.z + 256;
         forests.push(forests.shift());
     }
     
@@ -177,7 +175,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             City.position.z = -100000;
             cities.push(City);
         }
-        cities[0].position.z = stazione.position.z;
+        cities[0].position.z = -1024;   //DA CAMBIARE --> aggiungere al modello della prima stazione alcune città esterne
         cities.push(cities.shift());
     }
     
@@ -278,8 +276,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
                 cities.push(cities.shift());
             }
             if(forests_boolean) {
-                forests[0][0].position.z = stazione.position.z + 1024;
-                forests[0][1].position.z = stazione.position.z + 1024;
+                forests[0].position.z = stazione.position.z + 1024;
                 forests.push(forests.shift());
             }
             let indice = Math.floor(Math.random() * listaCartelli.length);

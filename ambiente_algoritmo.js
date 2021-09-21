@@ -32,10 +32,13 @@ function cittaRandom(scene, posx, posz, arrayOfCityMeshes) {
 
 //Funzione per creare un gruppo di x foreste
 function createForestGroup(scene) {
-    let Forest1 = createForest(scene, 20, 0);
-    let Forest2 = createForest(scene, -420, 0);
-    let arrayOfForestMeshes = [Forest1, Forest2];
-    return arrayOfForestMeshes;
+    let parent_mesh = new BABYLON.MeshBuilder.CreateBox('parent_mesh', {size: 1}, scene);
+    parent_mesh.isVisible = false;
+    for(let i=-1; i<=1; i++) {
+        createForest(scene, 50, i * 256, parent_mesh);
+        createForest(scene, -430, i * 256, parent_mesh);
+    }
+    return parent_mesh;
 }
 
 //Funzione per il tempo atmosferico
