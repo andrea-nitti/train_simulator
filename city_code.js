@@ -27,8 +27,8 @@ function cittaP1(scene, posx, posz, arrayOfCityMeshes) {
     casaBassa(scene, posx+478, posz+240, arrayOfCityMeshes);
     casaBassa(scene, posx+458, posz+382, arrayOfCityMeshes);
 
-    prato(scene, posx+140, posz+326, arrayOfCityMeshes);
-    prato(scene, posx+330, posz+160, arrayOfCityMeshes);
+    prato(scene, posx+140, posz+326, 128, arrayOfCityMeshes);
+    prato(scene, posx+330, posz+160, 128, arrayOfCityMeshes);
 
     terrenoCitta(scene, posx+302.5, posz+240, arrayOfCityMeshes);
 
@@ -62,14 +62,8 @@ function cittaP2(scene, posx, posz, arrayOfCityMeshes) {
     casaBassa(scene, posx+490, posz+340, arrayOfCityMeshes);
     casaBassa(scene, posx+478, posz+420, arrayOfCityMeshes);
 
-    prato(scene, posx+240, posz+50, arrayOfCityMeshes);
-    prato(scene, posx+240, posz+178, arrayOfCityMeshes);
-    prato(scene, posx+368, posz+50, arrayOfCityMeshes);
-    prato(scene, posx+368, posz+178, arrayOfCityMeshes);
-    prato(scene, posx+240, posz+306, arrayOfCityMeshes);
-    prato(scene, posx+240, posz+434, arrayOfCityMeshes);
-    prato(scene, posx+368, posz+306, arrayOfCityMeshes);
-    prato(scene, posx+368, posz+434, arrayOfCityMeshes);
+    prato(scene, posx+304, posz+368, 256, arrayOfCityMeshes);
+    prato(scene, posx+304, posz+112, 256, arrayOfCityMeshes);
 
     terrenoCitta(scene, posx+302.5, posz+240, arrayOfCityMeshes);
 
@@ -136,7 +130,7 @@ function cittaP3(scene, posx, posz, arrayOfCityMeshes) {
     casaBassa(scene, posx+60, posz+280, arrayOfCityMeshes);
     casaBassa(scene, posx+62, posz+350, arrayOfCityMeshes);
 
-    prato(scene, posx+300, posz+240, arrayOfCityMeshes);
+    prato(scene, posx+300, posz+240, 128, arrayOfCityMeshes);
 
     terrenoCitta(scene, posx+302.5, posz+240, arrayOfCityMeshes);
 
@@ -186,11 +180,8 @@ function cittaP4(scene, posx, posz, arrayOfCityMeshes) {
     casaBassa(scene, posx+340, posz+440, arrayOfCityMeshes);
     casaBassa(scene, posx+280, posz+442, arrayOfCityMeshes);
     casaBassa(scene, posx+208, posz+440, arrayOfCityMeshes);
-
-    prato(scene, posx+340, posz+156, arrayOfCityMeshes);
-    prato(scene, posx+260, posz+156, arrayOfCityMeshes);
-    prato(scene, posx+340, posz+200, arrayOfCityMeshes);
-    prato(scene, posx+260, posz+200, arrayOfCityMeshes);
+    
+    prato(scene, posx+300, posz+180, 200, arrayOfCityMeshes);
 
     terrenoCitta(scene, posx+302.5, posz+240, arrayOfCityMeshes);
 
@@ -250,11 +241,11 @@ function terrenoCitta(scene, posx, posz, arrayOfCityMeshes) {
     arrayOfCityMeshes.push(terrenoCitta);
 }
 
-function prato(scene, posx, posz, arrayOfCityMeshes) {
-    let prato = BABYLON.MeshBuilder.CreatePlane('prato', {width: 128, height: 128},scene);
+function prato(scene, posx, posz, size, arrayOfCityMeshes) {
+    let prato = BABYLON.MeshBuilder.CreatePlane('prato', {width: size, height: size},scene);
     prato.material = erba;
     prato.position.x = posx;
-    prato.position.y = 2;
+    prato.position.y = 0;
     prato.position.z = posz;
     prato.rotation.x = Math.PI/2;
     arrayOfCityMeshes.push(prato);

@@ -13,7 +13,7 @@ function createCityGroup(scene) {
 }
 
 function cittaRandom(scene, posx, posz, arrayOfCityMeshes) {
-    let random = Math.round(Math.random()*100);
+    let random = Math.round(Math.random() * 100);
     switch (true) {
         case random < 100 && random > 73:
           cittaP1(scene, posx, posz, arrayOfCityMeshes);
