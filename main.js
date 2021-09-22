@@ -147,6 +147,10 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     let stazione = createStation(scene);
     stazione.isVisible = false;
     let listaCartelli = createSigns(scene);
+    let indice = Math.floor(Math.random() * listaCartelli.length);
+    let cartello = listaCartelli[indice];
+    cartello.position.z = 92;
+    listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
     
     let forests = [];
     if(forests_boolean) {
@@ -175,15 +179,8 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             City.position.z = -100000;
             cities.push(City);
         }
-        cities[0].position.z = -1024;   //DA CAMBIARE --> aggiungere al modello della prima stazione alcune città esterne
-        cities.push(cities.shift());
-    }
-    
-    let indice = Math.floor(Math.random() * listaCartelli.length);
-    let cartello = listaCartelli[indice];
-    if(cartello != undefined) {
-        cartello.position.z = stazione.position.z + 12;
-        listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
+        /*cities[0].position.z = -1024;   //DA CAMBIARE --> aggiungere al modello della prima stazione alcune città esterne
+        cities.push(cities.shift());*/
     }
     
     let treno;
