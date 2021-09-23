@@ -176,7 +176,8 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     if(cities_boolean) {
         for(let i=0; i<5; i++) {
             let City = createCityGroup(scene);
-            City.position.z = -100000;
+            City.city.position.z = -100000;
+            City.trees.position.z = -100000;
             cities.push(City);
         }
         /*cities[0].position.z = -1024;   //DA CAMBIARE --> aggiungere al modello della prima stazione alcune città esterne
@@ -269,7 +270,8 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);    //sposto l'ultima stazione ad almeno 2048 unità di distanza dalla precedente; la massima distanza ammessa è 10240 unità
             stazione.isVisible = true;
             if(cities_boolean) {
-                cities[0].position.z = stazione.position.z;
+                cities[0].city.position.z = stazione.position.z;
+                cities[0].trees.position.z = stazione.position.z;
                 cities.push(cities.shift());
             }
             if(forests_boolean) {

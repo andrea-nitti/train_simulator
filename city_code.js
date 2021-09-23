@@ -1,5 +1,5 @@
 "use strict";
-function cittaP1(scene, posx, posz, arrayOfCityMeshes) {
+function cittaP1(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh) {
     casaAlta(scene, posx+64, posz, arrayOfCityMeshes);
     casaAlta(scene, posx+64, posz+80, arrayOfCityMeshes);
     casaAlta(scene, posx+64, posz+160, arrayOfCityMeshes);
@@ -35,18 +35,13 @@ function cittaP1(scene, posx, posz, arrayOfCityMeshes) {
     muro(scene, posx+48, posz+240, arrayOfCityMeshes);
     muro(scene, posx+560, posz+240, arrayOfCityMeshes);
     
-    /*albero(scene, posx+100, posz+300, arrayOfCityMeshes);
-    albero(scene, posx+120, posz+340, arrayOfCityMeshes);
-    albero(scene, posx+165, posz+310, arrayOfCityMeshes);
-    //albero(scene, posx+170, posz+360, arrayOfCityMeshes);
-
-    albero(scene, posx+290, posz+135, arrayOfCityMeshes);
-    //albero(scene, posx+310, posz+175, arrayOfCityMeshes);
-    albero(scene, posx+355, posz+145, arrayOfCityMeshes);
-    albero(scene, posx+360, posz+195, arrayOfCityMeshes);*/
+    let cityTree = albero();
+    let arrayOfTrees = [BABYLON.Matrix.Translation(posx+100, 0, posz+300),BABYLON.Matrix.Translation(posx+120, 0, posz+340),BABYLON.Matrix.Translation(posx+165, 0, posz+310),BABYLON.Matrix.Translation(posx+290, 0, posz+135),BABYLON.Matrix.Translation(posx+355, 0, posz+145),BABYLON.Matrix.Translation(posx+360, 0, posz+195)];
+    cityTree.thinInstanceAdd(arrayOfTrees);
+    cityTree.setParent(cityTreesParentMesh);
 }
 
-function cittaP2(scene, posx, posz, arrayOfCityMeshes) {
+function cittaP2(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh) {
 
     casaBassa(scene, posx+70, posz+20, arrayOfCityMeshes);
     casaBassa(scene, posx+70, posz+100, arrayOfCityMeshes);
@@ -70,20 +65,27 @@ function cittaP2(scene, posx, posz, arrayOfCityMeshes) {
     muro(scene, posx+48, posz+240, arrayOfCityMeshes);
     muro(scene, posx+560, posz+240, arrayOfCityMeshes);
     
-    /*for(let r=200; r<401; r+=50) {
-        for(let i=10; i<461; i+=50) {
-            albero(scene, posx+r, posz+i, arrayOfCityMeshes)
+    let cityTree = albero();
+    let arrayOfTrees = [];
+    for(let r=200; r<401; r+=100) {
+        for(let i=10; i<461; i+=100) {
+            if(Math.random() < 0.65) {
+                arrayOfTrees.push(BABYLON.Matrix.Translation(posx+r, 0, posz+i));
+            }
         }
     }
-
-    for(let r=225; r<376; r+=50) {
-        for(let i=35; i<436; i+=50) {
-            albero(scene, posx+r, posz+i, arrayOfCityMeshes)
+    for(let r=225; r<376; r+=100) {
+        for(let i=35; i<436; i+=100) {
+            if(Math.random() < 0.65) {
+                arrayOfTrees.push(BABYLON.Matrix.Translation(posx+r, 0, posz+i));
+            }
         }
-    }*/
+    }
+    cityTree.thinInstanceAdd(arrayOfTrees);
+    cityTree.setParent(cityTreesParentMesh);
 }
 
-function cittaP3(scene, posx, posz, arrayOfCityMeshes) {
+function cittaP3(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh) {
 
     casaAlta(scene, posx+400, posz+334, arrayOfCityMeshes);
     casaAlta(scene, posx+400, posz+254, arrayOfCityMeshes);
@@ -138,7 +140,7 @@ function cittaP3(scene, posx, posz, arrayOfCityMeshes) {
     muro(scene, posx+560, posz+240, arrayOfCityMeshes);
 }
 
-function cittaP4(scene, posx, posz, arrayOfCityMeshes) {
+function cittaP4(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh) {
 
     casaBassa(scene, posx+142, posz-4, arrayOfCityMeshes);
     casaBassa(scene, posx+202, posz-4, arrayOfCityMeshes);
@@ -187,18 +189,11 @@ function cittaP4(scene, posx, posz, arrayOfCityMeshes) {
 
     muro(scene, posx+48, posz+240, arrayOfCityMeshes);
     muro(scene, posx+560, posz+240, arrayOfCityMeshes);
-    
-    /*albero(scene, posx+66, posz+4, arrayOfCityMeshes);
-    //albero(scene, posx+70, posz+54, arrayOfCityMeshes);
-    albero(scene, posx+70, posz+96, arrayOfCityMeshes);
-    //albero(scene, posx+68, posz+148, arrayOfCityMeshes);
-    albero(scene, posx+70, posz+208, arrayOfCityMeshes);
-    //albero(scene, posx+74, posz+250, arrayOfCityMeshes);
-    albero(scene, posx+72, posz+304, arrayOfCityMeshes);
-    //albero(scene, posx+70, posz+348, arrayOfCityMeshes);
-    albero(scene, posx+70, posz+403, arrayOfCityMeshes);
-    //albero(scene, posx+68, posz+458, arrayOfCityMeshes);
-    */
+
+    let cityTree = albero();
+    let arrayOfTrees = [BABYLON.Matrix.Translation(posx+66, 0, posz+4),BABYLON.Matrix.Translation(posx+70, 0, posz+96),BABYLON.Matrix.Translation(posx+70, 0, posz+208),BABYLON.Matrix.Translation(posx+72, 0, posz+304),BABYLON.Matrix.Translation(posx+70, 0, posz+403)];
+    cityTree.thinInstanceAdd(arrayOfTrees);
+    cityTree.setParent(cityTreesParentMesh);
 }
 
 function muro(scene, posx, posz, arrayOfCityMeshes) {
@@ -251,18 +246,18 @@ function prato(scene, posx, posz, size, arrayOfCityMeshes) {
     arrayOfCityMeshes.push(prato);
 }
 
-/*function albero(scene, posx, posz, parent_mesh) {
-    let x = Math.floor(Math.random() * 2);
-    vegetali[x].forEach(x => {
-        let partePianta = x.clone('alberoscelto');
-        partePianta.position.x = posx;
-        partePianta.position.y = 0;
-        partePianta.position.z = posz;
-        partePianta.setParent(parent_mesh);
+function albero() {
+    let arrayOfTreeMeshes = []
+    albero1.forEach(x => {
+        let partePianta = x.clone('albero1');
+        arrayOfTreeMeshes.push(partePianta);
     });
-}*/
+    var pianta = BABYLON.Mesh.MergeMeshes(arrayOfTreeMeshes, true, true, undefined, false, true);
+    pianta.alwaysSelectAsActiveMesh = true; //sempre visibile
+    return pianta;
+}
 
-function createForest(scene, posx, posz, parent_mesh) {
+function createForest(scene, posx, posz, forestParentMesh) {
     let arrayOfTrees = [];
     for(let x=0; x<256; x+=50) {
         for(let z=0; z<225; z+=50) {
@@ -272,17 +267,11 @@ function createForest(scene, posx, posz, parent_mesh) {
             }
         }
     }
-    let arrayOfTreeMeshes = [];
-    albero1.forEach(x => {
-        let partePianta = x.clone('albero1');
-        arrayOfTreeMeshes.push(partePianta);
-    });
-    var pianta = BABYLON.Mesh.MergeMeshes(arrayOfTreeMeshes, true, true, undefined, false, true);
-    pianta.alwaysSelectAsActiveMesh = true; //sempre visibile
-    pianta.thinInstanceAdd(arrayOfTrees);
-    pianta.setParent(parent_mesh);
+    let forestTree = albero();
+    forestTree.setParent(forestParentMesh);
+    forestTree.thinInstanceAdd(arrayOfTrees);
     //casaBassa(scene, posx+170, posz+380, parent_mesh);
     //casaBassa(scene, posx+290, posz+20, parent_mesh);
     
-    return pianta;
+    return forestTree;
 }

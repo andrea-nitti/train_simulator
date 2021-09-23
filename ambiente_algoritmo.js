@@ -3,42 +3,44 @@
 function createCityGroup(scene) {
     let arrayOfCityMeshes = [];
     
+    let cityTreesParentMesh = new BABYLON.MeshBuilder.CreateBox('cityTreesParentMesh', {size: 1}, scene);
+    cityTreesParentMesh.isVisible = false;
     for(let posz=-512; posz<=512; posz+=512) {
-        cittaRandom(scene, 20, posz, arrayOfCityMeshes);
-        cittaRandom(scene, -629.5, posz, arrayOfCityMeshes);
+        cittaRandom(scene, 20, posz, arrayOfCityMeshes, cityTreesParentMesh);
+        cittaRandom(scene, -629.5, posz, arrayOfCityMeshes, cityTreesParentMesh);
     }
     
     var cityMesh = BABYLON.Mesh.MergeMeshes(arrayOfCityMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di città
-    return cityMesh;
+    return {city: cityMesh, trees: cityTreesParentMesh};
 }
 
-function cittaRandom(scene, posx, posz, arrayOfCityMeshes) {
+function cittaRandom(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh) {
     let random = Math.round(Math.random() * 100);
-    switch (true) {
+    switch(true) {
         case random < 100 && random > 73:
-          cittaP1(scene, posx, posz, arrayOfCityMeshes);
+          cittaP1(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
           break;
         case random < 74 && random > 48:
-          cittaP2(scene, posx, posz, arrayOfCityMeshes);
+          cittaP2(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
           break;
         case random < 49 && random > 23:
-          cittaP3(scene, posx, posz, arrayOfCityMeshes);
+          cittaP3(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
           break;
         case random < 24 && random > -1:
-          cittaP4(scene, posx, posz, arrayOfCityMeshes);
+          cittaP4(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
           break;
     }
 }
 
 //Funzione per creare un gruppo di x foreste
 function createForestGroup(scene) {
-    let parent_mesh = new BABYLON.MeshBuilder.CreateBox('parent_mesh', {size: 1}, scene);
-    parent_mesh.isVisible = false;
+    let forestParentMesh = new BABYLON.MeshBuilder.CreateBox('forestParentMesh', {size: 1}, scene);
+    forestParentMesh.isVisible = false;
     for(let i=-1; i<=1; i++) {
-        createForest(scene, 50, i * 256, parent_mesh);
-        createForest(scene, -430, i * 256, parent_mesh);
+        createForest(scene, 50, i * 256, forestParentMesh);
+        createForest(scene, -430, i * 256, forestParentMesh);
     }
-    return parent_mesh;
+    return forestParentMesh;
 }
 
 //Funzione per il tempo atmosferico
