@@ -205,32 +205,32 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     const globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
     
     let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
-    let angoloLuce = 0;
+    let sunAngle = 0;
     let moonAngle = 0;
     scene.registerBeforeRender(() => {
         day = new Date();
         switch(modalitaTempo) {
             case 0: //modalità reale
                 const time = day.getHours() * 60 + day.getMinutes();    //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
-                angoloLuce = time / (24 * 60) * 2 * Math.PI;    //calcolo l'angolo in base alla proporzione con i minuti contenuti in un giorno
-                angoloLuce -= Math.PI/2;    //-pi/2 è l'offset che esiste tra gli angoli calcolati ed il ciclo giorno-notte
-                if(angoloLuce < 0) angoloLuce = 2 * Math.PI + angoloLuce;   //converto in positivo gli angoli compresi tra le 0:00 e le 6:00
+                sunAngle = time / (24 * 60) * 2 * Math.PI;    //calcolo l'angolo in base alla proporzione con i minuti contenuti in un giorno
+                sunAngle -= Math.PI/2;    //-pi/2 è l'offset che esiste tra gli angoli calcolati ed il ciclo giorno-notte
+                if(sunAngle < 0) sunAngle = 2 * Math.PI + sunAngle;   //converto in positivo gli angoli compresi tra le 0:00 e le 6:00
                 break;
             case 1: //tempo accelerato
-                angoloLuce += .005;
-                if(angoloLuce > 2*Math.PI) angoloLuce = 0;
+                sunAngle += .005;
+                if(sunAngle > 2*Math.PI) sunAngle = 0;
                 break;
-            case 2: angoloLuce = 0; break;  //alba fissa
-            case 3: angoloLuce = Math.PI/2; break;  //mezzogiorno fisso
-            case 4: angoloLuce = Math.PI; break;    //tramonto fisso
-            case 5: angoloLuce = 3 / 2 * Math.PI; break;    //mezzanotte fissa
+            case 2: sunAngle = 0; break;  //alba fissa
+            case 3: sunAngle = Math.PI/2; break;  //mezzogiorno fisso
+            case 4: sunAngle = Math.PI; break;    //tramonto fisso
+            case 5: sunAngle = 3 / 2 * Math.PI; break;    //mezzanotte fissa
         }
-        sun.position.x = Math.cos(angoloLuce) * 500;
-        sun.position.y = Math.sin(angoloLuce) * 500;
+        sun.position.x = Math.cos(sunAngle) * 500;
+        sun.position.y = Math.sin(sunAngle) * 500;
         sun.position.z = camera.position.z;
-        if(angoloLuce <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * angoloLuce + 0.1;  //alba-mattina
-        else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1; //pomeriggio-sera
-        else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;  //notte
+        if(sunAngle <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * sunAngle + 0.1;  //alba-mattina
+        else if(sunAngle > Math.PI/2 && sunAngle < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * sunAngle + 2 + 0.1; //pomeriggio-sera
+        else if(sunAngle >= Math.PI) skyboxMaterial.alpha = 0.1;  //notte
         
         //la Luna ruota in senso opposto rispetto al Sole
         const moonTime = day.getDate();
@@ -304,12 +304,11 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             case 72:
                 if(aiutoOverlay.style.display === "") { //H --> mostra aiuto
                     aiutoOverlay.style.display = "block";
-                    break;
                 }
                 else if(aiutoOverlay.style.display === "block") {   //H --> nascondi aiuto
                     aiutoOverlay.style.display = "";
-                    break;
                 }
+                break;
             default: return;
         }
         evt.preventDefault();

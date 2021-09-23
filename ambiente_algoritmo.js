@@ -16,20 +16,10 @@ function createCityGroup(scene) {
 
 function cittaRandom(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh) {
     const random = Math.round(Math.random() * 100);
-    switch(true) {
-        case random < 100 && random > 73:
-          cittaP1(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
-          break;
-        case random < 74 && random > 48:
-          cittaP2(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
-          break;
-        case random < 49 && random > 23:
-          cittaP3(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
-          break;
-        case random < 24 && random > -1:
-          cittaP4(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
-          break;
-    }
+    if(random > 73) cittaP1(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
+    else if(random > 48) cittaP2(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
+    else if(random > 23) cittaP3(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
+    else cittaP4(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
 }
 
 //Funzione per creare un gruppo di 3 foreste

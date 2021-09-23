@@ -34,44 +34,44 @@ function createTerrain(scene) {
         if(z_offset % (4*chunk_size) == 0) {    //creo i pali ogni 5 chunks
             for(let x_offset=-8; x_offset<=8; x_offset+=16) {
                 wire.forEach(x => {
-                    const filo_sup = x.clone('wire');
-                    filo_sup.position.x = x_offset;
-                    filo_sup.position.y = 38;
-                    filo_sup.position.z = z_offset + 2 * chunk_size;
-                    arrayOfBaseTerrainMeshes.push(filo_sup);
+                    const upperWire = x.clone('');
+                    upperWire.position.x = x_offset;
+                    upperWire.position.y = 38;
+                    upperWire.position.z = z_offset + 2 * chunk_size;
+                    arrayOfBaseTerrainMeshes.push(upperWire);
                 });
             }
             leftPole.forEach(x => {
-                const partePalo = x.clone('palo');
-                partePalo.position.x = -24;
-                partePalo.position.z = z_offset;
-                arrayOfBaseTerrainMeshes.push(partePalo);
+                const polePiece = x.clone('');
+                polePiece.position.x = -24;
+                polePiece.position.z = z_offset;
+                arrayOfBaseTerrainMeshes.push(polePiece);
             });
             rightPole.forEach(x => {
-                const partePalo = x.clone('palo');
-                partePalo.position.x = +24;
-                partePalo.position.z = z_offset;
-                arrayOfBaseTerrainMeshes.push(partePalo);
+                const polePiece = x.clone('');
+                polePiece.position.x = +24;
+                polePiece.position.z = z_offset;
+                arrayOfBaseTerrainMeshes.push(polePiece);
             });
         }
         
         //creazione fili
         for(let x_offset = -8; x_offset<=8; x_offset+=16) {
-            const filo_inf = BABYLON.MeshBuilder.CreateCylinder('filo_inf', {height: chunk_size, diameter: 0.25}, scene);   //filo inferiore della linea aerea
-            filo_inf.material = colnero;
-            filo_inf.rotation.x = Math.PI/2;
-            filo_inf.position.x = x_offset;
-            filo_inf.position.y = 27.75;
-            filo_inf.position.z = z_offset;
-            arrayOfBaseTerrainMeshes.push(filo_inf);
-            const tirante = BABYLON.MeshBuilder.CreateCylinder('tirante2', {height: chunk_size, diameter: 0.35}, scene);    //tirante situato tra ogni palo ed il successivo
-            tirante.material = metal;
-            tirante.rotation.x = Math.PI/2;
-            if(x_offset < 0) tirante.position.x = -24;
-            else tirante.position.x = 24;
-            tirante.position.y = 22.5;
-            tirante.position.z = z_offset;
-            arrayOfBaseTerrainMeshes.push(tirante);
+            const lowerWire = BABYLON.MeshBuilder.CreateCylinder('lowerWire', {height: chunk_size, diameter: 0.25}, scene); //filo inferiore della linea aerea
+            lowerWire.material = colnero;
+            lowerWire.rotation.x = Math.PI/2;
+            lowerWire.position.x = x_offset;
+            lowerWire.position.y = 27.75;
+            lowerWire.position.z = z_offset;
+            arrayOfBaseTerrainMeshes.push(lowerWire);
+            const tieRod = BABYLON.MeshBuilder.CreateCylinder('tieRod', {height: chunk_size, diameter: 0.35}, scene);   //tieRod situato tra ogni palo ed il successivo
+            tieRod.material = metal;
+            tieRod.rotation.x = Math.PI/2;
+            if(x_offset < 0) tieRod.position.x = -24;
+            else tieRod.position.x = 24;
+            tieRod.position.y = 22.5;
+            tieRod.position.z = z_offset;
+            arrayOfBaseTerrainMeshes.push(tieRod);
         }
     }
     const baseTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfBaseTerrainMeshes, true, true, undefined, false, true); //mesh che raggruppa un intero blocco di terreno (per motivi di efficienza)
@@ -84,17 +84,17 @@ function createBridge(skybox, scene) {
     const arrayOfBridgeMeshes = [];
     for(let i=0; i<=512; i+=512) {
         ponte1.forEach(x => {
-            const partePonte = x.clone('ponte1');
-            partePonte.position.z = 1008 + i;
-            if(i == 0) partePonte.rotation.y = Math.PI;
-            arrayOfBridgeMeshes.push(partePonte);
+            const bridgePart = x.clone('');
+            bridgePart.position.z = 1008 + i;
+            if(i == 0) bridgePart.rotation.y = Math.PI;
+            arrayOfBridgeMeshes.push(bridgePart);
         });
     }
-    const river = BABYLON.MeshBuilder.CreatePlane('river', {size: 975}, scene);
+    const river = BABYLON.MeshBuilder.CreatePlane('river', {width: 1184, height: 975}, scene);
     river.rotation.x = Math.PI/2;
     river.position.y = -80;
     river.position.z = 1264;
-    const riverGround = BABYLON.MeshBuilder.CreatePlane('riverGround', {size: 975}, scene);
+    const riverGround = BABYLON.MeshBuilder.CreatePlane('riverGround', {width: 1184, height: 975}, scene);
     riverGround.rotation.x = Math.PI/2;
     riverGround.position.y = -82.5;
     riverGround.position.z = 1264;
