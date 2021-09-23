@@ -110,16 +110,16 @@ function musolat(scene, posx, posz, colore) {
 }*/
 
 function train(scene) {
-    let arrayOfTrainMeshes = [];
+    const arrayOfTrainMeshes = [];
     for(let i=0; i<9; i++) vagone(scene, 8, i*67.6, arrayOfTrainMeshes);
     //locomotiva(scene, 8, 0, arrayOfTrainMeshes);
-    let trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
+    const trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
     return trainMesh;
 }
 
 function vagone(scene, posx, posz, arrayOfTrainMeshes) {
     carrozza.forEach(x => {
-        let parteCarrozza = x.clone('carrozza');
+        const parteCarrozza = x.clone('carrozza');
         parteCarrozza.position.x = posx;
         parteCarrozza.position.z = posz;
         arrayOfTrainMeshes.push(parteCarrozza);
@@ -134,7 +134,7 @@ function vagone(scene, posx, posz, arrayOfTrainMeshes) {
 
 function carro(scene, posx, posz, arrayOfTrainMeshes) {
     carrovuoto.forEach(x => {
-        let parteCarro = x.clone('carrovuoto');
+        const parteCarro = x.clone('carrovuoto');
         parteCarro.position.x = posx;
         parteCarro.position.z = posz;
         arrayOfTrainMeshes.push(parteCarro);
@@ -143,7 +143,7 @@ function carro(scene, posx, posz, arrayOfTrainMeshes) {
 
 function locomotiva(scene, posx, posz, arrayOfTrainMeshes) {
     locomotore.forEach(x => {
-        let parteLocomotore = x.clone('locomotore');
+        const parteLocomotore = x.clone('locomotore');
         parteLocomotore.position.x = posx;
         parteLocomotore.position.z = posz;
         arrayOfTrainMeshes.push(parteLocomotore);

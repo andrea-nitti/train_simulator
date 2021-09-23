@@ -24,7 +24,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     canvas.addEventListener('wheel', evt => evt.preventDefault());
     const engine = new BABYLON.Engine(canvas, true);
     function schermoDiCaricamento() {}
-    schermoDiCaricamento.prototype.displayLoadingUI = function() {caricamento.innerHTML = "Loading...";};    //".prototype" consente di aggiungere una nuova proprietà (displayLoadingUI) al costruttore di un oggetto (schermoDiCaricamento)
+    schermoDiCaricamento.prototype.displayLoadingUI = function() {caricamento.innerHTML = "Loading...";};   //".prototype" consente di aggiungere una nuova proprietà (displayLoadingUI) al costruttore di un oggetto (schermoDiCaricamento)
     schermoDiCaricamento.prototype.hideLoadingUI = function() {
         caricamento.style.display = "none";
         avanzamento.style.display = "none";
@@ -33,7 +33,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     engine.displayLoadingUI();
     const scene = new BABYLON.Scene(engine);
     const camera = new BABYLON.UniversalCamera('cam',new BABYLON.Vector3(-8,7.5,0), scene);
-    camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = []; //rimuovo i controlli predefiniti della tastiera
+    camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = [];    //rimuovo i controlli predefiniti della tastiera
     camera.attachControl(canvas,true);
     //camera.maxZ = 4096; la skybox diventa invisibile
     //BABYLON.StandardMaterial.prototype.defaultAmbientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
@@ -49,18 +49,18 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     moon = BABYLON.MeshBuilder.CreateSphere('moon', {diameter: 10}, scene);
     moon.infiniteDistance = true;
     moon.material = moonSurface;
-    let moonHalo = new BABYLON.GlowLayer("moonHalo", scene);
-    let moonTexture = new BABYLON.Texture("./assets/textures/moon_surface.jpg");
+    const moonHalo = new BABYLON.GlowLayer("moonHalo", scene);
+    const moonTexture = new BABYLON.Texture("./assets/textures/moon_surface.jpg");
     moonHalo.customEmissiveTextureSelector = (mesh, submesh, material) => {
         return moonTexture;
     };
     moonHalo.addIncludedOnlyMesh(moon, BABYLON.Color3(1, 1, 1), true);
     
-    scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
-    let assetsManager = new BABYLON.AssetsManager(scene);
+    scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15);    //imposto il colore esterno alla skybox (blu scuro)
+    const assetsManager = new BABYLON.AssetsManager(scene);
     assetsManager.useDefaultLoadingScreen = false;
     importedModelsList.forEach(x => {
-        let importMesh = assetsManager.addMeshTask("task", "", "./assets/models/", x);
+        const importMesh = assetsManager.addMeshTask("task", "", "./assets/models/", x);
         importMesh.onSuccess = function(task) {
             //avanzamento.innerHTML = "(./assets/models/" + x + ")";
             switch(x) {
@@ -84,7 +84,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
         importMesh.onError = function(task, message) {console.log(message);};
     });
     importedSoundsList.forEach(x => {
-        let importSound = assetsManager.addBinaryFileTask("task", "./assets/sounds/" + x);
+        const importSound = assetsManager.addBinaryFileTask("task", "./assets/sounds/" + x);
         importSound.onSuccess = function(task) {
             //avanzamento.innerHTML = "(./assets/sounds/" + x + ")";
             switch(x) {
@@ -124,8 +124,8 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     const aiutoOverlay = document.getElementById('aiuto2');
     
     //creazione della skybox
-    let skybox = BABYLON.Mesh.CreateBox("skybox", 10000, scene);
-    let skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
+    const skybox = BABYLON.Mesh.CreateBox("skybox", 10000, scene);
+    const skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
     skyboxMaterial.backFaceCulling = false;
     skyboxMaterial.disableLighting = true;
     skyboxMaterial.alpha = 1;
@@ -136,26 +136,26 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     
     vegetali = [albero1, albero2];
     
-    let segments = [];  //array che contiene 12 modelli di terreno ferroviario (lunghi ciascuno 256 unità)
+    const segments = [];    //array che contiene 12 modelli di terreno ferroviario (lunghi ciascuno 256 unità)
     for(let i=0; i<12; i++) {
-        let Terrain = createTerrain(scene);
+        const Terrain = createTerrain(scene);
         Terrain.railRoad.position.z = i * 256;
         Terrain.terrain.position.z = i * 256;
         segments.push(Terrain);
     }
     
-    let stazione = createStation(scene);
+    const stazione = createStation(scene);
     stazione.isVisible = false;
-    let listaCartelli = createSigns(scene);
-    let indice = Math.floor(Math.random() * listaCartelli.length);
-    let cartello = listaCartelli[indice];
+    const listaCartelli = createSigns(scene);
+    const indice = Math.floor(Math.random() * listaCartelli.length);
+    const cartello = listaCartelli[indice];
     cartello.position.z = 92;
-    listaCitta.splice(indice, 1);    //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
+    listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
     
-    let forests = [];
+    const forests = [];
     if(forests_boolean) {
         for(let i=0; i<2; i++) {
-            let Forest = createForestGroup(scene);
+            const Forest = createForestGroup(scene);
             Forest.position.z = -100000;
             forests.push(Forest);
         }
@@ -172,10 +172,10 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     scene.fogColor = new BABYLON.Color3(0.494, 0.604, 0.686);
     skybox.applyFog = false;
     
-    let cities = [];    //array che contiene la lista delle mesh (fuse insieme) di 5*3*2 città
+    const cities = [];  //array che contiene la lista delle mesh (fuse insieme) di 5*3*2 città
     if(cities_boolean) {
         for(let i=0; i<5; i++) {
-            let City = createCityGroup(scene);
+            const City = createCityGroup(scene);
             City.city.position.z = -100000;
             City.trees.position.z = -100000;
             cities.push(City);
@@ -188,12 +188,11 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     if(trains_boolean) {
         treno = train(scene);
     }
-    let ponte = createBridge(skybox, scene);
+    const ponte = createBridge(skybox, scene);
     
     const rainParticleSystem = new BABYLON.GPUParticleSystem('rain', {capacity: 100000, randomTextureSize: 4096}, scene);
-    let droplet = new BABYLON.Texture("./assets/textures/rain.png");
-    rainParticleSystem.particleTexture = droplet;
-    let emitter = rainParticleSystem.createBoxEmitter(new BABYLON.Vector3(0, -150, 0), new BABYLON.Vector3(0, -250, 0), new BABYLON.Vector3(-75, 0, -400), new BABYLON.Vector3(75, 0, 400));
+    rainParticleSystem.particleTexture = new BABYLON.Texture("./assets/textures/rain.png");
+    const emitter = rainParticleSystem.createBoxEmitter(new BABYLON.Vector3(0, -150, 0), new BABYLON.Vector3(0, -250, 0), new BABYLON.Vector3(-75, 0, -400), new BABYLON.Vector3(75, 0, 400));
     rainParticleSystem.emitter = new BABYLON.Vector3(0, 75, 0);
     rainParticleSystem.minLifeTime = 4;
     rainParticleSystem.maxLifeTime = 7;
@@ -202,8 +201,8 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     rainParticleSystem.minScaleX = 0.05;
     rainParticleSystem.maxScaleX = 0.1;
     
-    let lightningPlanes = createLightning(scene);
-    let globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
+    const lightningPlanes = createLightning(scene);
+    const globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
     
     let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
     let angoloLuce = 0;
@@ -212,7 +211,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
         day = new Date();
         switch(modalitaTempo) {
             case 0: //modalità reale
-                let time = day.getHours() * 60 + day.getMinutes();  //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
+                const time = day.getHours() * 60 + day.getMinutes();    //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
                 angoloLuce = time / (24 * 60) * 2 * Math.PI;    //calcolo l'angolo in base alla proporzione con i minuti contenuti in un giorno
                 angoloLuce -= Math.PI/2;    //-pi/2 è l'offset che esiste tra gli angoli calcolati ed il ciclo giorno-notte
                 if(angoloLuce < 0) angoloLuce = 2 * Math.PI + angoloLuce;   //converto in positivo gli angoli compresi tra le 0:00 e le 6:00
@@ -229,12 +228,12 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
         sun.position.x = Math.cos(angoloLuce) * 500;
         sun.position.y = Math.sin(angoloLuce) * 500;
         sun.position.z = camera.position.z;
-        if(angoloLuce <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * angoloLuce + 0.1; //alba-mattina
-        else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1;   //pomeriggio-sera
-        else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;   //notte
+        if(angoloLuce <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * angoloLuce + 0.1;  //alba-mattina
+        else if(angoloLuce > Math.PI/2 && angoloLuce < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * angoloLuce + 2 + 0.1; //pomeriggio-sera
+        else if(angoloLuce >= Math.PI) skyboxMaterial.alpha = 0.1;  //notte
         
         //la Luna ruota in senso opposto rispetto al Sole
-        let moonTime = day.getDate();
+        const moonTime = day.getDate();
         if(moonTime > 28) moonTime = 28;
         moonAngle = moonTime / 28 * 2 * Math.PI;
         moon.position.x = Math.sin(moonAngle) * 250;
@@ -278,8 +277,8 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
                 forests[0].position.z = stazione.position.z + 1024;
                 forests.push(forests.shift());
             }
-            let indice = Math.floor(Math.random() * listaCartelli.length);
-            let cartello = listaCartelli[indice];
+            const indice = Math.floor(Math.random() * listaCartelli.length);
+            const cartello = listaCartelli[indice];
             if(cartello != undefined) {
                 cartello.position.z = stazione.position.z + 12;
                 listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
@@ -289,7 +288,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
             ponte.position.z += 512 * Math.floor(16 + Math.random() * 30);
         }
         
-        velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);  //il fattore 10 serve a rendere più realistici i valori
+        velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);   //il fattore 10 serve a rendere più realistici i valori
         spazioOverlay.innerText = "Spazio: " + Math.floor(spazio * 10);
     });
     engine.runRenderLoop(() => scene.render());

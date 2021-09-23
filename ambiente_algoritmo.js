@@ -1,21 +1,21 @@
 "use strict";
 //Funzione per creare un gruppo di 6 città
 function createCityGroup(scene) {
-    let arrayOfCityMeshes = [];
+    const arrayOfCityMeshes = [];
     
-    let cityTreesParentMesh = new BABYLON.MeshBuilder.CreateBox('cityTreesParentMesh', {size: 1}, scene);
+    const cityTreesParentMesh = new BABYLON.MeshBuilder.CreateBox('cityTreesParentMesh', {size: 1}, scene);
     cityTreesParentMesh.isVisible = false;
     for(let posz=-512; posz<=512; posz+=512) {
         cittaRandom(scene, 20, posz, arrayOfCityMeshes, cityTreesParentMesh);
         cittaRandom(scene, -629.5, posz, arrayOfCityMeshes, cityTreesParentMesh);
     }
     
-    let cityMesh = BABYLON.Mesh.MergeMeshes(arrayOfCityMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di città
+    const cityMesh = BABYLON.Mesh.MergeMeshes(arrayOfCityMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di città
     return {city: cityMesh, trees: cityTreesParentMesh};
 }
 
 function cittaRandom(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh) {
-    let random = Math.round(Math.random() * 100);
+    const random = Math.round(Math.random() * 100);
     switch(true) {
         case random < 100 && random > 73:
           cittaP1(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
@@ -32,9 +32,9 @@ function cittaRandom(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh) 
     }
 }
 
-//Funzione per creare un gruppo di x foreste
+//Funzione per creare un gruppo di 3 foreste
 function createForestGroup(scene) {
-    let forestParentMesh = new BABYLON.MeshBuilder.CreateBox('forestParentMesh', {size: 1}, scene);
+    const forestParentMesh = new BABYLON.MeshBuilder.CreateBox('forestParentMesh', {size: 1}, scene);
     forestParentMesh.isVisible = false;
     for(let i=-1; i<=1; i++) {
         createForest(scene, 50, i * 256, forestParentMesh);
@@ -45,17 +45,17 @@ function createForestGroup(scene) {
 
 //Funzione per il tempo atmosferico
 function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skyboxMaterial) {
-    let timeStamp = new Date().valueOf() / 1000;    //valueOf() --> millisecondi trascorsi dall'01/01/1970
+    const timeStamp = new Date().valueOf() / 1000;  //valueOf() --> millisecondi trascorsi dall'01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
         globalWeatherState.weatherState = Math.floor(Math.random() * 3);    //numero intero compreso tra 0 (incluso) e 3 (escluso)
         switch(globalWeatherState.weatherState) {
-            case 0:  //sereno
+            case 0: //sereno
                 rain.stop();
                 thunderstorm.stop();
                 rainParticleSystem.stop();
                 rainParticleSystem.reset();
                 break;
-            case 1:  //pioggia
+            case 1: //pioggia
                 thunderstorm.stop();
                 rain.setVolume(0);
                 rain.play();
@@ -63,7 +63,7 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
                 rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
                 break;
-            case 2:  //temporale
+            case 2: //temporale
                 rain.stop();
                 thunderstorm.setVolume(0);
                 thunderstorm.play();
@@ -72,16 +72,16 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
                 rainParticleSystem.start();
                 break;
         }
-        let duration = 60 * (1 + Math.round(Math.random() * 4));    //la durata prima di ogni transizione è misurata in minuti
+        const duration = 60 * (1 + Math.round(Math.random() * 4));  //la durata prima di ogni transizione è misurata in minuti
         console.log({Weather: globalWeatherState.weatherState, Duration: duration + " seconds"});
         globalWeatherState.finishTimeStamp = timeStamp+duration;
     }
     else if(globalWeatherState.weatherState == 2) {
         skyboxMaterial.alpha -= 0.25;
         if(Math.floor(Math.random() * 500) == 1) {
-            let thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
-            let selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length);    //scelgo un fulmine a caso dall'array da "illuminare"
-            let selectedThunderSound = Math.floor(Math.random() * thunderSounds.length);    //scelgo un tuono a caso dall'array da riprodurre
+            const thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
+            const selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length);  //scelgo un fulmine a caso dall'array da "illuminare"
+            const selectedThunderSound = Math.floor(Math.random() * thunderSounds.length);  //scelgo un tuono a caso dall'array da riprodurre
             lightningPlanes[selectedLightningPlane].isVisible = true;
             setTimeout(function() {
                 lightningPlanes[selectedLightningPlane].isVisible = false;
@@ -94,11 +94,11 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
 }
 
 function createLightning(scene) {
-    let lightningImages = ["lightning1","lightning2","lightning3","lightning4","lightning5"];
-    let lightningPlanes = [];
+    const lightningImages = ["lightning1","lightning2","lightning3","lightning4","lightning5"];
+    const lightningPlanes = [];
     lightningImages.forEach(x => {
-        let lightningPlane = BABYLON.MeshBuilder.CreatePlane('lightningPlane', {size: 256}, scene);
-        let lightningTexture = new BABYLON.StandardMaterial('lightningTexture', scene);
+        const lightningPlane = BABYLON.MeshBuilder.CreatePlane('lightningPlane', {size: 256}, scene);
+        const lightningTexture = new BABYLON.StandardMaterial('lightningTexture', scene);
         lightningTexture.diffuseTexture = new BABYLON.Texture("./assets/textures/" + x + ".png");
         lightningTexture.diffuseTexture.hasAlpha = true;
         lightningTexture.emissiveColor = new BABYLON.Color3(8, 8, 8);
