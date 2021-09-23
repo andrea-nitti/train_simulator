@@ -10,7 +10,7 @@ function createCityGroup(scene) {
         cittaRandom(scene, -629.5, posz, arrayOfCityMeshes, cityTreesParentMesh);
     }
     
-    var cityMesh = BABYLON.Mesh.MergeMeshes(arrayOfCityMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di città
+    let cityMesh = BABYLON.Mesh.MergeMeshes(arrayOfCityMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di città
     return {city: cityMesh, trees: cityTreesParentMesh};
 }
 

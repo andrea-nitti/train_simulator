@@ -113,7 +113,7 @@ function train(scene) {
     let arrayOfTrainMeshes = [];
     for(let i=0; i<9; i++) vagone(scene, 8, i*67.6, arrayOfTrainMeshes);
     //locomotiva(scene, 8, 0, arrayOfTrainMeshes);
-    var trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
+    let trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
     return trainMesh;
 }
 

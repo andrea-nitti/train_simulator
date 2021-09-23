@@ -98,6 +98,6 @@ function createStation(scene) {
             staz0.material.backFaceCulling = false;
         }
     });
-    var stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);   //mesh che raggruppa un'intera stazione
+    let stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);   //mesh che raggruppa un'intera stazione
     return stationMesh;
 }

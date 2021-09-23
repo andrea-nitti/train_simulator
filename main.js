@@ -57,7 +57,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     moonHalo.addIncludedOnlyMesh(moon, BABYLON.Color3(1, 1, 1), true);
     
     scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15); //imposto il colore esterno alla skybox (blu scuro)
-    var assetsManager = new BABYLON.AssetsManager(scene);
+    let assetsManager = new BABYLON.AssetsManager(scene);
     assetsManager.useDefaultLoadingScreen = false;
     importedModelsList.forEach(x => {
         let importMesh = assetsManager.addMeshTask("task", "", "./assets/models/", x);

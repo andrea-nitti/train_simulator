@@ -74,8 +74,8 @@ function createTerrain(scene) {
             arrayOfBaseTerrainMeshes.push(tirante);
         }
     }
-    var baseTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfBaseTerrainMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di terreno (per motivi di efficienza)
-    var dynamicTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfDynamicTerrainMeshes, true, true, undefined, false, true);
+    let baseTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfBaseTerrainMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di terreno (per motivi di efficienza)
+    let dynamicTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfDynamicTerrainMeshes, true, true, undefined, false, true);
     return {railRoad: baseTerrainMesh, terrain: dynamicTerrainMesh};
 }
 
@@ -117,6 +117,6 @@ function createBridge(skybox, scene) {
     water.freeze();
     arrayOfBridgeMeshes.push(river);
     arrayOfBridgeMeshes.push(riverGround);
-    var bridgeMesh = BABYLON.Mesh.MergeMeshes(arrayOfBridgeMeshes, true, true, undefined, false, true);
+    let bridgeMesh = BABYLON.Mesh.MergeMeshes(arrayOfBridgeMeshes, true, true, undefined, false, true);
     return bridgeMesh;
 }

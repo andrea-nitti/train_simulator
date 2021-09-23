@@ -252,7 +252,7 @@ function albero() {
         let partePianta = x.clone('albero1');
         arrayOfTreeMeshes.push(partePianta);
     });
-    var pianta = BABYLON.Mesh.MergeMeshes(arrayOfTreeMeshes, true, true, undefined, false, true);
+    let pianta = BABYLON.Mesh.MergeMeshes(arrayOfTreeMeshes, true, true, undefined, false, true);
     pianta.alwaysSelectAsActiveMesh = true; //sempre visibile
     return pianta;
 }
