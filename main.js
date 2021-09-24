@@ -14,7 +14,7 @@ const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.o
 const planeWidth = 10;
 const planeHeight = 3;
 
-function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean) {
+function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean, renderDistance) {
     const caricamento = document.getElementById('loadingScreen');
     caricamento.style.display = "block";
     const avanzamento = document.getElementById('objectToBeLoaded');
@@ -32,10 +32,10 @@ function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, tra
     engine.loadingScreen = new schermoDiCaricamento();
     engine.displayLoadingUI();
     const scene = new BABYLON.Scene(engine);
-    const camera = new BABYLON.UniversalCamera('cam',new BABYLON.Vector3(-8,7.5,0), scene);
+    const camera = new BABYLON.UniversalCamera('camera', new BABYLON.Vector3(-8,7.5,0), scene);
     camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = [];    //rimuovo i controlli predefiniti della tastiera
     camera.attachControl(canvas,true);
-    //camera.maxZ = 4096; la skybox diventa invisibile
+    camera.maxZ = renderDistance;
     //BABYLON.StandardMaterial.prototype.defaultAmbientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
     inizializzaColori(scene);
 
@@ -105,7 +105,7 @@ function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, tra
     };
     assetsManager.onFinish = function(tasks) {
         scene.autoClearDepthAndStencil = false;
-        setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean);
+        setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean, renderDistance);
         scene.blockfreeActiveMeshesAndRenderingGroups = true;
         [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
             model.forEach(modelPiece => {
@@ -118,13 +118,13 @@ function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, tra
     assetsManager.load();
 }
 
-function setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean) {
+function setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean, renderDistance) {
     const velocitaOverlay = document.getElementById('velocita');
     const spazioOverlay = document.getElementById('spazio');
     const aiutoOverlay = document.getElementById('aiuto2');
     
     //creazione della skybox
-    const skybox = BABYLON.Mesh.CreateBox("skybox", 10000, scene);
+    const skybox = BABYLON.Mesh.CreateBox("skybox", renderDistance * 2 / Math.sqrt(3), scene);
     const skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
     skyboxMaterial.backFaceCulling = false;
     skyboxMaterial.disableLighting = true;
