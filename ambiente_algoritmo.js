@@ -1,25 +1,25 @@
 "use strict";
 //Funzione per creare un gruppo di 6 città
-function createCityGroup(scene) {
+function createCityGroup(scene, cityTrees_boolean) {
     const arrayOfCityMeshes = [];
     
     const cityTreesParentMesh = new BABYLON.MeshBuilder.CreateBox('cityTreesParentMesh', {size: 1}, scene);
     cityTreesParentMesh.isVisible = false;
     for(let posz=-512; posz<=512; posz+=512) {
-        cittaRandom(scene, 20, posz, arrayOfCityMeshes, cityTreesParentMesh);
-        cittaRandom(scene, -629.5, posz, arrayOfCityMeshes, cityTreesParentMesh);
+        cittaRandom(scene, 20, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
+        cittaRandom(scene, -629.5, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
     }
     
     const cityMesh = BABYLON.Mesh.MergeMeshes(arrayOfCityMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di città
     return {city: cityMesh, trees: cityTreesParentMesh};
 }
 
-function cittaRandom(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh) {
+function cittaRandom(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh) {
     const random = Math.round(Math.random() * 100);
-    if(random > 73) cittaP1(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
-    else if(random > 48) cittaP2(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
-    else if(random > 23) cittaP3(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
-    else cittaP4(scene, posx, posz, arrayOfCityMeshes, cityTreesParentMesh);
+    if(random > 73) cittaP1(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
+    else if(random > 48) cittaP2(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
+    else if(random > 23) cittaP3(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
+    else cittaP4(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
 }
 
 //Funzione per creare un gruppo di 3 foreste

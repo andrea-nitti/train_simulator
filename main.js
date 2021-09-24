@@ -14,7 +14,7 @@ const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.o
 const planeWidth = 10;
 const planeHeight = 3;
 
-function startEverything(cities_boolean, forests_boolean, trains_boolean) {
+function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean) {
     const caricamento = document.getElementById('loadingScreen');
     caricamento.style.display = "block";
     const avanzamento = document.getElementById('objectToBeLoaded');
@@ -105,7 +105,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     };
     assetsManager.onFinish = function(tasks) {
         scene.autoClearDepthAndStencil = false;
-        setupScene(engine, camera, scene, cities_boolean, forests_boolean, trains_boolean);
+        setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean);
         scene.blockfreeActiveMeshesAndRenderingGroups = true;
         [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
             model.forEach(modelPiece => {
@@ -118,7 +118,7 @@ function startEverything(cities_boolean, forests_boolean, trains_boolean) {
     assetsManager.load();
 }
 
-function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trains_boolean) {
+function setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean) {
     const velocitaOverlay = document.getElementById('velocita');
     const spazioOverlay = document.getElementById('spazio');
     const aiutoOverlay = document.getElementById('aiuto2');
@@ -175,7 +175,7 @@ function setupScene(engine, camera, scene, cities_boolean, forests_boolean, trai
     const cities = [];  //array che contiene la lista delle mesh (fuse insieme) di 5*3*2 città
     if(cities_boolean) {
         for(let i=0; i<5; i++) {
-            const City = createCityGroup(scene);
+            const City = createCityGroup(scene, cityTrees_boolean);
             City.city.position.z = -100000;
             City.trees.position.z = -100000;
             cities.push(City);
