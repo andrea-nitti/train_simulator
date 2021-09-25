@@ -32,10 +32,16 @@ function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, tra
     engine.loadingScreen = new schermoDiCaricamento();
     engine.displayLoadingUI();
     const scene = new BABYLON.Scene(engine);
-    const camera = new BABYLON.UniversalCamera('camera', new BABYLON.Vector3(-8,7.5,0), scene);
-    camera.keysDown = camera.keysUp = camera.keysLeft = camera.keysRight = camera.keysDownward = camera.keysUpward = [];    //rimuovo i controlli predefiniti della tastiera
-    camera.attachControl(canvas,true);
-    camera.maxZ = renderDistance;
+    const defaultCamera = new BABYLON.UniversalCamera('defaultCamera', new BABYLON.Vector3(-8, 7.5, 0), scene);
+    defaultCamera.inputs.clear();   //rimuovo i controlli predefiniti della tastiera
+    defaultCamera.inputs.addMouse();
+    defaultCamera.attachControl(canvas, true);
+    defaultCamera.maxZ = renderDistance;
+    const freeCam = new BABYLON.UniversalCamera('freeCam', new BABYLON.Vector3(-8, 7.5, 0), scene);
+    freeCam.keysDownward = freeCam.keysUpward = [];
+    freeCam.attachControl(canvas, true);
+    freeCam.maxZ = renderDistance;
+    scene.activeCamera = defaultCamera;
     //BABYLON.StandardMaterial.prototype.defaultAmbientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
     inizializzaColori(scene);
 
@@ -105,7 +111,7 @@ function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, tra
     };
     assetsManager.onFinish = function(tasks) {
         scene.autoClearDepthAndStencil = false;
-        setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean, renderDistance);
+        setupScene(engine, defaultCamera, freeCam, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean, renderDistance);
         scene.blockfreeActiveMeshesAndRenderingGroups = true;
         [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
             model.forEach(modelPiece => {
@@ -118,7 +124,7 @@ function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, tra
     assetsManager.load();
 }
 
-function setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean, renderDistance) {
+function setupScene(engine, defaultCamera, freeCam, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean, renderDistance) {
     const velocitaOverlay = document.getElementById('velocita');
     const spazioOverlay = document.getElementById('spazio');
     const aiutoOverlay = document.getElementById('aiuto2');
@@ -190,6 +196,8 @@ function setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, fo
     }
     const ponte = createBridge(skybox, scene);
     
+    const axisGroup = createAxis(scene);
+    
     const rainParticleSystem = new BABYLON.GPUParticleSystem('rain', {capacity: 100000, randomTextureSize: 4096}, scene);
     rainParticleSystem.particleTexture = new BABYLON.Texture("./assets/textures/rain.png");
     const emitter = rainParticleSystem.createBoxEmitter(new BABYLON.Vector3(0, -150, 0), new BABYLON.Vector3(0, -250, 0), new BABYLON.Vector3(-75, 0, -400), new BABYLON.Vector3(75, 0, 400));
@@ -227,7 +235,7 @@ function setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, fo
         }
         sun.position.x = Math.cos(sunAngle) * 500;
         sun.position.y = Math.sin(sunAngle) * 500;
-        sun.position.z = camera.position.z;
+        sun.position.z = defaultCamera.position.z;
         if(sunAngle <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * sunAngle + 0.1;  //alba-mattina
         else if(sunAngle > Math.PI/2 && sunAngle < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * sunAngle + 2 + 0.1; //pomeriggio-sera
         else if(sunAngle >= Math.PI) skyboxMaterial.alpha = 0.1;  //notte
@@ -245,27 +253,27 @@ function setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, fo
             else segments[i].terrain.isVisible = true;
         }
         
-        rainParticleSystem.emitter.z = camera.position.z;
+        rainParticleSystem.emitter.z = defaultCamera.position.z;
         
         if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady())
             weather(rainParticleSystem, lightningPlanes, globalWeatherState, skyboxMaterial);
         
         if(trains_boolean) {
-            treno.position.z = camera.position.z;
+            treno.position.z = defaultCamera.position.z;
         }
         
         velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
         if(velocita < 0) velocita = 0;
         
         spazio += velocita;
-        camera.position.z = spazio;
+        defaultCamera.position.z = spazio;
         
-        if(camera.position.z > (4 * 256) + segments[0].railRoad.position.z) {   //sposto il primo modello di terreno se ho superato l'inizio del terzo
+        if(defaultCamera.position.z > (4 * 256) + segments[0].railRoad.position.z) {    //sposto il primo modello di terreno se ho superato l'inizio del terzo
             segments[0].railRoad.position.z += segments.length * 256;
             segments[0].terrain.position.z += segments.length * 256;
             segments.push(segments.shift());    //il primo elemento diventa l'ultimo
         }
-        if(camera.position.z > stazione.position.z + 2 * 256) { //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
+        if(defaultCamera.position.z > stazione.position.z + 2 * 256) {  //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
             stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);    //sposto l'ultima stazione ad almeno 2048 unità di distanza dalla precedente; la massima distanza ammessa è 10240 unità
             stazione.isVisible = true;
             if(cities_boolean) {
@@ -284,7 +292,7 @@ function setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, fo
                 listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
             }
         }
-        if(camera.position.z > ponte.position.z + 4096) {
+        if(defaultCamera.position.z > ponte.position.z + 4096) {
             ponte.position.z += 512 * Math.floor(16 + Math.random() * 30);
         }
         
@@ -297,8 +305,8 @@ function setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, fo
         switch(evt.keyCode) {
             case 87: if(velocita < 32) velocita += 0.025; break;    //W --> accelerazione
             case 83: velocita -= 0.1; break;    //S --> frenata
-            case 38: if(camera.position.y <= 64) camera.position.y += 0.5; break;   //↑ --> salita della visuale
-            case 40: if(camera.position.y > -0.5) camera.position.y -= 0.5; break;  //↓ --> discesa della visuale
+            case 38: if(scene.activeCamera == defaultCamera && defaultCamera.position.y <= 64) defaultCamera.position.y += 0.5; break;  //↑ --> salita della visuale
+            case 40: if(scene.activeCamera == defaultCamera && defaultCamera.position.y > -0.5) defaultCamera.position.y -= 0.5; break; //↓ --> discesa della visuale
             case 32: horn.play(); break;    //spacebar --> sirena
             case 71: modalitaTempo = (modalitaTempo + 1) % 6; break;    //G --> modalità giorno-notte
             case 72:
@@ -309,6 +317,16 @@ function setupScene(engine, camera, scene, cities_boolean, cityTrees_boolean, fo
                     aiutoOverlay.style.display = "";
                 }
                 break;
+            case 67:    //C --> cambia telecamera attiva e visibilità degli assi
+                if(scene.activeCamera == defaultCamera) {
+                    scene.activeCamera = freeCam;
+                    axisGroup.setEnabled(true);
+                    axisGroup.position = freeCam.position.clone();
+                }
+                else {
+                    scene.activeCamera = defaultCamera;
+                    axisGroup.setEnabled(false);
+                }
             default: return;
         }
         evt.preventDefault();
