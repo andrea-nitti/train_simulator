@@ -189,7 +189,7 @@
                 let trains = document.getElementById("treno");
                 document.getElementById("avvia").onclick = function() {
                     document.getElementById("config").style.display = "none";
-                    startEverything(cities.checked, cityTrees.checked, forests.checked, trains.checked, parseInt(slider.value));
+                    startEverything([cities.checked, cityTrees.checked, forests.checked, trains.checked], parseInt(slider.value));
                 };
             });
         </script>

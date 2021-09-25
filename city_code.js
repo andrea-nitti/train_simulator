@@ -253,7 +253,7 @@ function prato(scene, posx, posz, size, arrayOfCityMeshes) {
 }
 
 function albero() {
-    const arrayOfTreeMeshes = []
+    const arrayOfTreeMeshes = [];
     albero1.forEach(x => {
         const partePianta = x.clone('albero1');
         arrayOfTreeMeshes.push(partePianta);

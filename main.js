@@ -14,7 +14,7 @@ const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.o
 const planeWidth = 10;
 const planeHeight = 3;
 
-function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean, renderDistance) {
+function startEverything(configFlags, renderDistance) {
     const caricamento = document.getElementById('loadingScreen');
     caricamento.style.display = "block";
     const avanzamento = document.getElementById('objectToBeLoaded');
@@ -111,7 +111,7 @@ function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, tra
     };
     assetsManager.onFinish = function(tasks) {
         scene.autoClearDepthAndStencil = false;
-        setupScene(engine, defaultCamera, freeCam, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean, renderDistance);
+        setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance);
         scene.blockfreeActiveMeshesAndRenderingGroups = true;
         [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
             model.forEach(modelPiece => {
@@ -124,7 +124,7 @@ function startEverything(cities_boolean, cityTrees_boolean, forests_boolean, tra
     assetsManager.load();
 }
 
-function setupScene(engine, defaultCamera, freeCam, scene, cities_boolean, cityTrees_boolean, forests_boolean, trains_boolean, renderDistance) {
+function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance) {
     const velocitaOverlay = document.getElementById('velocita');
     const spazioOverlay = document.getElementById('spazio');
     const aiutoOverlay = document.getElementById('aiuto2');
@@ -159,7 +159,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, cities_boolean, cityT
     listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
     
     const forests = [];
-    if(forests_boolean) {
+    if(configFlags[2]) {
         for(let i=0; i<2; i++) {
             const Forest = createForestGroup(scene);
             Forest.position.z = -100000;
@@ -179,9 +179,9 @@ function setupScene(engine, defaultCamera, freeCam, scene, cities_boolean, cityT
     skybox.applyFog = false;
     
     const cities = [];  //array che contiene la lista delle mesh (fuse insieme) di 5*3*2 città
-    if(cities_boolean) {
+    if(configFlags[0]) {
         for(let i=0; i<5; i++) {
-            const City = createCityGroup(scene, cityTrees_boolean);
+            const City = createCityGroup(scene, configFlags[1]);
             City.city.position.z = -100000;
             City.trees.position.z = -100000;
             cities.push(City);
@@ -191,7 +191,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, cities_boolean, cityT
     }
     
     let treno;
-    if(trains_boolean) {
+    if(configFlags[3]) {
         treno = train(scene);
     }
     const ponte = createBridge(skybox, scene);
@@ -258,7 +258,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, cities_boolean, cityT
         if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady())
             weather(rainParticleSystem, lightningPlanes, globalWeatherState, skyboxMaterial);
         
-        if(trains_boolean) {
+        if(configFlags[3]) {
             treno.position.z = defaultCamera.position.z;
         }
         
@@ -276,12 +276,12 @@ function setupScene(engine, defaultCamera, freeCam, scene, cities_boolean, cityT
         if(defaultCamera.position.z > stazione.position.z + 2 * 256) {  //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
             stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);    //sposto l'ultima stazione ad almeno 2048 unità di distanza dalla precedente; la massima distanza ammessa è 10240 unità
             stazione.isVisible = true;
-            if(cities_boolean) {
+            if(configFlags[0]) {
                 cities[0].city.position.z = stazione.position.z;
                 cities[0].trees.position.z = stazione.position.z;
                 cities.push(cities.shift());
             }
-            if(forests_boolean) {
+            if(configFlags[2]) {
                 forests[0].position.z = stazione.position.z + 1024;
                 forests.push(forests.shift());
             }
