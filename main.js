@@ -116,6 +116,7 @@ function startEverything(configFlags, renderDistance) {
         [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
             model.forEach(modelPiece => {
                 modelPiece.dispose();
+                scene.removeMesh(modelPiece);
             });
         });
         scene.blockfreeActiveMeshesAndRenderingGroups = false;
@@ -249,7 +250,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         
         //controllo se sia presente una sovrapposizione del terreno con la base del ponte (in tal caso rendo il segmento invisibile)
         for(let i=0; i<12; i++) {
-            if(segments[i].terrain.position.z > (ponte.position.z + 1008 - 496) && segments[i].terrain.position.z < (ponte.position.z + 1008 + 512 + (1024*1/4))) segments[i].terrain.isVisible = false;
+            if(segments[i].terrain.position.z > (ponte.position.z + 752) && segments[i].terrain.position.z < (ponte.position.z + 1776)) segments[i].terrain.isVisible = false;
             else segments[i].terrain.isVisible = true;
         }
         
@@ -276,7 +277,8 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         if(defaultCamera.position.z > stazione.position.z + 2 * 256) {  //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
             stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);    //sposto l'ultima stazione ad almeno 2048 unità di distanza dalla precedente; la massima distanza ammessa è 10240 unità
             stazione.isVisible = true;
-            if(configFlags[0]) {
+            if(checkIntersections(ponte.position.z + 1264, 512 * 2, stazione.position.z + 98, 512 * 3)) stazione.isVisible = false; //98 --> da cambiare a seconda della lunghezza delle stazioni
+            if(configFlags[0] && stazione.isVisible) {
                 cities[0].city.position.z = stazione.position.z;
                 cities[0].trees.position.z = stazione.position.z;
                 cities.push(cities.shift());
