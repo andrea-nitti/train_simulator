@@ -64,7 +64,7 @@ function createTerrain(scene) {
             lowerWire.position.y = 27.75;
             lowerWire.position.z = z_offset;
             arrayOfBaseTerrainMeshes.push(lowerWire);
-            const tieRod = BABYLON.MeshBuilder.CreateCylinder('tieRod', {height: chunk_size, diameter: 0.35}, scene);   //tieRod situato tra ogni palo ed il successivo
+            const tieRod = BABYLON.MeshBuilder.CreateCylinder('tieRod', {height: chunk_size, diameter: 0.35}, scene);   //tirante situato tra ogni palo ed il successivo
             tieRod.material = metal;
             tieRod.rotation.x = Math.PI/2;
             if(x_offset < 0) tieRod.position.x = -24;
@@ -102,7 +102,6 @@ function createBridge(skybox, scene) {
     riverGroundMaterial.diffuseTexture = new BABYLON.Texture('./assets/textures/riverGround.jpg', scene);
     riverGroundMaterial.diffuseTexture.uScale = riverGroundMaterial.diffuseTexture.vScale = 4;
     const water = new BABYLON.WaterMaterial('water', scene);
-    water.backFaceCulling = true;
     water.bumpTexture = new BABYLON.Texture('./assets/textures/water.png', scene);
     water.windForce = 25;
     water.waveHeight = 0.5;    
