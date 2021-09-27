@@ -256,12 +256,9 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         
         rainParticleSystem.emitter.z = defaultCamera.position.z;
         
-        if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady())
-            weather(rainParticleSystem, lightningPlanes, globalWeatherState, skyboxMaterial);
+        if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady()) weather(rainParticleSystem, lightningPlanes, globalWeatherState, skyboxMaterial);
         
-        if(configFlags[3]) {
-            treno.position.z = defaultCamera.position.z;
-        }
+        if(configFlags[3]) treno.position.z = defaultCamera.position.z;
         
         velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
         if(velocita < 0) velocita = 0;
@@ -303,8 +300,8 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     });
     engine.runRenderLoop(() => scene.render());
     window.addEventListener("resize", () => engine.resize());
-    window.addEventListener("keydown", function(evt) {  //interazioni con la tastiera
-        switch(evt.keyCode) {
+    window.addEventListener("keydown", function(event) {    //interazioni con la tastiera
+        switch(event.keyCode) {
             case 87: if(velocita < 32) velocita += 0.025; break;    //W --> accelerazione
             case 83: velocita -= 0.1; break;    //S --> frenata
             case 38: if(scene.activeCamera == defaultCamera && defaultCamera.position.y <= 64) defaultCamera.position.y += 0.5; break;  //↑ --> salita della visuale
@@ -331,6 +328,6 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
                 }
             default: return;
         }
-        evt.preventDefault();
+        event.preventDefault();
     });
 }

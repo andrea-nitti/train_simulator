@@ -1,5 +1,4 @@
 "use strict";
-//Funzione per mostrare i tre assi di riferimento
 function createAxis(scene) {
     const axisParentMesh = new BABYLON.MeshBuilder.CreateBox('axisParentMesh', {size: 1}, scene);
     axisParentMesh.isVisible = false;
@@ -49,4 +48,24 @@ function checkIntersections(posA, lenghtA, posB, lenghtB) { //posA e posB sono l
     const pointC = posB - lenghtB / 2;
     const pointD = posB + lenghtB / 2;
     return !((pointD <= pointA) || (pointC >= pointB)); //true = esiste intersezione
+}
+
+function allWireframe(status) { //status --> boolean
+    [colnero, metal, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba, moonSurface].forEach(material => {
+        material.wireframe = status;
+    });
+    [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
+        model.forEach(modelPiece => {
+            modelPiece.material.wireframe = status;
+        });
+    });
+}
+
+function checkDebugCodes(event) {
+    if(event.shiftKey) {
+        switch(event.keyCode) {
+            case 49: allWireframe(true); break;
+            case 50: allWireframe(false); break;
+        }
+    }
 }

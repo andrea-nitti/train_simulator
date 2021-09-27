@@ -187,10 +187,15 @@
                 let cityTrees = document.getElementById("alberi-città");
                 let forests = document.getElementById("foreste");
                 let trains = document.getElementById("treno");
+                function checkKeyCombination(evt) {
+                    if(evt.altKey && evt.keyCode === 225) window.addEventListener("keyup", checkDebugCodes);
+                }
                 document.getElementById("avvia").onclick = function() {
                     document.getElementById("config").style.display = "none";
                     startEverything([cities.checked, cityTrees.checked, forests.checked, trains.checked], parseInt(slider.value));
+                    window.removeEventListener("keydown", checkKeyCombination);
                 };
+                window.addEventListener("keydown", checkKeyCombination);
             });
         </script>
     </head>
