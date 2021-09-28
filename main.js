@@ -4,10 +4,10 @@
 //Descrizione: Un simulatore di guida di treni, in cui la velocità del mezzo, lungo una rotaia infinita, potrà essere decisa e modificata in corsa
 
 "use strict";
-let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore; //models
+let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore, container1, container2, cisterna1, cisterna2;   //models
 let sun, moon, day, vegetali;
 let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5; //sounds
-const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj"];
+const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj","container1.obj","container2.obj","cisterna1.obj","cisterna2.obj"];
 const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg"];
 
 //parametri per la larghezza e l'altezza di ciascun cartello per ogni stazione
@@ -85,6 +85,10 @@ function startEverything(configFlags, renderDistance) {
                 case "carrozza.obj": carrozza = task.loadedMeshes; break;
                 case "carrovuoto.obj": carrovuoto = task.loadedMeshes; break;
                 case "locomotore.obj": locomotore = task.loadedMeshes; break;
+                case "container1.obj": container1 = task.loadedMeshes; break;
+                case "container2.obj": container2 = task.loadedMeshes; break;
+                case "cisterna1.obj": cisterna1 = task.loadedMeshes; break;
+                case "cisterna2.obj": cisterna2 = task.loadedMeshes; break;
             }
         };
         importMesh.onError = function(task, message) {console.log(message);};
@@ -113,7 +117,7 @@ function startEverything(configFlags, renderDistance) {
         scene.autoClearDepthAndStencil = false;
         setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance);
         scene.blockfreeActiveMeshesAndRenderingGroups = true;
-        [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
+        [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore,  container1, container2, cisterna1, cisterna2].forEach(model => {
             model.forEach(modelPiece => {
                 modelPiece.dispose();
                 scene.removeMesh(modelPiece);
@@ -192,9 +196,9 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     }
     
     let treno;
-    if(configFlags[3]) {
-        treno = train(scene);
-    }
+    if(configFlags[3]) treno = createNormalTrain();
+    if(configFlags[4]) treno = createTankTrainSecondType();
+
     const ponte = createBridge(skybox, scene);
     
     const axisGroup = createAxis(scene);
