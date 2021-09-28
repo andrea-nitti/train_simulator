@@ -111,7 +111,7 @@ function musolat(scene, posx, posz, colore) {
 
 function train(scene) {
     const arrayOfTrainMeshes = [];
-    for(let i=0; i<9; i++) vagone(scene, 8, i*67.6, arrayOfTrainMeshes);
+    for(let i=0; i<9; i++) vagone(scene, -8, i*67.6, arrayOfTrainMeshes);
     //locomotiva(scene, 8, 0, arrayOfTrainMeshes);
     const trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
     return trainMesh;

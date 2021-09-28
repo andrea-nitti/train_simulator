@@ -1,11 +1,9 @@
 "use strict";
-//Funzione per creare il terreno della ferrovia
 function createTerrain(scene) {
     const chunk_size = 32;    
     const arrayOfBaseTerrainMeshes = [];
     const arrayOfDynamicTerrainMeshes = [];
     
-    //creazione binari e terreno
     terrain_chunk.forEach(x => {
         const parteBinario = x.clone('terrain_chunk');
         parteBinario.position.z = 3.5 * 32;
@@ -17,7 +15,6 @@ function createTerrain(scene) {
         arrayOfDynamicTerrainMeshes.push(parteTerreno);
     });
     
-    //creazione ringhiera
     for(let x_offset=-48; x_offset<=48; x_offset+=96) {
         ringhiera.forEach(x => {
             const parteRinghiera = x.clone('ringhiera');
@@ -30,7 +27,6 @@ function createTerrain(scene) {
     for(let i=0; i<8; i++) {    //numero di chunk da generare per ogni segmento
         let z_offset = i * chunk_size;
         
-        //creazione pali
         if(z_offset % (4*chunk_size) == 0) {    //creo i pali ogni 5 chunks
             for(let x_offset=-8; x_offset<=8; x_offset+=16) {
                 wire.forEach(x => {
@@ -54,32 +50,29 @@ function createTerrain(scene) {
                 arrayOfBaseTerrainMeshes.push(polePiece);
             });
         }
-        
-        //creazione fili
-        for(let x_offset = -8; x_offset<=8; x_offset+=16) {
-            const lowerWire = BABYLON.MeshBuilder.CreateCylinder('lowerWire', {height: chunk_size, diameter: 0.25}, scene); //filo inferiore della linea aerea
-            lowerWire.material = colnero;
-            lowerWire.rotation.x = Math.PI/2;
-            lowerWire.position.x = x_offset;
-            lowerWire.position.y = 27.75;
-            lowerWire.position.z = z_offset;
-            arrayOfBaseTerrainMeshes.push(lowerWire);
-            const tieRod = BABYLON.MeshBuilder.CreateCylinder('tieRod', {height: chunk_size, diameter: 0.35}, scene);   //tirante situato tra ogni palo ed il successivo
-            tieRod.material = metal;
-            tieRod.rotation.x = Math.PI/2;
-            if(x_offset < 0) tieRod.position.x = -24;
-            else tieRod.position.x = 24;
-            tieRod.position.y = 22.5;
-            tieRod.position.z = z_offset;
-            arrayOfBaseTerrainMeshes.push(tieRod);
-        }
+    }
+    for(let x_offset = -8; x_offset<=8; x_offset+=16) {
+        const lowerWire = BABYLON.MeshBuilder.CreateCylinder('lowerWire', {height: 256, diameter: 0.25}, scene);    //filo inferiore della linea aerea
+        lowerWire.material = colnero;
+        lowerWire.rotation.x = Math.PI/2;
+        lowerWire.position.x = x_offset;
+        lowerWire.position.y = 27.75;
+        lowerWire.position.z = 3.5 * 32;
+        arrayOfBaseTerrainMeshes.push(lowerWire);
+        const tieRod = BABYLON.MeshBuilder.CreateCylinder('tieRod', {height: 256, diameter: 0.35}, scene);  //tirante situato tra ogni palo ed il successivo
+        tieRod.material = metal;
+        tieRod.rotation.x = Math.PI/2;
+        if(x_offset < 0) tieRod.position.x = -24;
+        else tieRod.position.x = 24;
+        tieRod.position.y = 22.5;
+        tieRod.position.z = 3.5 * 32;
+        arrayOfBaseTerrainMeshes.push(tieRod);
     }
     const baseTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfBaseTerrainMeshes, true, true, undefined, false, true); //mesh che raggruppa un intero blocco di terreno (per motivi di efficienza)
     const dynamicTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfDynamicTerrainMeshes, true, true, undefined, false, true);
     return {railRoad: baseTerrainMesh, terrain: dynamicTerrainMesh};
 }
 
-//Funzione per creare un ponte
 function createBridge(skybox, scene) {
     const arrayOfBridgeMeshes = [];
     for(let i=0; i<=512; i+=512) {
