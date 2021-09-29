@@ -10,6 +10,9 @@ let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5; 
 const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj","container1.obj","container2.obj","cisterna1.obj","cisterna2.obj"];
 const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg"];
 
+let spazio = 0;
+let velocita = 0;
+
 //parametri per la larghezza e l'altezza di ciascun cartello per ogni stazione
 const planeWidth = 10;
 const planeHeight = 3;
@@ -174,9 +177,6 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         forests.push(forests.shift());
     }
     
-    let spazio = 0;
-    let velocita = 0;
-    
     //manipolo la nebbia
     scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
     scene.fogDensity = 0.001;
@@ -246,7 +246,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         else if(sunAngle >= Math.PI) skyboxMaterial.alpha = 0.1;  //notte
         
         //la Luna ruota in senso opposto rispetto al Sole
-        const moonTime = day.getDate();
+        let moonTime = day.getDate();
         if(moonTime > 28) moonTime = 28;
         moonAngle = moonTime / 28 * 2 * Math.PI;
         moon.position.x = Math.sin(moonAngle) * 250;

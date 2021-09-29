@@ -66,6 +66,9 @@ function checkDebugCodes(event) {
         switch(event.keyCode) {
             case 49: allWireframe(true); break;
             case 50: allWireframe(false); break;
+            case 51: velocita = 100;
+            case 52: velocita = -10000;
+            case 53: velocita += 25;
         }
     }
 }
