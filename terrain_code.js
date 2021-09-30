@@ -110,5 +110,7 @@ function createBridge(skybox, scene) {
     arrayOfBridgeMeshes.push(river);
     arrayOfBridgeMeshes.push(riverGround);
     const bridgeMesh = BABYLON.Mesh.MergeMeshes(arrayOfBridgeMeshes, true, true, undefined, false, true);
+    riverSound.setVolume(2, 0);
+    riverSound.attachToMesh(river);
     return bridgeMesh;
 }
