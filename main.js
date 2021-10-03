@@ -4,10 +4,10 @@
 //Descrizione: Un simulatore di guida di treni, in cui la velocità del mezzo, lungo una rotaia infinita, potrà essere decisa e modificata in corsa
 
 "use strict";
-let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore, container1, container2, cisterna1, cisterna2;   //models
+let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, stazione1, carrozza, carrovuoto, locomotore, container1, container2, cisterna1, cisterna2;    //models
 let sun, moon, day, vegetali;
 let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5, riverSound; //sounds
-const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","carrozza.obj","carrovuoto.obj","locomotore.obj","container1.obj","container2.obj","cisterna1.obj","cisterna2.obj"];
+const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","stazione1.obj","carrozza.obj","carrovuoto.obj","locomotore.obj","container1.obj","container2.obj","cisterna1.obj","cisterna2.obj"];
 const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg","river.ogg"];
 
 let spazio = 0;
@@ -85,6 +85,7 @@ function startEverything(configFlags, renderDistance) {
                 case "albero1.obj": albero1 = task.loadedMeshes; break;
                 case "albero2.obj": albero2 = task.loadedMeshes; break;
                 case "stazione0.obj": stazione0 = task.loadedMeshes; break;
+                case "stazione1.obj": stazione1 = task.loadedMeshes; break;
                 case "carrozza.obj": carrozza = task.loadedMeshes; break;
                 case "carrovuoto.obj": carrovuoto = task.loadedMeshes; break;
                 case "locomotore.obj": locomotore = task.loadedMeshes; break;
@@ -109,7 +110,10 @@ function startEverything(configFlags, renderDistance) {
                 case "thunder5.ogg": thunder5 = new BABYLON.Sound("thunder5", task.data, scene); break;
                 case "rain.ogg": rain = new BABYLON.Sound("rain", task.data, scene); break;
                 case "thunderstorm.ogg": thunderstorm = new BABYLON.Sound("thunderstorm", task.data, scene); break;
-                case "river.ogg": riverSound = new BABYLON.Sound("river", task.data, scene, function() {setTimeout(function() {riverSound.play();}, 5000)}, {loop: true, maxDistance: 512, spatialSound: true}); break;
+                case "river.ogg": riverSound = new BABYLON.Sound("river", task.data, scene, function() {setTimeout(function() {
+                    riverSound.setPosition(new BABYLON.Vector3(0, 0, 1264));
+                    riverSound.play();
+                    }, 5000)}, {loop: true, maxDistance: 512, spatialSound: true}); break;
             }
         };
         importSound.onError = function(task, message) {console.log(message);};
@@ -121,7 +125,7 @@ function startEverything(configFlags, renderDistance) {
         scene.autoClearDepthAndStencil = false;
         setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance);
         scene.blockfreeActiveMeshesAndRenderingGroups = true;
-        [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore,  container1, container2, cisterna1, cisterna2].forEach(model => {
+        [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, stazione1, carrozza, carrovuoto, locomotore,  container1, container2, cisterna1, cisterna2].forEach(model => {
             model.forEach(modelPiece => {
                 modelPiece.dispose();
                 scene.removeMesh(modelPiece);
@@ -160,6 +164,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     }
     
     const stazione = createStation(scene);
+    //const stazione = createAllStations(scene);
     stazione.isVisible = false;
     const listaCartelli = createSigns(scene);
     const indice = Math.floor(Math.random() * listaCartelli.length);
@@ -201,6 +206,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     if(configFlags[4]) treno = createTankTrainSecondType();
 
     const ponte = createBridge(skybox, scene);
+    riverSound.setVolume(2, 0);
     
     const axisGroup = createAxis(scene);
     
@@ -298,6 +304,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         }
         if(defaultCamera.position.z > ponte.position.z + 4096) {
             ponte.position.z += 512 * Math.floor(16 + Math.random() * 30);
+            if(riverSound.isReady()) riverSound.setPosition(new BABYLON.Vector3(0, 0, ponte.position.z + 1264));
         }
         
         velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);   //il fattore 10 serve a rendere più realistici i valori
