@@ -141,6 +141,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     const velocitaOverlay = document.getElementById('velocita');
     const spazioOverlay = document.getElementById('spazio');
     const aiutoOverlay = document.getElementById('aiuto2');
+    const coordinateOverlay = document.getElementById('coordinate');
     
     //creazione della skybox
     const skybox = BABYLON.Mesh.CreateBox("skybox", renderDistance * 2 / Math.sqrt(3), scene);
@@ -309,6 +310,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         
         velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);   //il fattore 10 serve a rendere più realistici i valori
         spazioOverlay.innerText = "Spazio: " + Math.floor(spazio * 10);
+        coordinateOverlay.innerText = "X: " + freeCam.position.x + "\n Y: " + freeCam.position.y + "\n Z: " + freeCam.position.z;
     });
     engine.runRenderLoop(() => scene.render());
     window.addEventListener("resize", () => engine.resize());
@@ -333,10 +335,12 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
                     scene.activeCamera = freeCam;
                     axisGroup.setEnabled(true);
                     axisGroup.position = freeCam.position.clone();
+                    coordinateOverlay.style.display = "block";
                 }
                 else {
                     scene.activeCamera = defaultCamera;
                     axisGroup.setEnabled(false);
+                    coordinateOverlay.style.display = "";
                 }
             default: return;
         }
