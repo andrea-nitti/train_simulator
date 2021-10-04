@@ -2,35 +2,32 @@
 //Funzione per creare un gruppo di 6 città
 function createCityGroup(scene, cityTrees_boolean) {
     const arrayOfCityMeshes = [];
-    
-    const cityTreesParentMesh = new BABYLON.MeshBuilder.CreateBox('cityTreesParentMesh', {size: 1}, scene);
-    cityTreesParentMesh.isVisible = false;
+    const cityTreesParentNode = new BABYLON.TransformNode('cityTreesParentNode', scene);
     for(let posz=-512; posz<=512; posz+=512) {
-        cittaRandom(scene, 20, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
-        cittaRandom(scene, -629.5, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
+        cittaRandom(scene, 20, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
+        cittaRandom(scene, -629.5, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
     }
     
     const cityMesh = BABYLON.Mesh.MergeMeshes(arrayOfCityMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di città
-    return {city: cityMesh, trees: cityTreesParentMesh};
+    return {city: cityMesh, trees: cityTreesParentNode};
 }
 
-function cittaRandom(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh) {
+function cittaRandom(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
     const random = Math.round(Math.random() * 100);
-    if(random > 73) cittaP1(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
-    else if(random > 48) cittaP2(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
-    else if(random > 23) cittaP3(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
-    else cittaP4(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh);
+    if(random > 73) cittaP1(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
+    else if(random > 48) cittaP2(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
+    else if(random > 23) cittaP3(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
+    else cittaP4(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
 }
 
-//Funzione per creare un gruppo di 3 foreste
+//Funzione per creare un gruppo di 6 foreste
 function createForestGroup(scene) {
-    const forestParentMesh = new BABYLON.MeshBuilder.CreateBox('forestParentMesh', {size: 1}, scene);
-    forestParentMesh.isVisible = false;
+    const forestParentNode = new BABYLON.TransformNode('forestParentNode', scene);
     for(let i=-1; i<=1; i++) {
-        createForest(scene, 50, i * 256, forestParentMesh);
-        createForest(scene, -430, i * 256, forestParentMesh);
+        createForest(scene, 50, i * 256, forestParentNode);
+        createForest(scene, -430, i * 256, forestParentNode);
     }
-    return forestParentMesh;
+    return forestParentNode;
 }
 
 //Funzione per il tempo atmosferico

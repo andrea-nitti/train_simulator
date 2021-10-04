@@ -1,5 +1,5 @@
 "use strict";
-function cittaP1(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh) {
+function cittaP1(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
     casaAlta(posx+64, posz, arrayOfCityMeshes);
     casaAlta(posx+64, posz+80, arrayOfCityMeshes);
     casaAlta(posx+64, posz+160, arrayOfCityMeshes);
@@ -39,11 +39,11 @@ function cittaP1(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTr
         const cityTree = albero();
         const arrayOfTrees = [BABYLON.Matrix.Translation(posx+100, 0, posz+300),BABYLON.Matrix.Translation(posx+120, 0, posz+340),BABYLON.Matrix.Translation(posx+165, 0, posz+310),BABYLON.Matrix.Translation(posx+290, 0, posz+135),BABYLON.Matrix.Translation(posx+355, 0, posz+145),BABYLON.Matrix.Translation(posx+360, 0, posz+195)];
         cityTree.thinInstanceAdd(arrayOfTrees);
-        cityTree.setParent(cityTreesParentMesh);
+        cityTree.setParent(cityTreesParentNode);
     }
 }
 
-function cittaP2(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh) {
+function cittaP2(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
 
     casaBassa(posx+70, posz+20, arrayOfCityMeshes);
     casaBassa(posx+70, posz+100, arrayOfCityMeshes);
@@ -85,11 +85,11 @@ function cittaP2(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTr
             }
         }
         cityTree.thinInstanceAdd(arrayOfTrees);
-        cityTree.setParent(cityTreesParentMesh);
+        cityTree.setParent(cityTreesParentNode);
     }
 }
 
-function cittaP3(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh) {
+function cittaP3(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
 
     casaAlta(posx+400, posz+334, arrayOfCityMeshes);
     casaAlta(posx+400, posz+254, arrayOfCityMeshes);
@@ -144,7 +144,7 @@ function cittaP3(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTr
     muro(scene, posx+560, posz+240, arrayOfCityMeshes);
 }
 
-function cittaP4(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentMesh) {
+function cittaP4(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
 
     casaBassa(posx+142, posz-4, arrayOfCityMeshes);
     casaBassa(posx+202, posz-4, arrayOfCityMeshes);
@@ -198,7 +198,7 @@ function cittaP4(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTr
         const cityTree = albero();
         const arrayOfTrees = [BABYLON.Matrix.Translation(posx+66, 0, posz+4),BABYLON.Matrix.Translation(posx+70, 0, posz+96),BABYLON.Matrix.Translation(posx+70, 0, posz+208),BABYLON.Matrix.Translation(posx+72, 0, posz+304),BABYLON.Matrix.Translation(posx+70, 0, posz+403)];
         cityTree.thinInstanceAdd(arrayOfTrees);
-        cityTree.setParent(cityTreesParentMesh);
+        cityTree.setParent(cityTreesParentNode);
     }
 }
 
@@ -263,7 +263,7 @@ function albero() {
     return pianta;
 }
 
-function createForest(scene, posx, posz, forestParentMesh) {
+function createForest(scene, posx, posz, forestParentNode) {
     const arrayOfTrees = [];
     for(let x=0; x<256; x+=50) {
         for(let z=0; z<225; z+=50) {
@@ -274,7 +274,7 @@ function createForest(scene, posx, posz, forestParentMesh) {
         }
     }
     const forestTree = albero();
-    forestTree.setParent(forestParentMesh);
+    forestTree.setParent(forestParentNode);
     forestTree.thinInstanceAdd(arrayOfTrees);
     //casaBassa(posx+170, posz+380, parent_mesh);
     //casaBassa(posx+290, posz+20, parent_mesh);
