@@ -76,25 +76,44 @@ function createStation(scene) {
     tettoia.position.y = 19;
     tettoia.position.z = chunk_size;
     arrayOfStationMeshes.push(tettoia);
-    const cuneo = BABYLON.MeshBuilder.CreatePolyhedron('cuneo',{custom: {"vertex" : [[2,0,0],[0,0,0],[2,-2,0],[2,-2,6*chunk_size],[2,0,6*chunk_size],[0,0,6*chunk_size]],"face" : [[1,0,2,3],[3,2,4,5],[5,4,0,1],[0,4,2],[1,3,5]]},size: 0.5},scene);
+    const cuneo = BABYLON.MeshBuilder.CreatePolyhedron('cuneo', {custom: {"vertex": [[2,0,0],[0,0,0],[2,-2,0],[2,-2,6*chunk_size],[2,0,6*chunk_size],[0,0,6*chunk_size]], "face": [[1,0,2,3],[3,2,4,5],[5,4,0,1],[0,4,2],[1,3,5]]},size: 0.5},scene);
     cuneo.position.x = x_offset + 26.5;
     cuneo.position.y = 18.675;
     cuneo.position.z = -1/2 * chunk_size;
     arrayOfStationMeshes.push(cuneo);
-    const tetto = BABYLON.MeshBuilder.CreatePolyhedron('tetto',{custom: {"vertex" : [[0,0,0],[30,0,0],[0,7.5,1.5*chunk_size],[30,7.5,1.5*chunk_size],[0,0,3*chunk_size],[30,0,3*chunk_size]],"face" : [[1,0,2,3],[3,2,4,5],[5,4,0,1],[0,4,2],[1,3,5]]},size: 1},scene);
+    const tetto = BABYLON.MeshBuilder.CreatePolyhedron('tetto', {custom: {"vertex": [[0,0,0],[30,0,0],[0,7.5,1.5*chunk_size],[30,7.5,1.5*chunk_size],[0,0,3*chunk_size],[30,0,3*chunk_size]], "face": [[1,0,2,3],[3,2,4,5],[5,4,0,1],[0,4,2],[1,3,5]]},size: 1},scene);
     tetto.material = station_roof_1;
     tetto.position.x = x_offset + 27.5;
     tetto.position.y = 25 - 0.8;
     tetto.position.z = -1/2 * chunk_size;
     arrayOfStationMeshes.push(tetto);
+    const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true); //mesh che raggruppa un'intera stazione
+    return stationMesh;
+}
+
+function createAllStations(scene) {
     stazione0.forEach(x => {
-        const staz0 = x.clone('terrain_chunk');
+        const staz0 = x.clone('stazione0');
         staz0.position.z = 112;
         if(staz0.material.diffuseTexture != null) {
             staz0.material.diffuseTexture.hasAlpha = true;
             staz0.material.backFaceCulling = false;
         }
     });
-    const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true); //mesh che raggruppa un'intera stazione
+
+    const arrayOfStationMeshes = [];
+    stazione1.forEach(x => {
+        const stationPiece = x.clone('');
+        stationPiece.position.z = -8;
+        arrayOfStationMeshes.push(stationPiece);
+    });
+    const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
+    [new BABYLON.Vector3(-33.25, 27.5, 55 - 8), new BABYLON.Vector3(-32.375, 27.5, -55 - 8), new BABYLON.Vector3(32.375, 27.5, 15 - 35)].forEach(lightPos => {
+        let light = new BABYLON.SpotLight('light', lightPos, new BABYLON.Vector3(0, -1, 0), Math.PI, 10, scene);
+        light.diffuse = new BABYLON.Color3(0.8, 0.8, 0);
+        light.specular = new BABYLON.Color3(0, 0, 0);
+        light.intensity = 10;
+        light.parent = stationMesh;
+    });
     return stationMesh;
 }

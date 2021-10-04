@@ -164,9 +164,8 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         segments.push(Terrain);
     }
     
-    const stazione = createStation(scene);
-    //const stazione = createAllStations(scene);
-    stazione.isVisible = false;
+    const stazione = createAllStations(scene);
+    stazione.setEnabled(false);
     const listaCartelli = createSigns(scene);
     const indice = Math.floor(Math.random() * listaCartelli.length);
     const cartello = listaCartelli[indice];
@@ -285,9 +284,9 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         }
         if(defaultCamera.position.z > stazione.position.z + 2 * 256) {  //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
             stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);    //sposto l'ultima stazione ad almeno 2048 unità di distanza dalla precedente; la massima distanza ammessa è 10240 unità
-            stazione.isVisible = true;
-            if(checkIntersections(ponte.position.z + 1264, 512 * 2, stazione.position.z + 98, 512 * 3)) stazione.isVisible = false; //98 --> da cambiare a seconda della lunghezza delle stazioni
-            if(configFlags[0] && stazione.isVisible) {
+            stazione.setEnabled(true);
+            if(checkIntersections(ponte.position.z + 1264, 512 * 2, stazione.position.z + 98, 512 * 3)) stazione.setEnabled(false); //98 --> da cambiare a seconda della lunghezza delle stazioni
+            if(configFlags[0] && stazione.setEnabled) {
                 cities[0].city.position.z = stazione.position.z;
                 cities[0].trees.position.z = stazione.position.z;
                 cities.push(cities.shift());
@@ -298,7 +297,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             }
             const indice = Math.floor(Math.random() * listaCartelli.length);
             const cartello = listaCartelli[indice];
-            if(cartello != undefined && stazione.isVisible) {
+            if(cartello != undefined && stazione.setEnabled) {
                 cartello.position.z = stazione.position.z + 12;
                 listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
             }
@@ -334,6 +333,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
                 if(scene.activeCamera == defaultCamera) {
                     scene.activeCamera = freeCam;
                     axisGroup.setEnabled(true);
+                    freeCam.position = defaultCamera.position.clone();
                     axisGroup.position = freeCam.position.clone();
                     coordinateOverlay.style.display = "block";
                 }
