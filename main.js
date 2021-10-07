@@ -48,12 +48,10 @@ function startEverything(configFlags, renderDistance) {
     //BABYLON.StandardMaterial.prototype.defaultAmbientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
     inizializzaColori(scene);
 
-    sun = new BABYLON.PointLight("Light", new BABYLON.Vector3(-1, -2, -1), scene);
-    sun.setDirectionToTarget(BABYLON.Vector3.Zero());
-    //sun = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, -1, 0), scene);
+    sun = new BABYLON.HemisphericLight("sun", new BABYLON.Vector3(0, -1, 0), scene);
     sun.intensity = 1;
-    sun.diffuse = new BABYLON.Color3(1, 1, 0.8);
-    //sun.groundColor = new BABYLON.Color3(1, 1, 0.8);
+    sun.diffuse = new BABYLON.Color3(0,0,0);
+    sun.groundColor = new BABYLON.Color3(1, 1, 0.8);
     
     moon = BABYLON.MeshBuilder.CreateSphere('moon', {diameter: 10}, scene);
     moon.infiniteDistance = true;
@@ -225,32 +223,29 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     const globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
     
     let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
-    let sunAngle = 0;
+    let deltaSunIntensity = 0.0005;
     let moonAngle = 0;
     scene.registerBeforeRender(() => {
         day = new Date();
         switch(modalitaTempo) {
             case 0: //modalità reale
                 const time = day.getHours() * 60 + day.getMinutes();    //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
-                sunAngle = time / (24 * 60) * 2 * Math.PI;    //calcolo l'angolo in base alla proporzione con i minuti contenuti in un giorno
-                sunAngle -= Math.PI/2;    //-pi/2 è l'offset che esiste tra gli angoli calcolati ed il ciclo giorno-notte
-                if(sunAngle < 0) sunAngle = 2 * Math.PI + sunAngle;   //converto in positivo gli angoli compresi tra le 0:00 e le 6:00
+                if(time <= 720) sun.intensity = time / (12 * 60);   //calcolo la luminosità del Sole in base alla proporzione con i minuti contenuti in metà giornata
+                else sun.intensity = (-time) / (12 * 60) + 2;   //la luminosità del Sole è calcolata in modo inverso (con intensità decrescente) dopo mezzo-giorno
                 break;
             case 1: //tempo accelerato
-                sunAngle += .005;
-                if(sunAngle > 2*Math.PI) sunAngle = 0;
+                sun.intensity += deltaSunIntensity;
+                if((sun.intensity >= 1) || (sun.intensity <= 0)) deltaSunIntensity = -deltaSunIntensity;
                 break;
-            case 2: sunAngle = 0; break;  //alba fissa
-            case 3: sunAngle = Math.PI/2; break;  //mezzogiorno fisso
-            case 4: sunAngle = Math.PI; break;    //tramonto fisso
-            case 5: sunAngle = 3 / 2 * Math.PI; break;    //mezzanotte fissa
+            case 2: sun.intensity = 0.5; break; //alba fissa
+            case 3: sun.intensity = 1; break;   //mezzogiorno fisso
+            case 4: sun.intensity = 0.5; break; //tramonto fisso
+            case 5: sun.intensity = 0; break;   //mezzanotte fissa
         }
-        sun.position.x = Math.cos(sunAngle) * 500;
-        sun.position.y = Math.sin(sunAngle) * 500;
-        sun.position.z = defaultCamera.position.z;
-        if(sunAngle <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * sunAngle + 0.1;  //alba-mattina
+        skyboxMaterial.alpha = sun.intensity;
+        /*if(sunAngle <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * sunAngle + 0.1;  //alba-mattina
         else if(sunAngle > Math.PI/2 && sunAngle < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * sunAngle + 2 + 0.1; //pomeriggio-sera
-        else if(sunAngle >= Math.PI) skyboxMaterial.alpha = 0.1;  //notte
+        else if(sunAngle >= Math.PI) skyboxMaterial.alpha = 0.1;  //notte*/
         
         //la Luna ruota in senso opposto rispetto al Sole
         let moonTime = day.getDate();
