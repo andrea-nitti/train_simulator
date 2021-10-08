@@ -45,7 +45,6 @@ function startEverything(configFlags, renderDistance) {
     freeCam.attachControl(canvas, true);
     freeCam.maxZ = renderDistance;
     scene.activeCamera = defaultCamera;
-    //BABYLON.StandardMaterial.prototype.defaultAmbientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
     inizializzaColori(scene);
 
     sun = new BABYLON.HemisphericLight("sun", new BABYLON.Vector3(0, -1, 0), scene);
@@ -242,10 +241,8 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             case 4: sun.intensity = 0.5; break; //tramonto fisso
             case 5: sun.intensity = 0; break;   //mezzanotte fissa
         }
-        skyboxMaterial.alpha = sun.intensity;
-        /*if(sunAngle <= Math.PI/2) skyboxMaterial.alpha = 2 / Math.PI * sunAngle + 0.1;  //alba-mattina
-        else if(sunAngle > Math.PI/2 && sunAngle < Math.PI) skyboxMaterial.alpha = -2 / Math.PI * sunAngle + 2 + 0.1; //pomeriggio-sera
-        else if(sunAngle >= Math.PI) skyboxMaterial.alpha = 0.1;  //notte*/
+        if(globalWeatherState.weatherState != 2) skyboxMaterial.alpha = sun.intensity * 0.9 + 0.1;
+        else skyboxMaterial.alpha = sun.intensity - 0.25;
         
         //la Luna ruota in senso opposto rispetto al Sole
         let moonTime = day.getDate();
@@ -253,17 +250,17 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         moonAngle = moonTime / 28 * 2 * Math.PI;
         moon.position.x = Math.sin(moonAngle) * 250;
         moon.position.y = Math.cos(moonAngle) * 250;
-        
+
         //controllo se sia presente una sovrapposizione del terreno con la base del ponte (in tal caso rendo il segmento invisibile)
         for(let i=0; i<12; i++) {
             if(segments[i].terrain.position.z > (ponte.position.z + 752) && segments[i].terrain.position.z < (ponte.position.z + 1776)) segments[i].terrain.isVisible = false;
             else segments[i].terrain.isVisible = true;
         }
-        
+
         rainParticleSystem.emitter.z = defaultCamera.position.z;
-        
-        if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady()) weather(rainParticleSystem, lightningPlanes, globalWeatherState, skyboxMaterial);
-        
+
+        if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady()) weather(rainParticleSystem, lightningPlanes, globalWeatherState);
+
         if(configFlags[3]) treno.position.z = defaultCamera.position.z;
         
         velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W

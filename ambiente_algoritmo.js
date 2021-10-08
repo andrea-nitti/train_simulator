@@ -31,7 +31,7 @@ function createForestGroup(scene) {
 }
 
 //Funzione per il tempo atmosferico
-function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skyboxMaterial) {
+function weather(rainParticleSystem, lightningPlanes, globalWeatherState) {
     const timeStamp = new Date().valueOf() / 1000;  //valueOf() --> millisecondi trascorsi dall'01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
         globalWeatherState.weatherState = Math.floor(Math.random() * 3);    //numero intero compreso tra 0 (incluso) e 3 (escluso)
@@ -64,7 +64,6 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState, skybox
         globalWeatherState.finishTimeStamp = timeStamp+duration;
     }
     else if(globalWeatherState.weatherState == 2) {
-        skyboxMaterial.alpha -= 0.25;
         if(Math.floor(Math.random() * 500) == 1) {
             const thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
             const selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length);  //scelgo un fulmine a caso dall'array da "illuminare"
