@@ -11,6 +11,7 @@ function inizializzaColori(scene) {
     cemento.diffuseTexture = new BABYLON.Texture("./assets/models/concrete.jpg", scene);
     bricks_rotated = new BABYLON.StandardMaterial('bricks', scene);
     bricks_rotated.diffuseTexture = new BABYLON.Texture("./assets/textures/bricks-rotated.jpg", scene);
+    bricks_rotated.diffuseTexture.uScale = 4;
     bricks = new BABYLON.StandardMaterial('bricks', scene);
     bricks.diffuseTexture = new BABYLON.Texture("./assets/textures/bricks.jpg", scene);
     hv = new BABYLON.StandardMaterial('hv', scene);
