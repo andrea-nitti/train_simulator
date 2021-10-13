@@ -194,8 +194,6 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             City.trees.position.z = -100000;
             cities.push(City);
         }
-        /*cities[0].position.z = -1024;   //DA CAMBIARE --> aggiungere al modello della prima stazione alcune città esterne
-        cities.push(cities.shift());*/
     }
     
     let treno;
@@ -231,6 +229,8 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
                 const time = day.getHours() * 60 + day.getMinutes();    //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
                 if(time <= 720) sun.intensity = time / (12 * 60);   //calcolo la luminosità del Sole in base alla proporzione con i minuti contenuti in metà giornata
                 else sun.intensity = (-time) / (12 * 60) + 2;   //la luminosità del Sole è calcolata in modo inverso (con intensità decrescente) dopo mezzo-giorno
+                /*if(time >= 1200 && time <= 1260) scene.clearColor = new BABYLON.Color3(0.925, 0.625, 0.269);
+                else scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15);*/
                 break;
             case 1: //tempo accelerato
                 sun.intensity += deltaSunIntensity;
