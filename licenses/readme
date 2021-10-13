@@ -1,25 +1,25 @@
-textures
+assets/textures/
 bricks.jpg          Public Domain
 bricks-rotated.jpg  Public Domain
 grass-texture.jpg   Public Domain
 ground.jpg          Public Domain
 loadingImage.jpg    Public Domain
-moon_surface.jpg    Distributed under Attribution 4.0 International license: You may use, adapt, and share these textures for any purpose, even commercially.
+moon_surface.jpg    CC BY 4.0   https://creativecommons.org/licenses/by/4.0/    https://www.solarsystemscope.com/textures/
 riverGround.jpg     Apache License 2.0 (Apache)
-station_roof_1.jpg  Roof tiles by the3rdSequence is licensed under a Creative Commons Attribution 4.0 International License. You CAN use this texture for free, even for commercial use, as long as you give appropriate credit, link to the website, provide a link to the license, and indicate if changes were made. You CAN'T sell this texture or use it in a website or service that sells or shares textures, wallpapers or images. https://www.the3rdsequence.com/texturedb/texture/161/roof+tiles/
+station_roof_1.jpg  CC BY 4.0   https://creativecommons.org/licenses/by/4.0/    https://www.the3rdsequence.com/texturedb/texture/161/roof+tiles/
 station_roof_2.jpg  Public Domain
 icon.png            Public Domain
 rain.png            Public Domain
 water.png           Apache License 2.0 (Apache)
 
-models
+assets/models/
 bricks-rotated.jpg          Public Domain
 concrete.jpg                Public Domain
 ghiaia1.jpg                 Public Domain
 grass-texture.jpg           Public Domain
 palazzo.jpg                 Public Domain
 rusted-steel-cropped.jpg    Public Domain
-station_roof_1.jpg          Roof tiles by the3rdSequence is licensed under a Creative Commons Attribution 4.0 International License. You CAN use this texture for free, even for commercial use, as long as you give appropriate credit, link to the website, provide a link to the license, and indicate if changes were made. You CAN'T sell this texture or use it in a website or service that sells or shares textures, wallpapers or images. https://www.the3rdsequence.com/texturedb/texture/161/roof+tiles/
+station_roof_1.jpg  CC BY 4.0   https://creativecommons.org/licenses/by/4.0/    https://www.the3rdsequence.com/texturedb/texture/161/roof+tiles/
 station_roof_2.jpg          Public Domain
 wall.jpg                    Public Domain
 blocco_stazione.png         Public Domain
@@ -30,3 +30,9 @@ locomotorelato.png          Public Domain
 ponte-lato.png              Public Domain
 station_wall.png            Public Domain
 wood.png                    Public Domain
+
+lib/
+babylon.gui.min.js          Apache License 2.0 (Apache)
+babylon.js                  Apache License 2.0 (Apache)
+babylonjs.loaders.js        Apache License 2.0 (Apache)
+babylonjs.materials.min.js  Apache License 2.0 (Apache)

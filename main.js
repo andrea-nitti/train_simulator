@@ -1,7 +1,4 @@
-//Autori: Andrea Nitti; Lorenzo Parma
-//Istituto: Liceo G. M. Colombini
-//Progetto: Train Simulator
-//Descrizione: Un simulatore di guida di treni, in cui la velocità del mezzo, lungo una rotaia infinita, potrà essere decisa e modificata in corsa
+//Credits: Andrea Nitti; Lorenzo Parma
 
 "use strict";
 let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, stazione1, carrozza, carrovuoto, locomotore, container1, container2, cisterna1, cisterna2;    //models
