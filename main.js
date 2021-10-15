@@ -258,7 +258,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
 
         if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady()) weather(rainParticleSystem, lightningPlanes, globalWeatherState);
 
-        if(configFlags[3]) treno.position.z = defaultCamera.position.z;
+        if(configFlags[3]) treno.position.z = defaultCamera.position.z - 615;
         
         velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
         if(velocita < 0) velocita = 0;
