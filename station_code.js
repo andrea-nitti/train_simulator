@@ -95,6 +95,8 @@ function createAllStations(scene) {
     stazione0.forEach(x => {
         const staz0 = x.clone('stazione0');
         staz0.position.z = 112;
+        staz0.freezeWorldMatrix();
+        staz0.convertToUnIndexedMesh();
         if(staz0.material.diffuseTexture != null) {
             staz0.material.diffuseTexture.hasAlpha = true;
             staz0.material.backFaceCulling = false;

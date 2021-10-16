@@ -52,12 +52,11 @@ function startEverything(configFlags, renderDistance) {
     moon = BABYLON.MeshBuilder.CreateSphere('moon', {diameter: 10}, scene);
     moon.infiniteDistance = true;
     moon.material = moonSurface;
-    const moonHalo = new BABYLON.GlowLayer("moonHalo", scene);
+    const glowHalo = new BABYLON.GlowLayer("glowHalo", scene);
     const moonTexture = new BABYLON.Texture("./assets/textures/moon_surface.jpg");
-    moonHalo.customEmissiveTextureSelector = (mesh, submesh, material) => {
+    glowHalo.customEmissiveTextureSelector = (mesh, submesh, material) => {
         return moonTexture;
     };
-    moonHalo.addIncludedOnlyMesh(moon, BABYLON.Color3(1, 1, 1), true);
     
     scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15);    //imposto il colore esterno alla skybox (blu scuro)
     const assetsManager = new BABYLON.AssetsManager(scene);
@@ -66,6 +65,7 @@ function startEverything(configFlags, renderDistance) {
         const importMesh = assetsManager.addMeshTask("task", "", "./assets/models/", x);
         importMesh.onSuccess = function(task) {
             //avanzamento.innerHTML = "(./assets/models/" + x + ")";
+            //task.loadedMeshes.forEach(x => {x.doNotSyncBoundingInfo = true;});
             switch(x) {
                 case "filo.obj": wire = task.loadedMeshes; break;
                 case "chunk_binario.obj": terrain_chunk = task.loadedMeshes; break;
@@ -117,7 +117,7 @@ function startEverything(configFlags, renderDistance) {
     };
     assetsManager.onFinish = function(tasks) {
         scene.autoClearDepthAndStencil = false;
-        setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance);
+        setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance, glowHalo);
         scene.blockfreeActiveMeshesAndRenderingGroups = true;
         [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, stazione1, carrozza, carrovuoto, locomotore,  container1, container2, cisterna1, cisterna2].forEach(model => {
             model.forEach(modelPiece => {
@@ -131,7 +131,7 @@ function startEverything(configFlags, renderDistance) {
     assetsManager.load();
 }
 
-function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance) {
+function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance, glowHalo) {
     const velocitaOverlay = document.getElementById('velocita');
     const spazioOverlay = document.getElementById('spazio');
     const aiutoOverlay = document.getElementById('aiuto2');
@@ -160,7 +160,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     
     const stazione = createAllStations(scene);
     stazione.setEnabled(false);
-    const listaCartelli = createSigns(scene);
+    const listaCartelli = createSigns(scene, glowHalo);
     const indice = Math.floor(Math.random() * listaCartelli.length);
     const cartello = listaCartelli[indice];
     cartello.position.z = 92;
@@ -213,7 +213,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     rainParticleSystem.minScaleX = 0.05;
     rainParticleSystem.maxScaleX = 0.1;
     
-    const lightningPlanes = createLightning(scene);
+    const lightningPlanes = createLightning(scene, glowHalo);
     const globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
     
     let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale

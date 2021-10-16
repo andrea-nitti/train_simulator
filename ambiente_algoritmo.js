@@ -79,7 +79,7 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState) {
     else if(globalWeatherState.weatherState == 2 && rainParticleSystem.emitRate <= 8500) rainParticleSystem.emitRate += 25;
 }
 
-function createLightning(scene) {
+function createLightning(scene, glowHalo) {
     const lightningImages = ["lightning1","lightning2","lightning3","lightning4","lightning5"];
     const lightningPlanes = [];
     lightningImages.forEach(x => {
@@ -94,6 +94,7 @@ function createLightning(scene) {
         lightningPlane.applyFog = false;
         lightningPlane.infiniteDistance = true;
         lightningPlane.isVisible = false;
+        glowHalo.addExcludedMesh(lightningPlane);
         lightningPlanes.push(lightningPlane);
     })
     return lightningPlanes;

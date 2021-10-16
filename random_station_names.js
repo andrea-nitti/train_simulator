@@ -8,11 +8,10 @@ const listaCitta = ["Agrigento","Alessandria","Ancona","Aosta","Arezzo","Ascoli 
                   "Cortemaggiore","Regno dei funghi","Essecorta"];
 
 //Scritte sui cartelli
-function createSigns(scene) {
-    const listaCartelli = []; //salvo in un array tutte le parent_mesh dei cartelli
+function createSigns(scene, glowHalo) {
+    const listaCartelli = []; //salvo in un array tutte i transferNode dei cartelli
     for(let i=0; i<listaCitta.length; i++) {
-        const parent_mesh = BABYLON.Mesh.CreateBox("box", 1.0, scene);    //a questa mesh ancoro il cartello
-        parent_mesh.isVisible = false;  //rendo l'ancora invisibile
+        const signParentNode = new BABYLON.TransformNode("signParentNode", scene);
         const stationSignMaterial = new BABYLON.StandardMaterial("stationSignMaterial", scene);
         stationSignMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
         const DTWidth = planeWidth * 60;      //i moltiplicatori sono uguali per mantenere l'aspect ratio
@@ -30,13 +29,14 @@ function createSigns(scene) {
             stationSignMaterial.diffuseTexture = stationSignDynamicTexture;
             const plane = BABYLON.MeshBuilder.CreatePlane("plane", {width:planeWidth, height:planeHeight}, scene);
             plane.material = stationSignMaterial;
+            glowHalo.addExcludedMesh(plane);
             plane.position.x = -30;
             plane.position.y = 12.8;
             if(n==2) plane.rotation.y = Math.PI;
-            plane.setParent(parent_mesh);
+            plane.setParent(signParentNode);
         }
-        parent_mesh.position.z = -10000;
-        listaCartelli.push(parent_mesh);
+        signParentNode.position.z = -10000;
+        listaCartelli.push(signParentNode);
     }
     return listaCartelli;
 }
