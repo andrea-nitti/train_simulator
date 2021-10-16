@@ -83,11 +83,11 @@ function createBridge(skybox, scene) {
             arrayOfBridgeMeshes.push(bridgePart);
         });
     }
-    const river = BABYLON.MeshBuilder.CreatePlane('river', {width: 1184, height: 975}, scene);
+    const river = BABYLON.MeshBuilder.CreatePlane('river', {width: 2208, height: 975}, scene);
     river.rotation.x = Math.PI/2;
     river.position.y = -80;
     river.position.z = 1264;
-    const riverGround = BABYLON.MeshBuilder.CreatePlane('riverGround', {width: 1184, height: 975}, scene);
+    const riverGround = BABYLON.MeshBuilder.CreatePlane('riverGround', {width: 2208, height: 975}, scene);
     riverGround.rotation.x = Math.PI/2;
     riverGround.position.y = -82.5;
     riverGround.position.z = 1264;
