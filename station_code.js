@@ -39,8 +39,7 @@ function createStation(scene) {
         if (x_offset < 0) linea_gialla.position.x = x_offset + 7.5;
         else linea_gialla.position.x = x_offset - 7.5;
         linea_gialla.position.y = 3.201;
-        linea_gialla.position.z = chunk_size;
-        linea_gialla.setParent(parent_mesh);*/
+        linea_gialla.position.z = chunk_size;*/
         
         for(let ramp_z_offset=-3*chunk_size; ramp_z_offset<=3*chunk_size; ramp_z_offset+=6*chunk_size) {
             const rampa = BABYLON.MeshBuilder.CreatePolyhedron('rampa',{custom: {"vertex" : [[12,0,0],[-12,0,0],[12,0,50],[-12,0,50],[12,8,0],[-12,8,0]],"face" : [[1,0,2,3],[3,2,4,5],[5,4,0,1],[0,4,2],[1,3,5]]},size: 0.5},scene); //tratto dal file "shape_1.js"

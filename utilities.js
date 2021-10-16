@@ -1,7 +1,6 @@
 "use strict";
 function createAxis(scene) {
-    const axisParentMesh = new BABYLON.MeshBuilder.CreateBox('axisParentMesh', {size: 1}, scene);
-    axisParentMesh.isVisible = false;
+    const axisParentNode = new BABYLON.TransformNode('axisParentNode', scene);
     const xAxis = BABYLON.Mesh.CreateLines('xAxis', [new BABYLON.Vector3.Zero(), new BABYLON.Vector3(5, 0, 0), new BABYLON.Vector3(5 * 0.95, 0.05 * 5, 0), new BABYLON.Vector3(5, 0, 0), new BABYLON.Vector3(5 * 0.95, -0.05 * 5, 0)], scene);
     const yAxis = BABYLON.Mesh.CreateLines('yAxis', [new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, 5, 0), new BABYLON.Vector3(-0.05 * 5, 5 * 0.95, 0), new BABYLON.Vector3(0, 5, 0), new BABYLON.Vector3(0.05 * 5, 5 * 0.95, 0)], scene);
     const zAxis = BABYLON.Mesh.CreateLines('zAxis', [new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, 0, 5), new BABYLON.Vector3(0 , -0.05 * 5, 5 * 0.95), new BABYLON.Vector3(0, 0, 5), new BABYLON.Vector3(0, 0.05 * 5, 5 * 0.95)], scene);
@@ -23,11 +22,11 @@ function createAxis(scene) {
     xLabel.setParent(xAxis);
     yLabel.setParent(yAxis);
     zLabel.setParent(zAxis);
-    xAxis.setParent(axisParentMesh);
-    yAxis.setParent(axisParentMesh);
-    zAxis.setParent(axisParentMesh);
-    axisParentMesh.setEnabled(false);
-    return axisParentMesh;
+    xAxis.setParent(axisParentNode);
+    yAxis.setParent(axisParentNode);
+    zAxis.setParent(axisParentNode);
+    axisParentNode.setEnabled(false);
+    return axisParentNode;
 }
 
 function createAxisLabel(letter, color, scene) {
