@@ -44,9 +44,9 @@ function startEverything(configFlags, renderDistance) {
     scene.activeCamera = defaultCamera;
     inizializzaColori(scene);
 
-    sun = new BABYLON.HemisphericLight("sun", new BABYLON.Vector3(0, -1, 0), scene);
+    sun = new BABYLON.HemisphericLight('sun', new BABYLON.Vector3(0, -1, 0), scene);
     sun.intensity = 1;
-    sun.diffuse = new BABYLON.Color3(0,0,0);
+    sun.diffuse = new BABYLON.Color3(0, 0, 0);
     sun.groundColor = new BABYLON.Color3(1, 1, 0.8);
     
     moon = BABYLON.MeshBuilder.CreateSphere('moon', {diameter: 10}, scene);
@@ -57,8 +57,8 @@ function startEverything(configFlags, renderDistance) {
     glowHalo.customEmissiveTextureSelector = (mesh, submesh, material) => {
         return moonTexture;
     };
-    
-    scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15);    //imposto il colore esterno alla skybox (blu scuro)
+
+    //scene.clearColor = new BABYLON.Color3(0.086, 0.090, 0.150); //imposto il colore esterno alla skybox (blu scuro)
     const assetsManager = new BABYLON.AssetsManager(scene);
     assetsManager.useDefaultLoadingScreen = false;
     importedModelsList.forEach(x => {
@@ -92,19 +92,19 @@ function startEverything(configFlags, renderDistance) {
         importMesh.onError = function(task, message) {console.log(message);};
     });
     importedSoundsList.forEach(x => {
-        const importSound = assetsManager.addBinaryFileTask("task", "./assets/sounds/" + x);
+        const importSound = assetsManager.addBinaryFileTask('task', "./assets/sounds/" + x);
         importSound.onSuccess = function(task) {
             //avanzamento.innerHTML = "(./assets/sounds/" + x + ")";
             switch(x) {
-                case "horn.ogg": horn = new BABYLON.Sound("horn", task.data, scene); break;
-                case "thunder1.ogg": thunder1 = new BABYLON.Sound("thunder1", task.data, scene); break;
-                case "thunder2.ogg": thunder2 = new BABYLON.Sound("thunder2", task.data, scene); break;
-                case "thunder3.ogg": thunder3 = new BABYLON.Sound("thunder3", task.data, scene); break;
-                case "thunder4.ogg": thunder4 = new BABYLON.Sound("thunder4", task.data, scene); break;
-                case "thunder5.ogg": thunder5 = new BABYLON.Sound("thunder5", task.data, scene); break;
-                case "rain.ogg": rain = new BABYLON.Sound("rain", task.data, scene); break;
-                case "thunderstorm.ogg": thunderstorm = new BABYLON.Sound("thunderstorm", task.data, scene); break;
-                case "river.ogg": riverSound = new BABYLON.Sound("river", task.data, scene, function() {setTimeout(function() {
+                case "horn.ogg": horn = new BABYLON.Sound('horn', task.data, scene); break;
+                case "thunder1.ogg": thunder1 = new BABYLON.Sound('thunder1', task.data, scene); break;
+                case "thunder2.ogg": thunder2 = new BABYLON.Sound('thunder2', task.data, scene); break;
+                case "thunder3.ogg": thunder3 = new BABYLON.Sound('thunder3', task.data, scene); break;
+                case "thunder4.ogg": thunder4 = new BABYLON.Sound('thunder4', task.data, scene); break;
+                case "thunder5.ogg": thunder5 = new BABYLON.Sound('thunder5', task.data, scene); break;
+                case "rain.ogg": rain = new BABYLON.Sound('rain', task.data, scene); break;
+                case "thunderstorm.ogg": thunderstorm = new BABYLON.Sound('thunderstorm', task.data, scene); break;
+                case "river.ogg": riverSound = new BABYLON.Sound('river', task.data, scene, function() {setTimeout(function() {
                     riverSound.setPosition(new BABYLON.Vector3(0, 0, 1264));
                     riverSound.play();
                     }, 5000)}, {loop: true, maxDistance: 512, spatialSound: true}); break;
@@ -138,8 +138,8 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     const coordinateOverlay = document.getElementById('coordinate');
     
     //creazione della skybox
-    const skybox = BABYLON.Mesh.CreateBox("skybox", renderDistance * 2 / Math.sqrt(3), scene);
-    const skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
+    const skybox = BABYLON.Mesh.CreateBox('skybox', renderDistance * 2 / Math.sqrt(3), scene);
+    const skyboxMaterial = new BABYLON.StandardMaterial('skyboxMaterial', scene);
     skyboxMaterial.backFaceCulling = false;
     skyboxMaterial.disableLighting = true;
     skyboxMaterial.alpha = 1;
@@ -217,29 +217,40 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     const globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
     
     let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
-    let deltaSunIntensity = 0.0005;
+    let deltaSunIntensity = 0.00025;
     let moonAngle = 0;
     scene.registerBeforeRender(() => {
         day = new Date();
+        const time = day.getHours() * 60 + day.getMinutes();    //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
         switch(modalitaTempo) {
             case 0: //modalità reale
-                const time = day.getHours() * 60 + day.getMinutes();    //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
                 if(time <= 720) sun.intensity = time / (12 * 60);   //calcolo la luminosità del Sole in base alla proporzione con i minuti contenuti in metà giornata
                 else sun.intensity = (-time) / (12 * 60) + 2;   //la luminosità del Sole è calcolata in modo inverso (con intensità decrescente) dopo mezzo-giorno
-                /*if(time >= 1200 && time <= 1260) scene.clearColor = new BABYLON.Color3(0.925, 0.625, 0.269);
-                else scene.clearColor = new BABYLON.Color3(0.0859, 0.0898, 0.15);*/
                 break;
             case 1: //tempo accelerato
                 sun.intensity += deltaSunIntensity;
                 if((sun.intensity >= 1) || (sun.intensity <= 0)) deltaSunIntensity = -deltaSunIntensity;
                 break;
-            case 2: sun.intensity = 0.5; break; //alba fissa
+            case 2: sun.intensity = 0.5; break; //06:00 fisse
             case 3: sun.intensity = 1; break;   //mezzogiorno fisso
-            case 4: sun.intensity = 0.5; break; //tramonto fisso
+            case 4: sun.intensity = 0.5; break; //18:00 fisse
             case 5: sun.intensity = 0; break;   //mezzanotte fissa
         }
         if(globalWeatherState.weatherState != 2) skyboxMaterial.alpha = sun.intensity * 0.9 + 0.1;
         else skyboxMaterial.alpha = sun.intensity - 0.25;
+        
+        //gestione dei colori del tramonto
+        let sunsetProgress = 0;
+        if((modalitaTempo == 0 && time > 720) || (modalitaTempo == 1 && deltaSunIntensity < 0)) {
+            const secondHalfDayProgress = 1 - sun.intensity;
+            //7/12 e 3/4 sono le ore di inizio e fine del tramonto per mezzogiorno=0 e mezzanotte=1 (19:00 e 21:00)
+            if((secondHalfDayProgress > 7/12) && (secondHalfDayProgress < 17/24)) sunsetProgress = 8 * secondHalfDayProgress - 14/3;    //17/24 è un punto intermedio tra 7/12 e 3/4
+            else if((secondHalfDayProgress >= 17/24) && (secondHalfDayProgress < 3/4)) sunsetProgress = -24 * secondHalfDayProgress + 18;
+        }
+        const skyRed = 0.086 + sunsetProgress * 0.879;
+        const skyGreen = 0.090 + sunsetProgress * 0.404;
+        const skyBlue = 0.150 + sunsetProgress * (-0.107);
+        scene.clearColor = new BABYLON.Color3(skyRed, skyGreen, skyBlue);
         
         //la Luna ruota in senso opposto rispetto al Sole
         let moonTime = day.getDate();
