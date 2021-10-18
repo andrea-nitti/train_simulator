@@ -138,7 +138,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     const coordinateOverlay = document.getElementById('coordinate');
     
     //creazione della skybox
-    const skybox = BABYLON.Mesh.CreateBox('skybox', renderDistance * 2 / Math.sqrt(3), scene);
+    const skybox = BABYLON.Mesh.CreateBox('skybox', renderDistance * 2 / Math.sqrt(3), scene);  //la dimensione della skybox è calcolata in modo tale che rimanga sempre visibile all'osservatore
     const skyboxMaterial = new BABYLON.StandardMaterial('skyboxMaterial', scene);
     skyboxMaterial.backFaceCulling = false;
     skyboxMaterial.disableLighting = true;
@@ -218,6 +218,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     
     let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
     let deltaSunIntensity = 0.00025;
+    let sunsetProgress = 0;
     let moonAngle = 0;
     scene.registerBeforeRender(() => {
         day = new Date();
@@ -236,23 +237,22 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             case 4: sun.intensity = 0.5; break; //18:00 fisse
             case 5: sun.intensity = 0; break;   //mezzanotte fissa
         }
-        if(globalWeatherState.weatherState != 2) skyboxMaterial.alpha = sun.intensity * 0.9 + 0.1;
-        else skyboxMaterial.alpha = sun.intensity - 0.25;
+        /*if(globalWeatherState.weatherState != 2)*/ skyboxMaterial.alpha = sun.intensity * 0.9 + 0.1;
+        if((sunsetProgress < 0.1) && (globalWeatherState.weatherState == 2)) skyboxMaterial.alpha = sun.intensity - 0.25;   //può esistere un "gradino" di luminosità del cielo se il tramonto e il temporale sono attivi nello stesso momento
         
         //gestione dei colori del tramonto
-        let sunsetProgress = 0;
         if((modalitaTempo == 0 && time > 720) || (modalitaTempo == 1 && deltaSunIntensity < 0)) {
             const secondHalfDayProgress = 1 - sun.intensity;
             //7/12 e 3/4 sono le ore di inizio e fine del tramonto per mezzogiorno=0 e mezzanotte=1 (19:00 e 21:00)
             if((secondHalfDayProgress > 7/12) && (secondHalfDayProgress < 17/24)) sunsetProgress = 8 * secondHalfDayProgress - 14/3;    //17/24 è un punto intermedio tra 7/12 e 3/4
             else if((secondHalfDayProgress >= 17/24) && (secondHalfDayProgress < 3/4)) sunsetProgress = -24 * secondHalfDayProgress + 18;
         }
-        const skyRed = 0.086 + sunsetProgress * 0.879;
-        const skyGreen = 0.090 + sunsetProgress * 0.404;
-        const skyBlue = 0.150 + sunsetProgress * (-0.107);
+        const skyRed = 0.086 + sunsetProgress * (0.965 - 0.086);
+        const skyGreen = 0.090 + sunsetProgress * (0.387 - 0.090);
+        const skyBlue = 0.150 + sunsetProgress * (0.040 - 0.150);
         scene.clearColor = new BABYLON.Color3(skyRed, skyGreen, skyBlue);
         
-        //la Luna ruota in senso opposto rispetto al Sole
+        //rotazione della Luna
         let moonTime = day.getDate();
         if(moonTime > 28) moonTime = 28;
         moonAngle = moonTime / 28 * 2 * Math.PI;
