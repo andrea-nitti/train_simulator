@@ -37,14 +37,21 @@ function createTankTrainFirstType() {
     return trainMesh;
 }
 
-function createTankTrainSecondType() {
-    const arrayOfTrainMeshes = [];
+function createTankTrainSecondType(scene) {
+    const cargoTrainParentNode = new BABYLON.TransformNode('cargoTrainParentNode', scene);
+    const flatWagonArray = [];
+    const cargoArray = [];
     for(let i=0; i<25; i++) {
-        carro(8, i*67.6, arrayOfTrainMeshes);
-        if(Math.random() < 0.25) cargo(cisterna2, 8, 10.5, i*67.6, arrayOfTrainMeshes);
+        flatWagonArray.push(BABYLON.Matrix.Translation(8, 0, i * 67.6));
+        if(Math.random() < 0.25) cargoArray.push(BABYLON.Matrix.Translation(8, 10.5, i * 67.6));
     }
-    const trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
-    return trainMesh;
+    const flatWagon = carro();
+    const secondTank = cargo(cisterna2);
+    flatWagon.setParent(cargoTrainParentNode);
+    secondTank.setParent(cargoTrainParentNode);
+    secondTank.thinInstanceAdd(cargoArray);
+    flatWagon.thinInstanceAdd(flatWagonArray);
+    return cargoTrainParentNode;
 }
 
 function vagone(posx, posz, arrayOfTrainMeshes) {
@@ -61,23 +68,26 @@ function vagone(posx, posz, arrayOfTrainMeshes) {
     });
 }
 
-function carro(posx, posz, arrayOfTrainMeshes) {
+function carro() {
+    const arrayOfFlatWagonMeshes = [];
     carrovuoto.forEach(x => {
-        const parteCarro = x.clone('carrovuoto');
-        parteCarro.position.x = posx;
-        parteCarro.position.z = posz;
-        arrayOfTrainMeshes.push(parteCarro);
+        const flatWagonSegment = x.clone('flatWagonSegment');
+        arrayOfFlatWagonMeshes.push(flatWagonSegment);
     });
+    const flatWagonMesh = BABYLON.Mesh.MergeMeshes(arrayOfFlatWagonMeshes, true, true, undefined, false, true);
+    flatWagonMesh.alwaysSelectAsActiveMesh = true;
+    return flatWagonMesh;
 }
 
-function cargo(type, posx, posy, posz, arrayOfTrainMeshes) {
+function cargo(type) {
+    const arrayOfCargoMeshes = [];
     type.forEach(x => {
         const cargoSegment = x.clone('cargoSegment');
-        cargoSegment.position.x = posx;
-        cargoSegment.position.y = posy;
-        cargoSegment.position.z = posz;
-        arrayOfTrainMeshes.push(cargoSegment);
+        arrayOfCargoMeshes.push(cargoSegment);
     });
+    const cargoMesh = BABYLON.Mesh.MergeMeshes(arrayOfCargoMeshes, true, true, undefined, false, true);
+    cargoMesh.alwaysSelectAsActiveMesh = true;
+    return cargoMesh;
 }
 
 function locomotiva(posx, posz, arrayOfTrainMeshes) {
