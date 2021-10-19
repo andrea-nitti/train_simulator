@@ -292,7 +292,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
                 cities.push(cities.shift());
             }
             if(configFlags[2]) {
-                forests[0].position.z = stazione.position.z + 1024;
+                forests[0].position.z = stazione.position.z + 1280;
                 forests.push(forests.shift());
             }
             const indice = Math.floor(Math.random() * listaCartelli.length);

@@ -1,8 +1,8 @@
 "use strict";
 function createNormalTrain() {
     const arrayOfTrainMeshes = [];
-    for(let i=0; i<9; i++) vagone(-8, i*70, arrayOfTrainMeshes);
-    locomotiva(-8, 9*70, arrayOfTrainMeshes);
+    for(let i=0; i<9; i++) vagone(-8, i * 70, arrayOfTrainMeshes);
+    locomotiva(-8, 9 * 70 - 5, arrayOfTrainMeshes);
     const trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
     return trainMesh;
 }
