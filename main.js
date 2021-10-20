@@ -193,9 +193,9 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         }
     }
     
-    let treno, treno2;
+    let treno;
     if(configFlags[3]) treno = createNormalTrain();
-    if(configFlags[4]) treno2 = createTankTrainSecondType(scene);
+    if(configFlags[4]) createContainerTrainFirstType(scene);
 
     const ponte = createBridge(skybox, scene);
     riverSound.setVolume(2, 0);

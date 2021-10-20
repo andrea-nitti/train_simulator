@@ -7,34 +7,55 @@ function createNormalTrain() {
     return trainMesh;
 }
 
-function createContainerTrainFirstType() {
-    const arrayOfTrainMeshes = [];
+function createContainerTrainFirstType(scene) {
+    const cargoTrainParentNode = new BABYLON.TransformNode('cargoTrainParentNode', scene);
+    const flatWagonArray = [];
+    const cargoArray = [];
     for(let i=0; i<30; i++) {
-        carro(8, i*67.6, arrayOfTrainMeshes);
-        cargo(container1, 8, 10, i*67.6, arrayOfTrainMeshes);
+        flatWagonArray.push(BABYLON.Matrix.Translation(8, 0, i * 67.6));
+        cargoArray.push(BABYLON.Matrix.Translation(8, 10, i * 67.6));
     }
-    const trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
-    return trainMesh;
+    const flatWagon = carro();
+    const firstContainer = cargo(container1);
+    flatWagon.setParent(cargoTrainParentNode);
+    firstContainer.setParent(cargoTrainParentNode);
+    firstContainer.thinInstanceAdd(cargoArray);
+    flatWagon.thinInstanceAdd(flatWagonArray);
+    //return cargoTrainParentNode;
 }
 
-/*function createContainerTrainSecondType() {   //model bug
-    const arrayOfTrainMeshes = [];
+function createContainerTrainSecondType(scene) {
+    const cargoTrainParentNode = new BABYLON.TransformNode('cargoTrainParentNode', scene);
+    const flatWagonArray = [];
+    const cargoArray = [];
     for(let i=0; i<22; i++) {
-        carro(8, i*67.6, arrayOfTrainMeshes);
-        cargo(container2, 8, 12.5, i*67.6, arrayOfTrainMeshes);
+        flatWagonArray.push(BABYLON.Matrix.Translation(8, 0, i * 67.6));
+        cargoArray.push(BABYLON.Matrix.Translation(8, 12.5, i * 67.6));
     }
-    const trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
-    return trainMesh;
-}*/
+    const flatWagon = carro();
+    const secondContainer = cargo(container2);
+    flatWagon.setParent(cargoTrainParentNode);
+    secondContainer.setParent(cargoTrainParentNode);
+    secondContainer.thinInstanceAdd(cargoArray);
+    flatWagon.thinInstanceAdd(flatWagonArray);
+    //return cargoTrainParentNode;
+}
 
-function createTankTrainFirstType() {
-    const arrayOfTrainMeshes = [];
+function createTankTrainFirstType(scene) {
+    const cargoTrainParentNode = new BABYLON.TransformNode('cargoTrainParentNode', scene);
+    const flatWagonArray = [];
+    const cargoArray = [];
     for(let i=0; i<8; i++) {
-        carro(8, i*67.6, arrayOfTrainMeshes);
-        cargo(cisterna1, 8, 9, i*67.6, arrayOfTrainMeshes);
+        flatWagonArray.push(BABYLON.Matrix.Translation(8, 0, i * 67.6));
+        cargoArray.push(BABYLON.Matrix.Translation(8, 9, i * 67.6));
     }
-    const trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
-    return trainMesh;
+    const flatWagon = carro();
+    const firstTank = cargo(cisterna1);
+    flatWagon.setParent(cargoTrainParentNode);
+    firstTank.setParent(cargoTrainParentNode);
+    firstTank.thinInstanceAdd(cargoArray);
+    flatWagon.thinInstanceAdd(flatWagonArray);
+    //return cargoTrainParentNode;
 }
 
 function createTankTrainSecondType(scene) {
@@ -51,7 +72,7 @@ function createTankTrainSecondType(scene) {
     secondTank.setParent(cargoTrainParentNode);
     secondTank.thinInstanceAdd(cargoArray);
     flatWagon.thinInstanceAdd(flatWagonArray);
-    return cargoTrainParentNode;
+    //return cargoTrainParentNode;
 }
 
 function vagone(posx, posz, arrayOfTrainMeshes) {
