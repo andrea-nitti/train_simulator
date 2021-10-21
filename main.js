@@ -286,8 +286,8 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);    //sposto l'ultima stazione ad almeno 2048 unità di distanza dalla precedente; la massima distanza ammessa è 10240 unità
             stazione.setEnabled(true);
             if(checkIntersections(ponte.position.z + 1264, 512 * 2, stazione.position.z + 98, 512 * 3)) stazione.setEnabled(false); //98 --> da cambiare a seconda della lunghezza delle stazioni
-            if(configFlags[0] && stazione.setEnabled) {
-                cities[0].city.position.z = stazione.position.z;
+            if(configFlags[0] && stazione.isEnabled()) {
+                cities[0].city.position.z = stazione.position.z - 240;
                 cities[0].trees.position.z = stazione.position.z;
                 cities.push(cities.shift());
             }
@@ -297,7 +297,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             }
             const indice = Math.floor(Math.random() * listaCartelli.length);
             const cartello = listaCartelli[indice];
-            if(cartello != undefined && stazione.setEnabled) {
+            if(cartello != undefined && stazione.isEnabled()) {
                 cartello.position.z = stazione.position.z + 12;
                 listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
             }

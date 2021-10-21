@@ -46,7 +46,7 @@ function checkIntersections(posA, lenghtA, posB, lenghtB) { //posA e posB sono l
     const pointB = posA + lenghtA / 2;
     const pointC = posB - lenghtB / 2;
     const pointD = posB + lenghtB / 2;
-    return !((pointD <= pointA) || (pointC >= pointB)); //true = esiste intersezione
+    return !((pointD < pointA) || (pointC > pointB)); //true = esiste intersezione
 }
 
 function allWireframe(status) { //status --> boolean
