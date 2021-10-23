@@ -287,7 +287,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             stazione.setEnabled(true);
             if(checkIntersections(ponte.position.z + 1264, 512 * 2, stazione.position.z + 98, 512 * 3)) stazione.setEnabled(false); //98 --> da cambiare a seconda della lunghezza delle stazioni
             if(configFlags[0] && stazione.isEnabled()) {
-                cities[0].city.position.z = stazione.position.z - 240;
+                cities[0].city.position.z = stazione.position.z;
                 cities[0].trees.position.z = stazione.position.z;
                 cities.push(cities.shift());
             }
