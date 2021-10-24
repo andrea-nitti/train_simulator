@@ -48,7 +48,7 @@ function startEverything(configFlags, renderDistance) {
     sun.intensity = 1;
     sun.diffuse = new BABYLON.Color3(0, 0, 0);
     sun.groundColor = new BABYLON.Color3(1, 1, 0.8);
-    
+
     moon = BABYLON.MeshBuilder.CreateSphere('moon', {diameter: 10}, scene);
     moon.infiniteDistance = true;
     moon.material = moonSurface;
@@ -136,7 +136,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     const spazioOverlay = document.getElementById('spazio');
     const aiutoOverlay = document.getElementById('aiuto2');
     const coordinateOverlay = document.getElementById('coordinate');
-    
+
     //creazione della skybox
     const skybox = BABYLON.Mesh.CreateBox('skybox', renderDistance * 2 / Math.sqrt(3), scene);  //la dimensione della skybox è calcolata in modo tale che rimanga sempre visibile all'osservatore
     const skyboxMaterial = new BABYLON.StandardMaterial('skyboxMaterial', scene);
@@ -147,9 +147,9 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     skybox.infiniteDistance = true;
     skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v4", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    
+
     vegetali = [albero1, albero2];
-    
+
     const segments = [];    //array che contiene 12 modelli di terreno ferroviario (lunghi ciascuno 256 unità)
     for(let i=0; i<12; i++) {
         const Terrain = createTerrain(scene);
@@ -157,7 +157,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         Terrain.terrain.position.z = i * 256;
         segments.push(Terrain);
     }
-    
+
     const stazione = createAllStations(scene);
     stazione.setEnabled(false);
     const listaCartelli = createSigns(scene, glowHalo);
@@ -165,7 +165,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     const cartello = listaCartelli[indice];
     cartello.position.z = 92;
     listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
-    
+
     const forests = [];
     if(configFlags[2]) {
         for(let i=0; i<2; i++) {
@@ -176,13 +176,13 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         forests[0].position.z = stazione.position.z + 256;
         forests.push(forests.shift());
     }
-    
+
     //manipolo la nebbia
     scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
     scene.fogDensity = 0.001;
     scene.fogColor = new BABYLON.Color3(0.494, 0.604, 0.686);
     skybox.applyFog = false;
-    
+
     const cities = [];  //array che contiene la lista delle mesh (fuse insieme) di 5*3*2 città
     if(configFlags[0]) {
         for(let i=0; i<5; i++) {
@@ -192,19 +192,19 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             cities.push(City);
         }
     }
-    
+
     let treno;
     if(configFlags[3]) treno = createNormalTrain();
     if(configFlags[4]) createContainerTrainFirstType(scene);
 
     const ponte = createBridge(skybox, scene);
     riverSound.setVolume(2, 0);
-    
+
     const axisGroup = createAxis(scene);
-    
-    const rainParticleSystem = new BABYLON.GPUParticleSystem('rain', {capacity: 100000, randomTextureSize: 4096}, scene);
+
+    const rainParticleSystem = new BABYLON.GPUParticleSystem('rainPS', {capacity: 100000, randomTextureSize: 4096}, scene);
     rainParticleSystem.particleTexture = new BABYLON.Texture("./assets/textures/rain.png");
-    const emitter = rainParticleSystem.createBoxEmitter(new BABYLON.Vector3(0, -150, 0), new BABYLON.Vector3(0, -250, 0), new BABYLON.Vector3(-75, 0, -400), new BABYLON.Vector3(75, 0, 400));
+    rainParticleSystem.createBoxEmitter(new BABYLON.Vector3(0, -150, 0), new BABYLON.Vector3(0, -250, 0), new BABYLON.Vector3(-75, 0, -400), new BABYLON.Vector3(75, 0, 400));
     rainParticleSystem.emitter = new BABYLON.Vector3(0, 75, 0);
     rainParticleSystem.minLifeTime = 4;
     rainParticleSystem.maxLifeTime = 7;
@@ -212,10 +212,19 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     rainParticleSystem.maxSize = 2.0;
     rainParticleSystem.minScaleX = 0.05;
     rainParticleSystem.maxScaleX = 0.1;
-    
+
+    const sparksParticleSystem = new BABYLON.ParticleSystem('sparksPS', 50, scene);
+    sparksParticleSystem.particleTexture = new BABYLON.Texture("./assets/textures/spark.png");
+    sparksParticleSystem.emitter = new BABYLON.Vector3(-8, 27.625, -10);
+    sparksParticleSystem.direction1 = sparksParticleSystem.direction2 = BABYLON.Vector3.Zero();
+    sparksParticleSystem.minLifeTime = 0.15;
+    sparksParticleSystem.maxLifeTime = 0.75;
+    sparksParticleSystem.minSize = 0.01;
+    sparksParticleSystem.maxSize = 0.25;
+
     const lightningPlanes = createLightning(scene, glowHalo);
     const globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
-    
+
     let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
     let deltaSunIntensity = 0.00025;
     let sunsetProgress = 0;
@@ -251,7 +260,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         const skyGreen = 0.090 + sunsetProgress * (0.387 - 0.090);
         const skyBlue = 0.150 + sunsetProgress * (0.040 - 0.150);
         scene.clearColor = new BABYLON.Color3(skyRed, skyGreen, skyBlue);
-        
+
         //rotazione della Luna
         let moonTime = day.getDate();
         if(moonTime > 28) moonTime = 28;
@@ -266,17 +275,18 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         }
 
         rainParticleSystem.emitter.z = defaultCamera.position.z;
+        sparksParticleSystem.emitter.z = defaultCamera.position.z - 10;
 
-        if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady()) weather(rainParticleSystem, lightningPlanes, globalWeatherState);
+        if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady()) weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, globalWeatherState);
 
         if(configFlags[3]) treno.position.z = defaultCamera.position.z - 615;
-        
+
         velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
         if(velocita < 0) velocita = 0;
-        
+
         spazio += velocita;
         defaultCamera.position.z = spazio;
-        
+
         if(defaultCamera.position.z > (4 * 256) + segments[0].railRoad.position.z) {    //sposto il primo modello di terreno se ho superato l'inizio del terzo
             segments[0].railRoad.position.z += segments.length * 256;
             segments[0].terrain.position.z += segments.length * 256;
@@ -306,7 +316,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             ponte.position.z += 512 * Math.floor(16 + Math.random() * 30);
             if(riverSound.isReady()) riverSound.setPosition(new BABYLON.Vector3(0, 0, ponte.position.z + 1264));
         }
-        
+
         velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);   //il fattore 10 serve a rendere più realistici i valori
         spazioOverlay.innerText = "Spazio: " + Math.floor(spazio * 10);
         coordinateOverlay.innerText = "X: " + freeCam.position.x + "\n Y: " + freeCam.position.y + "\n Z: " + freeCam.position.z;

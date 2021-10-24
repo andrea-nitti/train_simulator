@@ -31,7 +31,7 @@ function createForestGroup(scene) {
 }
 
 //Funzione per il tempo atmosferico
-function weather(rainParticleSystem, lightningPlanes, globalWeatherState) {
+function weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, globalWeatherState) {
     const timeStamp = new Date().valueOf() / 1000;  //valueOf() --> millisecondi trascorsi dall'01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
         globalWeatherState.weatherState = Math.floor(Math.random() * 3);    //numero intero compreso tra 0 (incluso) e 3 (escluso)
@@ -41,6 +41,7 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState) {
                 thunderstorm.stop();
                 rainParticleSystem.stop();
                 rainParticleSystem.reset();
+                sparksParticleSystem.stop();
                 break;
             case 1: //pioggia
                 thunderstorm.stop();
@@ -49,6 +50,7 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState) {
                 rain.setVolume(1, 10);  //syntax: (volume level, seconds to reach the specified volume)
                 rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
+                sparksParticleSystem.start();
                 break;
             case 2: //temporale
                 rain.stop();
@@ -57,6 +59,7 @@ function weather(rainParticleSystem, lightningPlanes, globalWeatherState) {
                 thunderstorm.setVolume(1, 6);
                 rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
+                sparksParticleSystem.start();
                 break;
         }
         const duration = 60 * (1 + Math.round(Math.random() * 4));  //la durata prima di ogni transizione è misurata in minuti
