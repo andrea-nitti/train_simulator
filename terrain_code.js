@@ -12,6 +12,7 @@ function createTerrain(scene) {
     gravelPlane.forEach(x => {
         const parteTerreno = x.clone('gravelPlane');
         parteTerreno.position.z = 3.5 * 32;
+        parteTerreno.material.zOffset = -1;
         arrayOfDynamicTerrainMeshes.push(parteTerreno);
     });
     

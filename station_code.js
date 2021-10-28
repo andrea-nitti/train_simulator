@@ -106,6 +106,7 @@ function createAllStations(scene) {
     stazione1.forEach(x => {
         const stationPiece = x.clone('');
         stationPiece.position.z = -8;
+        stationPiece.material.backFaceCulling = false;
         arrayOfStationMeshes.push(stationPiece);
     });
     const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);

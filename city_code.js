@@ -243,7 +243,7 @@ function prato(scene, posx, posz, dimensions, arrayOfCityMeshes) {
     const prato = BABYLON.MeshBuilder.CreatePlane('prato', {size: dimensions}, scene);
     prato.material = erba;
     prato.position.x = posx;
-    prato.position.y = 0;
+    prato.position.y = -0.8;
     prato.position.z = posz;
     prato.rotation.x = Math.PI/2;
     arrayOfCityMeshes.push(prato);

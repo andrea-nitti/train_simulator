@@ -9,6 +9,7 @@ function inizializzaColori(scene) {
     metal.diffuseColor = new BABYLON.Color3(0.447, 0.474, 0.447);
     cemento = new BABYLON.StandardMaterial('cemento', scene);
     cemento.diffuseTexture = new BABYLON.Texture("./assets/models/concrete.jpg", scene);
+    cemento.zOffset = -2;
     bricks_rotated = new BABYLON.StandardMaterial('bricks', scene);
     bricks_rotated.diffuseTexture = new BABYLON.Texture("./assets/textures/bricks-rotated.jpg", scene);
     bricks_rotated.diffuseTexture.uScale = 4;
@@ -26,6 +27,7 @@ function inizializzaColori(scene) {
     ground.diffuseTexture = new BABYLON.Texture("./assets/textures/ground.jpg", scene);
     erba = new BABYLON.StandardMaterial('erba', scene);
     erba.diffuseTexture = new BABYLON.Texture("./assets/textures/erba.jpg", scene);
+    erba.zOffset = -3;
     moonSurface = new BABYLON.StandardMaterial('moonSurface', scene);
     moonSurface.diffuseTexture = new BABYLON.Texture("./assets/textures/moon_surface.jpg", scene);
     moonSurface.emissiveColor = new BABYLON.Color3(0.6, 0.6, 0.6);
