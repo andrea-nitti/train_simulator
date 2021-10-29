@@ -3,9 +3,9 @@
 "use strict";
 let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, stazione1, carrozza, carrovuoto, locomotore, container1, container2, cisterna1, cisterna2;    //models
 let sun, moon, day, vegetali;
-let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5, riverSound; //sounds
+let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5, riverSound, sparks; //sounds
 const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","albero2.obj","stazione0.obj","stazione1.obj","carrozza.obj","carrovuoto.obj","locomotore.obj","container1.obj","container2.obj","cisterna1.obj","cisterna2.obj"];
-const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg","river.ogg"];
+const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg","river.ogg","sparks.ogg"];
 
 let spazio = 0;
 let velocita = 0;
@@ -108,6 +108,7 @@ function startEverything(configFlags, renderDistance) {
                     riverSound.setPosition(new BABYLON.Vector3(0, 0, 1264));
                     riverSound.play();
                     }, 5000)}, {loop: true, maxDistance: 512, spatialSound: true}); break;
+                case "sparks.ogg": sparks = new BABYLON.Sound('sparks', task.data, scene, function() {sparks.setVolume(2);}, {loop: true}); break;
             }
         };
         importSound.onError = function(task, message) {console.log(message);};
@@ -277,7 +278,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         rainParticleSystem.emitter.z = defaultCamera.position.z;
         sparksParticleSystem.emitter.z = defaultCamera.position.z - 10;
 
-        if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady()) weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, globalWeatherState);
+        if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady() && sparks.isReady()) weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, globalWeatherState);
 
         if(configFlags[3]) treno.position.z = defaultCamera.position.z - 615;
 

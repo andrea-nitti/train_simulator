@@ -51,6 +51,7 @@ function weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, glob
                 rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
                 sparksParticleSystem.start();
+                sparks.play();
                 break;
             case 2: //temporale
                 rain.stop();
@@ -60,6 +61,7 @@ function weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, glob
                 rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
                 sparksParticleSystem.start();
+                sparks.play();
                 break;
         }
         const duration = 60 * (1 + Math.round(Math.random() * 4));  //la durata prima di ogni transizione è misurata in minuti
