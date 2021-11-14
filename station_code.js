@@ -109,6 +109,15 @@ function createAllStations(scene) {
         stationPiece.material.backFaceCulling = false;
         arrayOfStationMeshes.push(stationPiece);
     });
+    /*stazione3.forEach(x => {
+        const stationPiece = x.clone('');
+        stationPiece.position.z = -8;
+        if(stationPiece.material.diffuseTexture != null) {
+            stationPiece.material.diffuseTexture.hasAlpha = true;
+            stationPiece.material.backFaceCulling = false;
+        }
+        arrayOfStationMeshes.push(stationPiece);
+    });*/
     const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
     [new BABYLON.Vector3(-33.25, 27.5, 55 - 8), new BABYLON.Vector3(-32.375, 27.5, -55 - 8), new BABYLON.Vector3(32.375, 27.5, 15 - 35)].forEach(lightPos => {
         let light = new BABYLON.SpotLight('light', lightPos, new BABYLON.Vector3(0, -1, 0), Math.PI, 10, scene);
