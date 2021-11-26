@@ -90,7 +90,13 @@ function createStation(scene) {
     return stationMesh;
 }
 
-function createAllStations(scene) {
+function createAllStations(scene, glowHalo) {
+    stationZero(scene);
+    const mesh = thirdStation(scene, glowHalo);
+    return mesh;
+}
+
+function stationZero() {
     stazione0.forEach(x => {
         const staz0 = x.clone('stazione0');
         staz0.position.z = 112;
@@ -101,7 +107,9 @@ function createAllStations(scene) {
             staz0.material.backFaceCulling = false;
         }
     });
+}
 
+function firstStation(scene) {
     const arrayOfStationMeshes = [];
     stazione1.forEach(x => {
         const stationPiece = x.clone('');
@@ -109,19 +117,37 @@ function createAllStations(scene) {
         stationPiece.material.backFaceCulling = false;
         arrayOfStationMeshes.push(stationPiece);
     });
-    /*stazione3.forEach(x => {
+    const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
+    [new BABYLON.Vector3(-33.25, 27.5, 55 - 8), new BABYLON.Vector3(-32.375, 27.5, -55 - 8), new BABYLON.Vector3(32.375, 27.5, 15 - 35)].forEach(lightPos => {
+        let light = new BABYLON.SpotLight('', lightPos, new BABYLON.Vector3(0, -1, 0), Math.PI, 10, scene);
+        light.diffuse = new BABYLON.Color3(0.8, 0.8, 0);
+        light.specular = new BABYLON.Color3(0, 0, 0);
+        light.intensity = 10;
+        light.parent = stationMesh;
+    });
+    return stationMesh;
+}
+
+function secondStation(scene) {
+}
+
+function thirdStation(scene, glowHalo) {
+    const arrayOfStationMeshes = [];
+    stazione3.forEach(x => {
         const stationPiece = x.clone('');
-        stationPiece.position.z = -8;
+        //stationPiece.position.z = -8;
+        glowHalo.addExcludedMesh(stationPiece);
         if(stationPiece.material.diffuseTexture != null) {
             stationPiece.material.diffuseTexture.hasAlpha = true;
             stationPiece.material.backFaceCulling = false;
+            stationPiece.material.maxSimultaneousLights = 7;
         }
         arrayOfStationMeshes.push(stationPiece);
-    });*/
+    });
     const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
-    [new BABYLON.Vector3(-33.25, 27.5, 55 - 8), new BABYLON.Vector3(-32.375, 27.5, -55 - 8), new BABYLON.Vector3(32.375, 27.5, 15 - 35)].forEach(lightPos => {
-        let light = new BABYLON.SpotLight('light', lightPos, new BABYLON.Vector3(0, -1, 0), Math.PI, 10, scene);
-        light.diffuse = new BABYLON.Color3(0.8, 0.8, 0);
+    [new BABYLON.Vector3(-22.5, 24.5, 0), new BABYLON.Vector3(32.5, 24.5, 0), new BABYLON.Vector3(-22.5, 24.5, 50), new BABYLON.Vector3(32.5, 24.5, 50), new BABYLON.Vector3(-22.5, 24.5, -50), new BABYLON.Vector3(32.5, 24.5, -50)].forEach(lightPos => {
+        let light = new BABYLON.SpotLight('', lightPos, new BABYLON.Vector3(0, -1, 0), Math.PI, 6, scene);
+        light.diffuse = new BABYLON.Color3(0.8, 0.8, 0.5);
         light.specular = new BABYLON.Color3(0, 0, 0);
         light.intensity = 10;
         light.parent = stationMesh;
