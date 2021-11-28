@@ -92,7 +92,8 @@ function createStation(scene) {
 
 function createAllStations(scene, glowHalo) {
     stationZero(scene);
-    const mesh = thirdStation(scene, glowHalo);
+    //const mesh = thirdStation(scene, glowHalo);
+    const mesh = secondStation(scene);
     return mesh;
 }
 
@@ -129,6 +130,20 @@ function firstStation(scene) {
 }
 
 function secondStation(scene) {
+    const arrayOfStationMeshes = [];
+    stazione2.forEach(x => {
+        const stationPiece = x.clone('');
+        arrayOfStationMeshes.push(stationPiece);
+    });
+    const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
+    [new BABYLON.Vector3(-33, 14.075, 26.5), new BABYLON.Vector3(-33, 14.075, 3.5)].forEach(lightPos => {
+        let light = new BABYLON.SpotLight('', lightPos, new BABYLON.Vector3(0.5, -1, 0), Math.PI, 8, scene);
+        light.diffuse = new BABYLON.Color3(0.65, 0.6, 0);
+        light.specular = new BABYLON.Color3(0, 0, 0);
+        light.intensity = 10;
+        light.parent = stationMesh;
+    });
+    return stationMesh;
 }
 
 function thirdStation(scene, glowHalo) {
