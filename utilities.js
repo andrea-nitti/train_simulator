@@ -53,7 +53,7 @@ function allWireframe(status) { //status --> boolean
     [colnero, metal, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba, moonSurface].forEach(material => {
         material.wireframe = status;
     });
-    [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, albero2, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
+    [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
         model.forEach(modelPiece => {
             modelPiece.material.wireframe = status;
         });
