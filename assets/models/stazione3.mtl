@@ -1,5 +1,13 @@
 # Blender MTL File: 'stazione3.blend'
-# Material Count: 10
+# Material Count: 11
+
+newmtl None
+Ns 500
+Ka 0.8 0.8 0.8
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
 
 newmtl darkColor
 Ns 225.000000

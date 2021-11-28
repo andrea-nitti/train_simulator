@@ -310,7 +310,8 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             const indice = Math.floor(Math.random() * listaCartelli.length);
             const cartello = listaCartelli[indice];
             if(cartello != undefined && stazione.isEnabled()) {
-                cartello.position.z = stazione.position.z + 12;
+                //cartello.position.z = stazione.position.z + 12;
+                cartello.position.z = stazione.position.z - 140;
                 listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
             }
         }
