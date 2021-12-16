@@ -1,10 +1,10 @@
 //Credits: Andrea Nitti; Lorenzo Parma
 
 "use strict";
-let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, stazione0, stazione1, stazione2, stazione3, carrozza, carrovuoto, locomotore, container1, container2, cisterna1, cisterna2;  //models
+let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, stazione0, stazione1, stazione2, stazione3, stazione4, carrozza, carrovuoto, locomotore, container1, container2, cisterna1, cisterna2;    //models
 let sun, moon, day;
 let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5, riverSound, sparks; //sounds
-const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","stazione0.obj","stazione1.obj","stazione2.obj","stazione3.obj","carrozza.obj","carrovuoto.obj","locomotore.obj","container1.obj","container2.obj","cisterna1.obj","cisterna2.obj"];
+const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","stazione0.obj","stazione1.obj","stazione2.obj","stazione3.obj","stazione4.obj","carrozza.obj","carrovuoto.obj","locomotore.obj","container1.obj","container2.obj","cisterna1.obj","cisterna2.obj"];
 const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg","river.ogg","sparks.ogg"];
 
 let spazio = 0;
@@ -81,6 +81,7 @@ function startEverything(configFlags, renderDistance) {
                 case "stazione1.obj": stazione1 = task.loadedMeshes; break;
                 case "stazione2.obj": stazione2 = task.loadedMeshes; break;
                 case "stazione3.obj": stazione3 = task.loadedMeshes; break;
+                case "stazione4.obj": stazione4 = task.loadedMeshes; break;
                 case "carrozza.obj": carrozza = task.loadedMeshes; break;
                 case "carrovuoto.obj": carrovuoto = task.loadedMeshes; break;
                 case "locomotore.obj": locomotore = task.loadedMeshes; break;
@@ -121,7 +122,7 @@ function startEverything(configFlags, renderDistance) {
         scene.autoClearDepthAndStencil = false;
         setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance, glowHalo);
         scene.blockfreeActiveMeshesAndRenderingGroups = true;
-        [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, stazione0, stazione1, stazione2, stazione3, carrozza, carrovuoto, locomotore,  container1, container2, cisterna1, cisterna2].forEach(model => {
+        [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, stazione0, stazione1, stazione2, stazione3, stazione4, carrozza, carrovuoto, locomotore,  container1, container2, cisterna1, cisterna2].forEach(model => {
             model.forEach(modelPiece => {
                 modelPiece.dispose();
                 scene.removeMesh(modelPiece);

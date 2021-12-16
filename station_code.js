@@ -93,7 +93,7 @@ function createStation(scene) {
 function createAllStations(scene, glowHalo) {
     stationZero(scene);
     //const mesh = thirdStation(scene, glowHalo);
-    const mesh = secondStation(scene);
+    const mesh = fourthStation(scene);
     return mesh;
 }
 
@@ -167,5 +167,19 @@ function thirdStation(scene, glowHalo) {
         light.intensity = 10;
         light.parent = stationMesh;
     });
+    return stationMesh;
+}
+
+function fourthStation(scene) {
+    const arrayOfStationMeshes = [];
+    stazione4.forEach(x => {
+        const stationPiece = x.clone('');
+        stationPiece.position.z = -24;
+        if(stationPiece.material.diffuseTexture != null) {
+            stationPiece.material.backFaceCulling = false;
+        }
+        arrayOfStationMeshes.push(stationPiece);
+    });
+    const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
     return stationMesh;
 }
