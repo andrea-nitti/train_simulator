@@ -150,7 +150,6 @@ function thirdStation(scene, glowHalo) {
     const arrayOfStationMeshes = [];
     stazione3.forEach(x => {
         const stationPiece = x.clone('');
-        //stationPiece.position.z = -8;
         glowHalo.addExcludedMesh(stationPiece);
         if(stationPiece.material.diffuseTexture != null) {
             stationPiece.material.diffuseTexture.hasAlpha = true;
