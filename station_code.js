@@ -90,11 +90,11 @@ function createStation(scene) {
     return stationMesh;
 }
 
-function createAllStations(scene, glowHalo) {
+function createAllStations(scene) {
     stationZero(scene);
-    //const mesh = thirdStation(scene, glowHalo);
-    const mesh = fourthStation(scene);
-    return mesh;
+    const arrayOfStations = [firstStation(scene), secondStation(scene), thirdStation(scene), fourthStation(scene)];
+    arrayOfStations.forEach(x => {x.setEnabled(false);});
+    return arrayOfStations;
 }
 
 function stationZero() {
@@ -146,11 +146,10 @@ function secondStation(scene) {
     return stationMesh;
 }
 
-function thirdStation(scene, glowHalo) {
+function thirdStation(scene) {
     const arrayOfStationMeshes = [];
     stazione3.forEach(x => {
         const stationPiece = x.clone('');
-        glowHalo.addExcludedMesh(stationPiece);
         if(stationPiece.material.diffuseTexture != null) {
             stationPiece.material.diffuseTexture.hasAlpha = true;
             stationPiece.material.backFaceCulling = false;

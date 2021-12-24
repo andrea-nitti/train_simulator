@@ -159,8 +159,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         segments.push(Terrain);
     }
 
-    const stazione = createAllStations(scene, glowHalo);
-    stazione.setEnabled(false);
+    const arrayOfStations = createAllStations(scene);
     const listaCartelli = createSigns(scene, glowHalo);
     const indice = Math.floor(Math.random() * listaCartelli.length);
     const cartello = listaCartelli[indice];
@@ -174,7 +173,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             Forest.position.z = -100000;
             forests.push(Forest);
         }
-        forests[0].position.z = stazione.position.z + 256;
+        forests[0].position.z = 256;
         forests.push(forests.shift());
     }
 
@@ -230,6 +229,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     let deltaSunIntensity = 0.00025;
     let sunsetProgress = 0;
     let moonAngle = 0;
+    let stationIndex = 0;
     scene.registerBeforeRender(() => {
         day = new Date();
         const time = day.getHours() * 60 + day.getMinutes();    //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
@@ -293,28 +293,36 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
             segments[0].terrain.position.z += segments.length * 256;
             segments.push(segments.shift());    //il primo elemento diventa l'ultimo
         }
-        if(defaultCamera.position.z > stazione.position.z + 2 * 256) {  //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
-            stazione.position.z += 256 * Math.floor(8 + Math.random() * 40);    //sposto l'ultima stazione ad almeno 2048 unità di distanza dalla precedente; la massima distanza ammessa è 10240 unità
-            stazione.setEnabled(true);
-            if(checkIntersections(ponte.position.z + 1264, 512 * 2, stazione.position.z + 98, 512 * 3)) stazione.setEnabled(false); //98 --> da cambiare a seconda della lunghezza delle stazioni
-            if(configFlags[0] && stazione.isEnabled()) {
-                cities[0].city.position.z = stazione.position.z;
-                cities[0].trees.position.z = stazione.position.z;
+        if(defaultCamera.position.z > arrayOfStations[stationIndex].position.z + 2 * 256) {         //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
+            const previuosStationIndex = stationIndex;
+            if(stationIndex < 3) stationIndex += 1;
+            else stationIndex = 0;
+            arrayOfStations[stationIndex].position.z = arrayOfStations[previuosStationIndex].position.z + 256 * Math.floor(8 + Math.random() * 40);   //sposto l'ultima stazione ad almeno 4096 unità di distanza dalla precedente
+            arrayOfStations[stationIndex].setEnabled(true);
+            arrayOfStations[previuosStationIndex].getChildren().forEach(x => x.setEnabled(false));  //spengo tutte le luci della stazione precedente
+            arrayOfStations[stationIndex].getChildren().forEach(x => x.setEnabled(true));           //accendo tutte le luci della stazione corrente
+            //if(checkIntersections(ponte.position.z + 1264, 512 * 2, stazione.position.z + 98, 512 * 3)) stazione.setEnabled(false); //98 --> da cambiare a seconda della lunghezza delle stazioni
+            if(configFlags[0] && arrayOfStations[stationIndex].isEnabled()) {
+                cities[0].city.position.z = arrayOfStations[stationIndex].position.z;
+                cities[0].trees.position.z = arrayOfStations[stationIndex].position.z;
                 cities.push(cities.shift());
             }
             if(configFlags[2]) {
-                forests[0].position.z = stazione.position.z + 1280;
+                forests[0].position.z = arrayOfStations[stationIndex].position.z + 1280;
                 forests.push(forests.shift());
             }
             const indice = Math.floor(Math.random() * listaCartelli.length);
             const cartello = listaCartelli[indice];
-            if(cartello != undefined && stazione.isEnabled()) {
-                //cartello.position.z = stazione.position.z + 12;
-                //cartello.position.z = stazione.position.z - 40;
-                //cartello.position.z = stazione.position.z - 140;
-                cartello.position.z = stazione.position.z - 104;
+            if(cartello != undefined && arrayOfStations[stationIndex].isEnabled()) {
+                switch(stationIndex) {
+                    case 0: cartello.position.z = arrayOfStations[stationIndex].position.z + 12; break;
+                    case 1: cartello.position.z = arrayOfStations[stationIndex].position.z - 40; break;
+                    case 2: cartello.position.z = arrayOfStations[stationIndex].position.z - 140; break;
+                    case 3: cartello.position.z = arrayOfStations[stationIndex].position.z - 104; break;
+                }
                 listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
             }
+            
         }
         if(defaultCamera.position.z > ponte.position.z + 4096) {
             ponte.position.z += 512 * Math.floor(16 + Math.random() * 30);
