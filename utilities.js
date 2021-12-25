@@ -5,6 +5,9 @@ function convertModelToMesh(modelName, outputArray, params) {
         if(params.positionX != undefined) modelPart.position.x = params.positionX;
         if(params.positionY != undefined) modelPart.position.y = params.positionY;
         if(params.positionZ != undefined) modelPart.position.z = params.positionZ;
+        if(params.rotationX != undefined) modelPart.rotation.x = params.rotationX;
+        if(params.rotationY != undefined) modelPart.rotation.y = params.rotationY;
+        if(params.rotationZ != undefined) modelPart.rotation.z = params.rotationZ;
         if(params.backFaceCullingStatus != undefined) modelPart.material.backFaceCulling = params.backFaceCullingStatus;
         if(params.maxNumberOfLights != undefined) modelPart.material.maxSimultaneousLights = params.maxNumberOfLights;
         if(params.alphaStatus != undefined && modelPart.material.diffuseTexture != null) modelPart.material.diffuseTexture.hasAlpha = params.alphaStatus;

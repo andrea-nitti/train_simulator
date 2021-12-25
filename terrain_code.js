@@ -45,12 +45,8 @@ function createTerrain(scene) {
 function createBridge(skybox, scene) {
     const arrayOfBridgeMeshes = [];
     for(let i=0; i<=512; i+=512) {
-        ponte1.forEach(x => {
-            const bridgePart = x.clone('');
-            bridgePart.position.z = 1008 + i;
-            //if(i == 0) bridgePart.rotation.y = Math.PI;
-            arrayOfBridgeMeshes.push(bridgePart);
-        });
+        if(i == 0) convertModelToMesh(ponte1, arrayOfBridgeMeshes, {positionZ: 1008 + i, rotationY: Math.PI});
+        else convertModelToMesh(ponte1, arrayOfBridgeMeshes, {positionZ: 1008 + i});
     }
     const river = BABYLON.MeshBuilder.CreatePlane('river', {width: 2208, height: 975}, scene);
     river.rotation.x = Math.PI/2;
