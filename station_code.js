@@ -98,26 +98,12 @@ function createAllStations(scene) {
 }
 
 function stationZero() {
-    stazione0.forEach(x => {
-        const staz0 = x.clone('stazione0');
-        staz0.position.z = 112;
-        staz0.freezeWorldMatrix();
-        staz0.convertToUnIndexedMesh();
-        if(staz0.material.diffuseTexture != null) {
-            staz0.material.diffuseTexture.hasAlpha = true;
-            staz0.material.backFaceCulling = false;
-        }
-    });
+    convertModelToMesh(stazione0, [], {positionZ: 112, backFaceCullingStatus: false, alphaStatus: true, disableWorldMatrix: true, disableMeshIndexing: true});
 }
 
 function firstStation(scene) {
     const arrayOfStationMeshes = [];
-    stazione1.forEach(x => {
-        const stationPiece = x.clone('');
-        stationPiece.position.z = -8;
-        stationPiece.material.backFaceCulling = false;
-        arrayOfStationMeshes.push(stationPiece);
-    });
+    convertModelToMesh(stazione1, arrayOfStationMeshes, {positionZ: -8, backFaceCullingStatus: false});
     const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
     [new BABYLON.Vector3(-33.25, 27.5, 55 - 8), new BABYLON.Vector3(-32.375, 27.5, -55 - 8), new BABYLON.Vector3(32.375, 27.5, 15 - 35)].forEach(lightPos => {
         let light = new BABYLON.SpotLight('', lightPos, new BABYLON.Vector3(0, -1, 0), Math.PI, 10, scene);
@@ -131,10 +117,7 @@ function firstStation(scene) {
 
 function secondStation(scene) {
     const arrayOfStationMeshes = [];
-    stazione2.forEach(x => {
-        const stationPiece = x.clone('');
-        arrayOfStationMeshes.push(stationPiece);
-    });
+    convertModelToMesh(stazione2, arrayOfStationMeshes, {});
     const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
     [new BABYLON.Vector3(-33, 14.075, 26.5), new BABYLON.Vector3(-33, 14.075, 3.5)].forEach(lightPos => {
         let light = new BABYLON.SpotLight('', lightPos, new BABYLON.Vector3(0.5, -1, 0), Math.PI, 8, scene);
@@ -148,15 +131,7 @@ function secondStation(scene) {
 
 function thirdStation(scene) {
     const arrayOfStationMeshes = [];
-    stazione3.forEach(x => {
-        const stationPiece = x.clone('');
-        if(stationPiece.material.diffuseTexture != null) {
-            stationPiece.material.diffuseTexture.hasAlpha = true;
-            stationPiece.material.backFaceCulling = false;
-            stationPiece.material.maxSimultaneousLights = 7;
-        }
-        arrayOfStationMeshes.push(stationPiece);
-    });
+    convertModelToMesh(stazione3, arrayOfStationMeshes, {backFaceCullingStatus: false, maxNumberOfLights: 7, alphaStatus: true});
     const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
     [new BABYLON.Vector3(-22.5, 24.5, 0), new BABYLON.Vector3(32.5, 24.5, 0), new BABYLON.Vector3(-22.5, 24.5, 50), new BABYLON.Vector3(32.5, 24.5, 50), new BABYLON.Vector3(-22.5, 24.5, -50), new BABYLON.Vector3(32.5, 24.5, -50)].forEach(lightPos => {
         let light = new BABYLON.SpotLight('', lightPos, new BABYLON.Vector3(0, -1, 0), Math.PI, 6, scene);
@@ -170,14 +145,7 @@ function thirdStation(scene) {
 
 function fourthStation(scene) {
     const arrayOfStationMeshes = [];
-    stazione4.forEach(x => {
-        const stationPiece = x.clone('');
-        stationPiece.position.z = -24;
-        if(stationPiece.material.diffuseTexture != null) {
-            stationPiece.material.backFaceCulling = false;
-        }
-        arrayOfStationMeshes.push(stationPiece);
-    });
+    convertModelToMesh(stazione4, arrayOfStationMeshes, {positionZ: -24, backFaceCullingStatus: false});
     const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
     return stationMesh;
 }

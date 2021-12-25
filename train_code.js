@@ -1,8 +1,8 @@
 "use strict";
 function createNormalTrain() {
     const arrayOfTrainMeshes = [];
-    for(let i=0; i<9; i++) vagone(-8, i * 70, arrayOfTrainMeshes);
-    locomotiva(-8, 9 * 70 - 5, arrayOfTrainMeshes);
+    for(let i=0; i<9; i++) convertModelToMesh(carrozza, arrayOfTrainMeshes, {positionX: -8, positionZ: i * 70, backFaceCullingStatus: false, alphaStatus: true});
+    convertModelToMesh(locomotore, arrayOfTrainMeshes, {positionX: -8, positionZ: 9 * 70 - 5, backFaceCullingStatus: false, alphaStatus: true});
     const trainMesh = BABYLON.Mesh.MergeMeshes(arrayOfTrainMeshes, true, true, undefined, false, true);
     return trainMesh;
 }
@@ -75,26 +75,9 @@ function createTankTrainSecondType(scene) {
     //return cargoTrainParentNode;
 }
 
-function vagone(posx, posz, arrayOfTrainMeshes) {
-    carrozza.forEach(x => {
-        const parteCarrozza = x.clone('carrozza');
-        parteCarrozza.position.x = posx;
-        parteCarrozza.position.z = posz;
-        arrayOfTrainMeshes.push(parteCarrozza);
-        if(parteCarrozza.material.diffuseTexture != null) {
-            parteCarrozza.material.diffuseTexture.hasAlpha = true;
-            //parteCarrozza.material.useAlphaFromDiffuseTexture = true;
-            parteCarrozza.material.backFaceCulling = false;
-        }
-    });
-}
-
 function carro() {
     const arrayOfFlatWagonMeshes = [];
-    carrovuoto.forEach(x => {
-        const flatWagonSegment = x.clone('flatWagonSegment');
-        arrayOfFlatWagonMeshes.push(flatWagonSegment);
-    });
+    convertModelToMesh(carrovuoto, arrayOfFlatWagonMeshes, {});
     const flatWagonMesh = BABYLON.Mesh.MergeMeshes(arrayOfFlatWagonMeshes, true, true, undefined, false, true);
     flatWagonMesh.alwaysSelectAsActiveMesh = true;
     return flatWagonMesh;
@@ -102,25 +85,8 @@ function carro() {
 
 function cargo(type) {
     const arrayOfCargoMeshes = [];
-    type.forEach(x => {
-        const cargoSegment = x.clone('cargoSegment');
-        arrayOfCargoMeshes.push(cargoSegment);
-    });
+    convertModelToMesh(type, arrayOfCargoMeshes, {});
     const cargoMesh = BABYLON.Mesh.MergeMeshes(arrayOfCargoMeshes, true, true, undefined, false, true);
     cargoMesh.alwaysSelectAsActiveMesh = true;
     return cargoMesh;
-}
-
-function locomotiva(posx, posz, arrayOfTrainMeshes) {
-    locomotore.forEach(x => {
-        const parteLocomotore = x.clone('locomotore');
-        parteLocomotore.position.x = posx;
-        parteLocomotore.position.z = posz;
-        arrayOfTrainMeshes.push(parteLocomotore);
-        if(parteLocomotore.material.diffuseTexture != null) {
-            parteLocomotore.material.diffuseTexture.hasAlpha = true;
-            //parteLocomotore.material.useAlphaFromDiffuseTexture = true;
-            parteLocomotore.material.backFaceCulling = false;
-        }
-    });
 }

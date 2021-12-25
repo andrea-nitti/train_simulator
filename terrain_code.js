@@ -3,53 +3,21 @@ function createTerrain(scene) {
     const chunk_size = 32;    
     const arrayOfBaseTerrainMeshes = [];
     const arrayOfDynamicTerrainMeshes = [];
-    
-    terrain_chunk.forEach(x => {
-        const parteBinario = x.clone('terrain_chunk');
-        parteBinario.position.z = 3.5 * 32;
-        arrayOfBaseTerrainMeshes.push(parteBinario);
-    });
-    gravelPlane.forEach(x => {
-        const parteTerreno = x.clone('gravelPlane');
-        parteTerreno.position.z = 3.5 * 32;
-        parteTerreno.material.zOffset = -1;
-        arrayOfDynamicTerrainMeshes.push(parteTerreno);
-    });
-    
-    for(let x_offset=-48; x_offset<=48; x_offset+=96) {
-        ringhiera.forEach(x => {
-            const parteRinghiera = x.clone('ringhiera');
-            parteRinghiera.position.x = x_offset;
-            parteRinghiera.position.z = 3.5 * 32;
-            arrayOfDynamicTerrainMeshes.push(parteRinghiera);
-        });
-    }
-    
+
+    convertModelToMesh(terrain_chunk, arrayOfBaseTerrainMeshes, {positionZ: 112});
+    convertModelToMesh(gravelPlane, arrayOfDynamicTerrainMeshes, {positionZ: 112, materialPriority: -1});
+
+    for(let x_offset=-48; x_offset<=48; x_offset+=96) convertModelToMesh(ringhiera, arrayOfDynamicTerrainMeshes, {positionX: x_offset, positionZ: 112});
+
     for(let i=0; i<8; i++) {    //numero di chunk da generare per ogni segmento
         let z_offset = i * chunk_size;
-        
+
         if(z_offset % (4*chunk_size) == 0) {    //creo i pali ogni 5 chunks
             for(let x_offset=-8; x_offset<=8; x_offset+=16) {
-                wire.forEach(x => {
-                    const upperWire = x.clone('');
-                    upperWire.position.x = x_offset;
-                    upperWire.position.y = 38;
-                    upperWire.position.z = z_offset + 2 * chunk_size;
-                    arrayOfBaseTerrainMeshes.push(upperWire);
-                });
+                convertModelToMesh(wire, arrayOfBaseTerrainMeshes, {positionX: x_offset, positionY: 38, positionZ: z_offset + 2 * chunk_size});
             }
-            leftPole.forEach(x => {
-                const polePiece = x.clone('');
-                polePiece.position.x = -24;
-                polePiece.position.z = z_offset;
-                arrayOfBaseTerrainMeshes.push(polePiece);
-            });
-            rightPole.forEach(x => {
-                const polePiece = x.clone('');
-                polePiece.position.x = +24;
-                polePiece.position.z = z_offset;
-                arrayOfBaseTerrainMeshes.push(polePiece);
-            });
+            convertModelToMesh(leftPole, arrayOfBaseTerrainMeshes, {positionX: -24, positionZ: z_offset});
+            convertModelToMesh(rightPole, arrayOfBaseTerrainMeshes, {positionX: 24, positionZ: z_offset});
         }
     }
     for(let x_offset = -8; x_offset<=8; x_offset+=16) {
@@ -80,7 +48,7 @@ function createBridge(skybox, scene) {
         ponte1.forEach(x => {
             const bridgePart = x.clone('');
             bridgePart.position.z = 1008 + i;
-            if(i == 0) bridgePart.rotation.y = Math.PI;
+            //if(i == 0) bridgePart.rotation.y = Math.PI;
             arrayOfBridgeMeshes.push(bridgePart);
         });
     }

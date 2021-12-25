@@ -1,4 +1,20 @@
 "use strict";
+function convertModelToMesh(modelName, outputArray, params) {
+    modelName.forEach(x => {
+        const modelPart = x.clone('');
+        if(params.positionX != undefined) modelPart.position.x = params.positionX;
+        if(params.positionY != undefined) modelPart.position.y = params.positionY;
+        if(params.positionZ != undefined) modelPart.position.z = params.positionZ;
+        if(params.backFaceCullingStatus != undefined) modelPart.material.backFaceCulling = params.backFaceCullingStatus;
+        if(params.maxNumberOfLights != undefined) modelPart.material.maxSimultaneousLights = params.maxNumberOfLights;
+        if(params.alphaStatus != undefined && modelPart.material.diffuseTexture != null) modelPart.material.diffuseTexture.hasAlpha = params.alphaStatus;
+        if(params.materialPriority != undefined) modelPart.material.zOffset = params.materialPriority;
+        if(params.disableWorldMatrix != undefined) modelPart.freezeWorldMatrix();
+        if(params.disableMeshIndexing != undefined) modelPart.convertToUnIndexedMesh();
+        outputArray.push(modelPart);
+    });
+}
+
 function createAxis(scene) {
     const axisParentNode = new BABYLON.TransformNode('axisParentNode', scene);
     const xAxis = BABYLON.Mesh.CreateLines('xAxis', [new BABYLON.Vector3.Zero(), new BABYLON.Vector3(5, 0, 0), new BABYLON.Vector3(5 * 0.95, 0.05 * 5, 0), new BABYLON.Vector3(5, 0, 0), new BABYLON.Vector3(5 * 0.95, -0.05 * 5, 0)], scene);

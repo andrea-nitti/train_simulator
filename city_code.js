@@ -210,23 +210,12 @@ function muro(scene, posx, posz, arrayOfCityMeshes) {
 }
 
 function casaAlta(posx, posz, arrayOfCityMeshes) {
-    palazzo.forEach(x => {
-        const buildingPart = x.clone('');
-        buildingPart.position.x = posx+32;
-        buildingPart.position.y = 30;
-        buildingPart.position.z = posz+32;
-        arrayOfCityMeshes.push(buildingPart);
-    });
+    convertModelToMesh(palazzo, arrayOfCityMeshes, {positionX: posx+32, positionY: 30, positionZ: posz+32});
 }
 
 function casaBassa(posx, posz, arrayOfCityMeshes) {
-    casa.forEach(x => {
-        const housePart = x.clone('');
-        housePart.position.x = posx+25;
-        housePart.position.y = 14;
-        housePart.position.z = posz+25;
-        arrayOfCityMeshes.push(housePart);
-    });
+    convertModelToMesh(casa, arrayOfCityMeshes, {positionX: posx+25, positionY: 14, positionZ: posz+25});
+
 }
 
 function terrenoCitta(scene, posx, posz, arrayOfCityMeshes) {
@@ -251,10 +240,7 @@ function prato(scene, posx, posz, dimensions, arrayOfCityMeshes) {
 
 function albero() {
     const arrayOfTreeMeshes = [];
-    albero1.forEach(x => {
-        const partePianta = x.clone('albero1');
-        arrayOfTreeMeshes.push(partePianta);
-    });
+    convertModelToMesh(albero1, arrayOfTreeMeshes, {});
     const pianta = BABYLON.Mesh.MergeMeshes(arrayOfTreeMeshes, true, true, undefined, false, true);
     pianta.alwaysSelectAsActiveMesh = true; //sempre visibile
     return pianta;
