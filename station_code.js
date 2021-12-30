@@ -145,7 +145,14 @@ function thirdStation(scene) {
 
 function fourthStation(scene) {
     const arrayOfStationMeshes = [];
-    convertModelToMesh(stazione4, arrayOfStationMeshes, {positionZ: -24, backFaceCullingStatus: false});
+    convertModelToMesh(stazione4, arrayOfStationMeshes, {positionZ: -24, maxNumberOfLights: 5, backFaceCullingStatus: false});
     const stationMesh = BABYLON.Mesh.MergeMeshes(arrayOfStationMeshes, true, true, undefined, false, true);
+    [new BABYLON.Vector3(-33.25, 27.5, -135), new BABYLON.Vector3(33.25, 27.5, -135), new BABYLON.Vector3(-33.25, 27.5, -35), new BABYLON.Vector3(33.25, 27.5, -35)].forEach(lightPos => {
+        let light = new BABYLON.SpotLight('', lightPos, new BABYLON.Vector3(0, -1, 0), Math.PI, 7.5, scene);
+        light.diffuse = new BABYLON.Color3(0.65, 0.45, 0);
+        light.specular = new BABYLON.Color3(0, 0, 0);
+        light.intensity = 10;
+        light.parent = stationMesh;
+    });
     return stationMesh;
 }
