@@ -15,7 +15,7 @@ function createContainerTrainFirstType(scene) {
         flatWagonArray.push(BABYLON.Matrix.Translation(8, 0, i * 67.6));
         cargoArray.push(BABYLON.Matrix.Translation(8, 10, i * 67.6));
     }
-    const flatWagon = carro();
+    const flatWagon = emptyWagon();
     const firstContainer = cargo(container1);
     flatWagon.setParent(cargoTrainParentNode);
     firstContainer.setParent(cargoTrainParentNode);
@@ -32,7 +32,7 @@ function createContainerTrainSecondType(scene) {
         flatWagonArray.push(BABYLON.Matrix.Translation(8, 0, i * 67.6));
         cargoArray.push(BABYLON.Matrix.Translation(8, 12.5, i * 67.6));
     }
-    const flatWagon = carro();
+    const flatWagon = emptyWagon();
     const secondContainer = cargo(container2);
     flatWagon.setParent(cargoTrainParentNode);
     secondContainer.setParent(cargoTrainParentNode);
@@ -49,7 +49,7 @@ function createTankTrainFirstType(scene) {
         flatWagonArray.push(BABYLON.Matrix.Translation(8, 0, i * 67.6));
         cargoArray.push(BABYLON.Matrix.Translation(8, 9, i * 67.6));
     }
-    const flatWagon = carro();
+    const flatWagon = emptyWagon();
     const firstTank = cargo(cisterna1);
     flatWagon.setParent(cargoTrainParentNode);
     firstTank.setParent(cargoTrainParentNode);
@@ -66,7 +66,7 @@ function createTankTrainSecondType(scene) {
         flatWagonArray.push(BABYLON.Matrix.Translation(8, 0, i * 67.6));
         if(Math.random() < 0.25) cargoArray.push(BABYLON.Matrix.Translation(8, 10.5, i * 67.6));
     }
-    const flatWagon = carro();
+    const flatWagon = emptyWagon();
     const secondTank = cargo(cisterna2);
     flatWagon.setParent(cargoTrainParentNode);
     secondTank.setParent(cargoTrainParentNode);
@@ -75,7 +75,7 @@ function createTankTrainSecondType(scene) {
     //return cargoTrainParentNode;
 }
 
-function carro() {
+function emptyWagon() {
     const arrayOfFlatWagonMeshes = [];
     convertModelToMesh(carrovuoto, arrayOfFlatWagonMeshes, {});
     const flatWagonMesh = BABYLON.Mesh.MergeMeshes(arrayOfFlatWagonMeshes, true, true, undefined, false, true);

@@ -9,10 +9,10 @@ function createTerrain(scene) {
 
     for(let x_offset=-48; x_offset<=48; x_offset+=96) convertModelToMesh(ringhiera, arrayOfDynamicTerrainMeshes, {positionX: x_offset, positionZ: 112});
 
-    for(let i=0; i<8; i++) {    //numero di chunk da generare per ogni segmento
+    for(let i=0; i<8; i++) {    //number of chunks for each segment
         let z_offset = i * chunk_size;
 
-        if(z_offset % (4*chunk_size) == 0) {    //creo i pali ogni 5 chunks
+        if(z_offset % (4*chunk_size) == 0) {    //poles are present every 5 chunks
             for(let x_offset=-8; x_offset<=8; x_offset+=16) {
                 convertModelToMesh(wire, arrayOfBaseTerrainMeshes, {positionX: x_offset, positionY: 38, positionZ: z_offset + 2 * chunk_size});
             }
@@ -21,14 +21,14 @@ function createTerrain(scene) {
         }
     }
     for(let x_offset = -8; x_offset<=8; x_offset+=16) {
-        const lowerWire = BABYLON.MeshBuilder.CreateCylinder('lowerWire', {height: 256, diameter: 0.25}, scene);    //filo inferiore della linea aerea
-        lowerWire.material = colnero;
+        const lowerWire = BABYLON.MeshBuilder.CreateCylinder('lowerWire', {height: 256, diameter: 0.25}, scene);
+        lowerWire.material = blackColor;
         lowerWire.rotation.x = Math.PI/2;
         lowerWire.position.x = x_offset;
         lowerWire.position.y = 27.75;
         lowerWire.position.z = 3.5 * 32;
         arrayOfBaseTerrainMeshes.push(lowerWire);
-        const tieRod = BABYLON.MeshBuilder.CreateCylinder('tieRod', {height: 256, diameter: 0.35}, scene);  //tirante situato tra ogni palo ed il successivo
+        const tieRod = BABYLON.MeshBuilder.CreateCylinder('tieRod', {height: 256, diameter: 0.35}, scene);
         tieRod.material = metal;
         tieRod.rotation.x = Math.PI/2;
         if(x_offset < 0) tieRod.position.x = -24;
@@ -37,7 +37,7 @@ function createTerrain(scene) {
         tieRod.position.z = 3.5 * 32;
         arrayOfBaseTerrainMeshes.push(tieRod);
     }
-    const baseTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfBaseTerrainMeshes, true, true, undefined, false, true); //mesh che raggruppa un intero blocco di terreno (per motivi di efficienza)
+    const baseTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfBaseTerrainMeshes, true, true, undefined, false, true); //this mesh is an entire terrain block
     const dynamicTerrainMesh = BABYLON.Mesh.MergeMeshes(arrayOfDynamicTerrainMeshes, true, true, undefined, false, true);
     return {railRoad: baseTerrainMesh, terrain: dynamicTerrainMesh};
 }
