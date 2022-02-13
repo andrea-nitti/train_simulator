@@ -1,73 +1,73 @@
 "use strict";
-function cittaP1(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
-    casaAlta(posx+64, posz-240, arrayOfCityMeshes);
-    casaAlta(posx+64, posz-160, arrayOfCityMeshes);
-    casaAlta(posx+64, posz-80, arrayOfCityMeshes);
-    casaAlta(posx+160, posz-240, arrayOfCityMeshes);
-    casaAlta(posx+160, posz-160, arrayOfCityMeshes);
-    casaAlta(posx+160, posz-80, arrayOfCityMeshes);
-    casaAlta(posx+260, posz+84, arrayOfCityMeshes);
-    casaAlta(posx+460, posz-160, arrayOfCityMeshes);
-    casaAlta(posx+430, posz-80, arrayOfCityMeshes);
-    casaAlta(posx+470, posz+60, arrayOfCityMeshes);
-    casaAlta(posx+380, posz+180, arrayOfCityMeshes);
+function firstCity(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
+    officeBuilding(posx+64, posz-240, arrayOfCityMeshes);
+    officeBuilding(posx+64, posz-160, arrayOfCityMeshes);
+    officeBuilding(posx+64, posz-80, arrayOfCityMeshes);
+    officeBuilding(posx+160, posz-240, arrayOfCityMeshes);
+    officeBuilding(posx+160, posz-160, arrayOfCityMeshes);
+    officeBuilding(posx+160, posz-80, arrayOfCityMeshes);
+    officeBuilding(posx+260, posz+84, arrayOfCityMeshes);
+    officeBuilding(posx+460, posz-160, arrayOfCityMeshes);
+    officeBuilding(posx+430, posz-80, arrayOfCityMeshes);
+    officeBuilding(posx+470, posz+60, arrayOfCityMeshes);
+    officeBuilding(posx+380, posz+180, arrayOfCityMeshes);
 
-    casaBassa(posx+70, posz+178, arrayOfCityMeshes);
-    casaBassa(posx+140, posz+178, arrayOfCityMeshes);
-    casaBassa(posx+208, posz+182, arrayOfCityMeshes);
-    casaBassa(posx+280, posz+182, arrayOfCityMeshes);
-    casaBassa(posx+266, posz+24, arrayOfCityMeshes);
-    casaBassa(posx+342, posz+24, arrayOfCityMeshes);
-    casaBassa(posx+340, posz+90, arrayOfCityMeshes);
-    casaBassa(posx+240, posz-228, arrayOfCityMeshes);
-    casaBassa(posx+302, posz-230, arrayOfCityMeshes);
-    casaBassa(posx+360, posz-232, arrayOfCityMeshes);
-    casaBassa(posx+420, posz-232, arrayOfCityMeshes);
-    casaBassa(posx+482, posz-228, arrayOfCityMeshes);
-    casaBassa(posx+478, posz, arrayOfCityMeshes);
-    casaBassa(posx+458, posz+142, arrayOfCityMeshes);
+    house(posx+70, posz+178, arrayOfCityMeshes);
+    house(posx+140, posz+178, arrayOfCityMeshes);
+    house(posx+208, posz+182, arrayOfCityMeshes);
+    house(posx+280, posz+182, arrayOfCityMeshes);
+    house(posx+266, posz+24, arrayOfCityMeshes);
+    house(posx+342, posz+24, arrayOfCityMeshes);
+    house(posx+340, posz+90, arrayOfCityMeshes);
+    house(posx+240, posz-228, arrayOfCityMeshes);
+    house(posx+302, posz-230, arrayOfCityMeshes);
+    house(posx+360, posz-232, arrayOfCityMeshes);
+    house(posx+420, posz-232, arrayOfCityMeshes);
+    house(posx+482, posz-228, arrayOfCityMeshes);
+    house(posx+478, posz, arrayOfCityMeshes);
+    house(posx+458, posz+142, arrayOfCityMeshes);
 
-    prato(scene, posx+140, posz+86, 128, arrayOfCityMeshes);
-    prato(scene, posx+330, posz-80, 128, arrayOfCityMeshes);
+    lawn(scene, posx+140, posz+86, 128, arrayOfCityMeshes);
+    lawn(scene, posx+330, posz-80, 128, arrayOfCityMeshes);
 
-    terrenoCitta(scene, posx+302.5, posz, arrayOfCityMeshes);
+    cityTerrain(scene, posx+302.5, posz, arrayOfCityMeshes);
 
-    muro(scene, posx+48, posz, arrayOfCityMeshes);
-    muro(scene, posx+560, posz, arrayOfCityMeshes);
+    wall(scene, posx+48, posz, arrayOfCityMeshes);
+    wall(scene, posx+560, posz, arrayOfCityMeshes);
     
     if(cityTrees_boolean) {
-        const cityTree = albero();
+        const cityTree = treeModel();
         const arrayOfTrees = [BABYLON.Matrix.Translation(posx+100, 0, posz+60),BABYLON.Matrix.Translation(posx+120, 0, posz+100),BABYLON.Matrix.Translation(posx+165, 0, posz+70),BABYLON.Matrix.Translation(posx+290, 0, posz-105),BABYLON.Matrix.Translation(posx+355, 0, posz-95),BABYLON.Matrix.Translation(posx+360, 0, posz-45)];
         cityTree.thinInstanceAdd(arrayOfTrees);
         cityTree.setParent(cityTreesParentNode);
     }
 }
 
-function cittaP2(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
-    casaBassa(posx+70, posz-220, arrayOfCityMeshes);
-    casaBassa(posx+70, posz-140, arrayOfCityMeshes);
-    casaBassa(posx+86, posz-60, arrayOfCityMeshes);
-    casaBassa(posx+90, posz+20, arrayOfCityMeshes);
-    casaBassa(posx+78, posz+100, arrayOfCityMeshes);
-    casaBassa(posx+86, posz+180, arrayOfCityMeshes);
+function secondCity(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
+    house(posx+70, posz-220, arrayOfCityMeshes);
+    house(posx+70, posz-140, arrayOfCityMeshes);
+    house(posx+86, posz-60, arrayOfCityMeshes);
+    house(posx+90, posz+20, arrayOfCityMeshes);
+    house(posx+78, posz+100, arrayOfCityMeshes);
+    house(posx+86, posz+180, arrayOfCityMeshes);
 
-    casaBassa(posx+474, posz-220, arrayOfCityMeshes);
-    casaBassa(posx+480, posz-140, arrayOfCityMeshes);
-    casaBassa(posx+474, posz-60, arrayOfCityMeshes);
-    casaBassa(posx+488, posz+20, arrayOfCityMeshes);
-    casaBassa(posx+490, posz+100, arrayOfCityMeshes);
-    casaBassa(posx+478, posz+180, arrayOfCityMeshes);
+    house(posx+474, posz-220, arrayOfCityMeshes);
+    house(posx+480, posz-140, arrayOfCityMeshes);
+    house(posx+474, posz-60, arrayOfCityMeshes);
+    house(posx+488, posz+20, arrayOfCityMeshes);
+    house(posx+490, posz+100, arrayOfCityMeshes);
+    house(posx+478, posz+180, arrayOfCityMeshes);
 
-    prato(scene, posx+304, posz+128, 256, arrayOfCityMeshes);
-    prato(scene, posx+304, posz-128, 256, arrayOfCityMeshes);
+    lawn(scene, posx+304, posz+128, 256, arrayOfCityMeshes);
+    lawn(scene, posx+304, posz-128, 256, arrayOfCityMeshes);
 
-    terrenoCitta(scene, posx+302.5, posz, arrayOfCityMeshes);
+    cityTerrain(scene, posx+302.5, posz, arrayOfCityMeshes);
 
-    muro(scene, posx+48, posz, arrayOfCityMeshes);
-    muro(scene, posx+560, posz, arrayOfCityMeshes);
+    wall(scene, posx+48, posz, arrayOfCityMeshes);
+    wall(scene, posx+560, posz, arrayOfCityMeshes);
 
     if(cityTrees_boolean) {
-        const cityTree = albero();
+        const cityTree = treeModel();
         const arrayOfTrees = [];
         for(let r=200; r<401; r+=100) {
             for(let i=-230; i<221; i+=100) {
@@ -88,162 +88,161 @@ function cittaP2(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTr
     }
 }
 
-function cittaP3(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
-    casaAlta(posx+400, posz+94, arrayOfCityMeshes);
-    casaAlta(posx+400, posz+14, arrayOfCityMeshes);
-    casaAlta(posx+400, posz-70, arrayOfCityMeshes);
-    casaAlta(posx+400, posz-156, arrayOfCityMeshes);
-    casaAlta(posx+320, posz-156, arrayOfCityMeshes);
-    casaAlta(posx+236, posz-156, arrayOfCityMeshes);
-    casaAlta(posx+150, posz-156, arrayOfCityMeshes);
-    casaAlta(posx+150, posz-70, arrayOfCityMeshes);
-    casaAlta(posx+150, posz+14, arrayOfCityMeshes);
-    casaAlta(posx+150, posz+94, arrayOfCityMeshes);
-    casaAlta(posx+236, posz+94, arrayOfCityMeshes);
-    casaAlta(posx+320, posz+94, arrayOfCityMeshes);
+function thirdCity(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
+    officeBuilding(posx+400, posz+94, arrayOfCityMeshes);
+    officeBuilding(posx+400, posz+14, arrayOfCityMeshes);
+    officeBuilding(posx+400, posz-70, arrayOfCityMeshes);
+    officeBuilding(posx+400, posz-156, arrayOfCityMeshes);
+    officeBuilding(posx+320, posz-156, arrayOfCityMeshes);
+    officeBuilding(posx+236, posz-156, arrayOfCityMeshes);
+    officeBuilding(posx+150, posz-156, arrayOfCityMeshes);
+    officeBuilding(posx+150, posz-70, arrayOfCityMeshes);
+    officeBuilding(posx+150, posz+14, arrayOfCityMeshes);
+    officeBuilding(posx+150, posz+94, arrayOfCityMeshes);
+    officeBuilding(posx+236, posz+94, arrayOfCityMeshes);
+    officeBuilding(posx+320, posz+94, arrayOfCityMeshes);
 
-    casaAlta(posx+54, posz-246, arrayOfCityMeshes);
+    officeBuilding(posx+54, posz-246, arrayOfCityMeshes);
 
-    casaBassa(posx+150, posz-240, arrayOfCityMeshes);
-    casaBassa(posx+214, posz-240, arrayOfCityMeshes);
-    casaBassa(posx+276, posz-242, arrayOfCityMeshes);
-    casaAlta(posx+338, posz-246, arrayOfCityMeshes);
-    casaBassa(posx+410, posz-240, arrayOfCityMeshes);
+    house(posx+150, posz-240, arrayOfCityMeshes);
+    house(posx+214, posz-240, arrayOfCityMeshes);
+    house(posx+276, posz-242, arrayOfCityMeshes);
+    officeBuilding(posx+338, posz-246, arrayOfCityMeshes);
+    house(posx+410, posz-240, arrayOfCityMeshes);
 
-    casaBassa(posx+492, posz-240, arrayOfCityMeshes);
+    house(posx+492, posz-240, arrayOfCityMeshes);
 
-    casaAlta(posx+486, posz-156, arrayOfCityMeshes);
-    casaBassa(posx+492, posz-86, arrayOfCityMeshes);
-    casaBassa(posx+494, posz-20, arrayOfCityMeshes);
-    casaAlta(posx+492, posz+40, arrayOfCityMeshes);
-    casaBassa(posx+492, posz+110, arrayOfCityMeshes);
+    officeBuilding(posx+486, posz-156, arrayOfCityMeshes);
+    house(posx+492, posz-86, arrayOfCityMeshes);
+    house(posx+494, posz-20, arrayOfCityMeshes);
+    officeBuilding(posx+492, posz+40, arrayOfCityMeshes);
+    house(posx+492, posz+110, arrayOfCityMeshes);
 
-    casaBassa(posx+492, posz+192, arrayOfCityMeshes);
+    house(posx+492, posz+192, arrayOfCityMeshes);
 
-    casaBassa(posx+150, posz+192, arrayOfCityMeshes);
-    casaBassa(posx+216, posz+192, arrayOfCityMeshes);
-    casaAlta(posx+274, posz+186, arrayOfCityMeshes);
-    casaBassa(posx+342, posz+192, arrayOfCityMeshes);
-    casaBassa(posx+412, posz+194, arrayOfCityMeshes);
+    house(posx+150, posz+192, arrayOfCityMeshes);
+    house(posx+216, posz+192, arrayOfCityMeshes);
+    officeBuilding(posx+274, posz+186, arrayOfCityMeshes);
+    house(posx+342, posz+192, arrayOfCityMeshes);
+    house(posx+412, posz+194, arrayOfCityMeshes);
 
-    casaBassa(posx+60, posz+192, arrayOfCityMeshes);
+    house(posx+60, posz+192, arrayOfCityMeshes);
 
-    casaBassa(posx+62, posz-148, arrayOfCityMeshes);
-    casaAlta(posx+60, posz-90, arrayOfCityMeshes);
-    casaBassa(posx+60, posz-24, arrayOfCityMeshes);
-    casaBassa(posx+60, posz+40, arrayOfCityMeshes);
-    casaBassa(posx+62, posz+110, arrayOfCityMeshes);
+    house(posx+62, posz-148, arrayOfCityMeshes);
+    officeBuilding(posx+60, posz-90, arrayOfCityMeshes);
+    house(posx+60, posz-24, arrayOfCityMeshes);
+    house(posx+60, posz+40, arrayOfCityMeshes);
+    house(posx+62, posz+110, arrayOfCityMeshes);
 
-    prato(scene, posx+300, posz, 128, arrayOfCityMeshes);
+    lawn(scene, posx+300, posz, 128, arrayOfCityMeshes);
 
-    terrenoCitta(scene, posx+302.5, posz, arrayOfCityMeshes);
+    cityTerrain(scene, posx+302.5, posz, arrayOfCityMeshes);
 
-    muro(scene, posx+48, posz, arrayOfCityMeshes);
-    muro(scene, posx+560, posz, arrayOfCityMeshes);
+    wall(scene, posx+48, posz, arrayOfCityMeshes);
+    wall(scene, posx+560, posz, arrayOfCityMeshes);
 }
 
-function cittaP4(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
-    casaBassa(posx+142, posz-244, arrayOfCityMeshes);
-    casaBassa(posx+202, posz-244, arrayOfCityMeshes);
-    casaBassa(posx+262, posz-244, arrayOfCityMeshes);
-    casaBassa(posx+320, posz-246, arrayOfCityMeshes);
-    casaBassa(posx+382, posz-244, arrayOfCityMeshes);
-    casaBassa(posx+442, posz-242, arrayOfCityMeshes);
-    casaBassa(posx+500, posz-242, arrayOfCityMeshes);
+function fourthCity(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
+    house(posx+142, posz-244, arrayOfCityMeshes);
+    house(posx+202, posz-244, arrayOfCityMeshes);
+    house(posx+262, posz-244, arrayOfCityMeshes);
+    house(posx+320, posz-246, arrayOfCityMeshes);
+    house(posx+382, posz-244, arrayOfCityMeshes);
+    house(posx+442, posz-242, arrayOfCityMeshes);
+    house(posx+500, posz-242, arrayOfCityMeshes);
 
-    casaBassa(posx+502, posz-150, arrayOfCityMeshes);
-    casaBassa(posx+500, posz-90, arrayOfCityMeshes);
-    casaBassa(posx+500, posz-30, arrayOfCityMeshes);
-    casaBassa(posx+502, posz+62, arrayOfCityMeshes);
-    casaBassa(posx+500, posz+118, arrayOfCityMeshes);
-    casaBassa(posx+504, posz+198, arrayOfCityMeshes);
+    house(posx+502, posz-150, arrayOfCityMeshes);
+    house(posx+500, posz-90, arrayOfCityMeshes);
+    house(posx+500, posz-30, arrayOfCityMeshes);
+    house(posx+502, posz+62, arrayOfCityMeshes);
+    house(posx+500, posz+118, arrayOfCityMeshes);
+    house(posx+504, posz+198, arrayOfCityMeshes);
 
-    casaBassa(posx+410, posz-148, arrayOfCityMeshes);
-    casaBassa(posx+410, posz-88, arrayOfCityMeshes);
-    casaBassa(posx+410, posz-30, arrayOfCityMeshes);
-    casaBassa(posx+408, posz+62, arrayOfCityMeshes);
-    casaBassa(posx+410, posz+120, arrayOfCityMeshes);
-    casaBassa(posx+408, posz+200, arrayOfCityMeshes);
+    house(posx+410, posz-148, arrayOfCityMeshes);
+    house(posx+410, posz-88, arrayOfCityMeshes);
+    house(posx+410, posz-30, arrayOfCityMeshes);
+    house(posx+408, posz+62, arrayOfCityMeshes);
+    house(posx+410, posz+120, arrayOfCityMeshes);
+    house(posx+408, posz+200, arrayOfCityMeshes);
 
-    casaBassa(posx+142, posz-148, arrayOfCityMeshes);
-    casaBassa(posx+144, posz-90, arrayOfCityMeshes);
-    casaBassa(posx+144, posz-32, arrayOfCityMeshes);
-    casaBassa(posx+140, posz+58, arrayOfCityMeshes);
-    casaBassa(posx+140, posz+122, arrayOfCityMeshes);
-    casaBassa(posx+142, posz+202, arrayOfCityMeshes);
+    house(posx+142, posz-148, arrayOfCityMeshes);
+    house(posx+144, posz-90, arrayOfCityMeshes);
+    house(posx+144, posz-32, arrayOfCityMeshes);
+    house(posx+140, posz+58, arrayOfCityMeshes);
+    house(posx+140, posz+122, arrayOfCityMeshes);
+    house(posx+142, posz+202, arrayOfCityMeshes);
 
-    casaBassa(posx+338, posz+60, arrayOfCityMeshes);
-    casaBassa(posx+278, posz+62, arrayOfCityMeshes);
-    casaBassa(posx+210, posz+62, arrayOfCityMeshes);
+    house(posx+338, posz+60, arrayOfCityMeshes);
+    house(posx+278, posz+62, arrayOfCityMeshes);
+    house(posx+210, posz+62, arrayOfCityMeshes);
 
-    casaBassa(posx+342, posz+122, arrayOfCityMeshes);
-    casaBassa(posx+280, posz+120, arrayOfCityMeshes);
-    casaBassa(posx+210, posz+122, arrayOfCityMeshes);
+    house(posx+342, posz+122, arrayOfCityMeshes);
+    house(posx+280, posz+120, arrayOfCityMeshes);
+    house(posx+210, posz+122, arrayOfCityMeshes);
 
-    casaBassa(posx+340, posz+200, arrayOfCityMeshes);
-    casaBassa(posx+280, posz+202, arrayOfCityMeshes);
-    casaBassa(posx+208, posz+200, arrayOfCityMeshes);
+    house(posx+340, posz+200, arrayOfCityMeshes);
+    house(posx+280, posz+202, arrayOfCityMeshes);
+    house(posx+208, posz+200, arrayOfCityMeshes);
 
-    prato(scene, posx+300, posz-60, 200, arrayOfCityMeshes);
+    lawn(scene, posx+300, posz-60, 200, arrayOfCityMeshes);
 
-    terrenoCitta(scene, posx+302.5, posz, arrayOfCityMeshes);
+    cityTerrain(scene, posx+302.5, posz, arrayOfCityMeshes);
 
-    muro(scene, posx+48, posz, arrayOfCityMeshes);
-    muro(scene, posx+560, posz, arrayOfCityMeshes);
+    wall(scene, posx+48, posz, arrayOfCityMeshes);
+    wall(scene, posx+560, posz, arrayOfCityMeshes);
 
     if(cityTrees_boolean) {
-        const cityTree = albero();
+        const cityTree = treeModel();
         const arrayOfTrees = [BABYLON.Matrix.Translation(posx+66, 0, posz-236),BABYLON.Matrix.Translation(posx+70, 0, posz-144),BABYLON.Matrix.Translation(posx+70, 0, posz-32),BABYLON.Matrix.Translation(posx+72, 0, posz+64),BABYLON.Matrix.Translation(posx+70, 0, posz+163)];
         cityTree.thinInstanceAdd(arrayOfTrees);
         cityTree.setParent(cityTreesParentNode);
     }
 }
 
-function muro(scene, posx, posz, arrayOfCityMeshes) {
-    const muro = BABYLON.MeshBuilder.CreateBox('muro', {width: 512, height: 16, depth: 3}, scene);
-    muro.material = bricks_rotated;
-    muro.rotation.y = Math.PI/2;
-    muro.position.x = posx;
-    muro.position.y = 7;
-    muro.position.z = posz;
-    arrayOfCityMeshes.push(muro);
+function wall(scene, posx, posz, arrayOfCityMeshes) {
+    const wall = BABYLON.MeshBuilder.CreateBox('wall', {width: 512, height: 16, depth: 3}, scene);
+    wall.material = bricks_rotated;
+    wall.rotation.y = Math.PI/2;
+    wall.position.x = posx;
+    wall.position.y = 7;
+    wall.position.z = posz;
+    arrayOfCityMeshes.push(wall);
 }
 
-function casaAlta(posx, posz, arrayOfCityMeshes) {
+function officeBuilding(posx, posz, arrayOfCityMeshes) {
     convertModelToMesh(palazzo, arrayOfCityMeshes, {positionX: posx+32, positionY: 30, positionZ: posz+32});
 }
 
-function casaBassa(posx, posz, arrayOfCityMeshes) {
+function house(posx, posz, arrayOfCityMeshes) {
     convertModelToMesh(casa, arrayOfCityMeshes, {positionX: posx+25, positionY: 14, positionZ: posz+25});
-
 }
 
-function terrenoCitta(scene, posx, posz, arrayOfCityMeshes) {
-    const terrenoCitta = BABYLON.MeshBuilder.CreatePlane('terrenoCitta', {width: 512, height: 512}, scene);
-    terrenoCitta.material = cemento;
-    terrenoCitta.position.x = posx;
-    terrenoCitta.position.y = -0.8;
-    terrenoCitta.position.z = posz;
-    terrenoCitta.rotation.x = Math.PI/2;
-    arrayOfCityMeshes.push(terrenoCitta);
+function cityTerrain(scene, posx, posz, arrayOfCityMeshes) {
+    const cityTerrain = BABYLON.MeshBuilder.CreatePlane('cityTerrain', {width: 512, height: 512}, scene);
+    cityTerrain.material = cemento;
+    cityTerrain.position.x = posx;
+    cityTerrain.position.y = -0.8;
+    cityTerrain.position.z = posz;
+    cityTerrain.rotation.x = Math.PI/2;
+    arrayOfCityMeshes.push(cityTerrain);
 }
 
-function prato(scene, posx, posz, dimensions, arrayOfCityMeshes) {
-    const prato = BABYLON.MeshBuilder.CreatePlane('prato', {size: dimensions}, scene);
-    prato.material = erba;
-    prato.position.x = posx;
-    prato.position.y = -0.8;
-    prato.position.z = posz;
-    prato.rotation.x = Math.PI/2;
-    arrayOfCityMeshes.push(prato);
+function lawn(scene, posx, posz, dimensions, arrayOfCityMeshes) {
+    const lawn = BABYLON.MeshBuilder.CreatePlane('lawn', {size: dimensions}, scene);
+    lawn.material = erba;
+    lawn.position.x = posx;
+    lawn.position.y = -0.8;
+    lawn.position.z = posz;
+    lawn.rotation.x = Math.PI/2;
+    arrayOfCityMeshes.push(lawn);
 }
 
-function albero() {
+function treeModel() {
     const arrayOfTreeMeshes = [];
     convertModelToMesh(albero1, arrayOfTreeMeshes, {});
-    const pianta = BABYLON.Mesh.MergeMeshes(arrayOfTreeMeshes, true, true, undefined, false, true);
-    pianta.alwaysSelectAsActiveMesh = true; //sempre visibile
-    return pianta;
+    const tree = BABYLON.Mesh.MergeMeshes(arrayOfTreeMeshes, true, true, undefined, false, true);
+    tree.alwaysSelectAsActiveMesh = true; //always visible
+    return tree;
 }
 
 function createForest(scene, posx, posz, forestParentNode) {
@@ -256,11 +255,10 @@ function createForest(scene, posx, posz, forestParentNode) {
             }
         }
     }
-    const forestTree = albero();
+    const forestTree = treeModel();
     forestTree.setParent(forestParentNode);
     forestTree.thinInstanceAdd(arrayOfTrees);
-    //casaBassa(posx+170, posz+380, parent_mesh);
-    //casaBassa(posx+290, posz+20, parent_mesh);
-    
+    //house(posx+170, posz+380, parent_mesh);
+    //house(posx+290, posz+20, parent_mesh);
     return forestTree;
 }

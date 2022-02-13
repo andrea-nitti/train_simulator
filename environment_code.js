@@ -1,27 +1,25 @@
 "use strict";
-//Funzione per creare un gruppo di 6 città
 function createCityGroup(scene, cityTrees_boolean) {
     const arrayOfCityMeshes = [];
     const cityTreesParentNode = new BABYLON.TransformNode('cityTreesParentNode', scene);
     for(let posz=-512; posz<=512; posz+=512) {
-        cittaRandom(scene, 20, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
-        cittaRandom(scene, -629.5, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
+        randomCity(scene, 20, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
+        randomCity(scene, -629.5, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
     }
     
-    const cityMesh = BABYLON.Mesh.MergeMeshes(arrayOfCityMeshes, true, true, undefined, false, true);   //mesh che raggruppa un intero blocco di città
+    const cityMesh = BABYLON.Mesh.MergeMeshes(arrayOfCityMeshes, true, true, undefined, false, true);   //this mesh is an entire city block
     return {city: cityMesh, trees: cityTreesParentNode};
 }
 
-function cittaRandom(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
-    const random = Math.round(Math.random() * 100);
-    if(random > 73) cittaP1(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
-    else if(random > 48) cittaP2(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
-    else if(random > 23) cittaP3(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
-    else cittaP4(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
+function randomCity(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode) {
+    const randomNumber = Math.round(Math.random() * 100);
+    if(randomNumber > 73) firstCity(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
+    else if(randomNumber > 48) secondCity(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
+    else if(randomNumber > 23) thirdCity(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
+    else fourthCity(scene, posx, posz, cityTrees_boolean, arrayOfCityMeshes, cityTreesParentNode);
 }
 
-//Funzione per creare un gruppo di 6 foreste
-function createForestGroup(scene) {
+function createForestGroup(scene) { //a 'group' indicates 6 forest blocks
     const forestParentNode = new BABYLON.TransformNode('forestParentNode', scene);
     for(let i=-1; i<=1; i++) {
         createForest(scene, 50, i * 256, forestParentNode);
@@ -30,20 +28,19 @@ function createForestGroup(scene) {
     return forestParentNode;
 }
 
-//Funzione per il tempo atmosferico
 function weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, globalWeatherState) {
-    const timeStamp = new Date().valueOf() / 1000;  //valueOf() --> millisecondi trascorsi dall'01/01/1970
+    const timeStamp = new Date().valueOf() / 1000;  //valueOf() --> milliseconds since 01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
-        globalWeatherState.weatherState = Math.floor(Math.random() * 3);    //numero intero compreso tra 0 (incluso) e 3 (escluso)
+        globalWeatherState.weatherState = Math.floor(Math.random() * 3);
         switch(globalWeatherState.weatherState) {
-            case 0: //sereno
+            case 0: //clean sky
                 rain.stop();
                 thunderstorm.stop();
                 rainParticleSystem.stop();
                 rainParticleSystem.reset();
                 sparksParticleSystem.stop();
                 break;
-            case 1: //pioggia
+            case 1: //rain
                 thunderstorm.stop();
                 rain.setVolume(0);
                 rain.play();
@@ -53,7 +50,7 @@ function weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, glob
                 sparksParticleSystem.start();
                 sparks.play();
                 break;
-            case 2: //temporale
+            case 2: //thunderstorm
                 rain.stop();
                 thunderstorm.setVolume(0);
                 thunderstorm.play();
@@ -64,20 +61,20 @@ function weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, glob
                 sparks.play();
                 break;
         }
-        const duration = 60 * (1 + Math.round(Math.random() * 4));  //la durata prima di ogni transizione è misurata in minuti
+        const duration = 60 * (1 + Math.round(Math.random() * 4));  //duration is measured in minutes
         console.log({Weather: globalWeatherState.weatherState, Duration: duration + " seconds"});
         globalWeatherState.finishTimeStamp = timeStamp+duration;
     }
     else if(globalWeatherState.weatherState == 2) {
         if(Math.floor(Math.random() * 500) == 1) {
             const thunderSounds = [thunder1, thunder2, thunder3, thunder4, thunder5];
-            const selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length);  //scelgo un fulmine a caso dall'array da "illuminare"
-            const selectedThunderSound = Math.floor(Math.random() * thunderSounds.length);  //scelgo un tuono a caso dall'array da riprodurre
+            const selectedLightningPlane = Math.floor(Math.random() * lightningPlanes.length);  //choosing random lightning
+            const selectedThunderSound = Math.floor(Math.random() * thunderSounds.length);  //choosing random sound
             lightningPlanes[selectedLightningPlane].isVisible = true;
             setTimeout(function() {
                 lightningPlanes[selectedLightningPlane].isVisible = false;
                 thunderSounds[selectedThunderSound].play();
-            }, 200);    //il fulmine rimane visibile per 0,2 secondi
+            }, 200);    //lightnings remain visible for 0.2 s
         }
     }
     if(globalWeatherState.weatherState == 1 && rainParticleSystem.emitRate <= 6500) rainParticleSystem.emitRate += 10;

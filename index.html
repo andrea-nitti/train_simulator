@@ -13,12 +13,12 @@
                 padding:0;
             }
             #renderCanvas {
-                position:absolute;  /* con questo parametro consento di posizionare altri elementi sopra il canvas */
+                position:absolute;  /* positioning elements on top of the canvas */
                 width:100%;
                 height:100%;
                 display:none;
             }
-            #velocita {
+            #speed {
                 position:absolute;
                 text-align:center;
                 top:12px;
@@ -26,7 +26,7 @@
                 color:yellow;
                 font-size:24px;
             }
-            #spazio {
+            #distance {
                 position:absolute;
                 text-align:center;
                 top:48px;
@@ -34,7 +34,7 @@
                 color:red;
                 font-size:16px;
             }
-            #coordinate {
+            #coordinates {
                 position:absolute;
                 text-align:left;
                 top:35px;
@@ -44,7 +44,7 @@
                 background-color:rgba(0,0,0,0.25);
                 display:none;
             }
-            #aiuto1 {
+            #helpRequest {
                 position:absolute;
                 text-align:center;
                 bottom:12px;
@@ -52,7 +52,7 @@
                 color:white;
                 font-size:16px;
             }
-            #aiuto2 {
+            #helpDialog {
                 position:absolute;
                 text-align:center;
                 bottom:50px;
@@ -62,14 +62,14 @@
                 display:none;
                 background-color:rgba(0,0,0,0.5);
             }
-            .tasto {
+            .key {
                 font-weight:bold;
             }
-            .paragrafo {
+            .paragraph {
                 font-weight:bold;
                 color:red;
             }
-            .descrizione {
+            .description {
                 font-style:italic;
             }
             #loadingScreen {
@@ -83,7 +83,7 @@
                 font-size:100px;
                 text-align:center;
                 background-color:rgb(0,0,0);
-                z-index:90; /* posiziono la schermata di caricamento davanti a tutti gli altri elementi */
+                z-index:90;
                 display:none;
             }
             #objectToBeLoaded {
@@ -183,7 +183,7 @@
         <script src="station_code.js"></script>
         <script src="train_code.js"></script>
         <script src="city_code.js"></script>
-        <script src="ambiente_algoritmo.js"></script>
+        <script src="environment_code.js"></script>
         <script src="train_code.js"></script>
         <script src="utilities.js"></script>
         <script src="main.js"></script>
@@ -195,15 +195,15 @@
                 slider.oninput = function() {
                     output.innerHTML = this.value;
                 };
-                let cities = document.getElementById("città");
-                let cityTrees = document.getElementById("alberi-città");
-                let forests = document.getElementById("foreste");
-                let trains1 = document.getElementById("treno1");
-                let trains2 = document.getElementById("treno2");
+                let cities = document.getElementById("cities");
+                let cityTrees = document.getElementById("cityTrees");
+                let forests = document.getElementById("forests");
+                let trains1 = document.getElementById("passengerTrain");
+                let trains2 = document.getElementById("freightTrain");
                 function checkKeyCombination(evt) {
                     if(evt.altKey && evt.keyCode === 225) window.addEventListener("keyup", checkDebugCodes);
                 }
-                document.getElementById("avvia").onclick = function() {
+                document.getElementById("startButton").onclick = function() {
                     document.getElementById("config").style.display = "none";
                     startEverything([cities.checked, cityTrees.checked, forests.checked, trains1.checked, trains2.checked], parseInt(slider.value));
                     window.removeEventListener("keydown", checkKeyCombination);
@@ -216,39 +216,39 @@
         <canvas id="renderCanvas" touch-action="none"></canvas>
         <div id="config">
             <ul style="list-style-type:none"><p>Seleziona quali funzionalità includere:</p>
-                <li><input type="checkbox" id="città"/><span class="square"></span> <label for="città">abilita la formazione di città</label><br><br></li>
-                <li><input type="checkbox" id="alberi-città"/><span class="square"></span> <label for="alberi-città">abilita la formazione di alberi nelle città</label><br><br></li>
-                <li><input type="checkbox" id="foreste"/><span class="square"></span> <label for="foreste">abilita la formazione di foreste</label><br><br></li>
-                <li><input type="checkbox" id="treno1"/><span class="square"></span> <label for="treno1">abilita un treno passeggeri</label><br><br></li>
-                <li><input type="checkbox" id="treno2"/><span class="square"></span> <label for="treno2">abilita convogli merci</label><br><br></li>
+                <li><input type="checkbox" id="cities"/><span class="square"></span> <label for="cities">abilita la formazione di città</label><br><br></li>
+                <li><input type="checkbox" id="cityTrees"/><span class="square"></span> <label for="cityTrees">abilita la formazione di alberi nelle città</label><br><br></li>
+                <li><input type="checkbox" id="forests"/><span class="square"></span> <label for="forests">abilita la formazione di foreste</label><br><br></li>
+                <li><input type="checkbox" id="passengerTrain"/><span class="square"></span> <label for="passengerTrain">abilita un treno passeggeri</label><br><br></li>
+                <li><input type="checkbox" id="freightTrain"/><span class="square"></span> <label for="freightTrain">abilita convogli merci</label><br><br></li>
             </ul>
             <br><p>Distanza di rendering</p>
             <input type="range" min="128" max="8192" step="128" value="2048" class="slider" id="sliderBlock"><br>
             <br><p>Valore corrente: <span id="sliderOutput"></span></p><br><br>
-            <button id="avvia" tabindex="-1">Start!</button>
+            <button id="startButton" tabindex="-1">Start!</button>
         </div>
         <div id="loadingScreen">ERROR</div>
         <div id="objectToBeLoaded"></div>
-        <div id="velocita"></div>
-        <div id="spazio"></div>
-        <div id="coordinate"></div>
-        <div id="aiuto1">Premi H per mostrare/nascondere la lista dei comandi</div>
-        <div id="aiuto2">
-           <span class="paragrafo">Controlli del treno</span><br>
-           <span class="tasto">W</span> <span class="descrizione">Acceleratore</span><br>
-           <span class="tasto">S</span> <span class="descrizione">Freno</span><br>
-           <span class="tasto">SPAZIO</span> <span class="descrizione">Clacson</span><br>
+        <div id="speed"></div>
+        <div id="distance"></div>
+        <div id="coordinates"></div>
+        <div id="helpRequest">Premi H per mostrare/nascondere la lista dei comandi</div>
+        <div id="helpDialog">
+           <span class="paragraph">Controlli del treno</span><br>
+           <span class="key">W</span> <span class="description">Acceleratore</span><br>
+           <span class="key">S</span> <span class="description">Freno</span><br>
+           <span class="key">SPAZIO</span> <span class="description">Clacson</span><br>
                 
            <br>
-           <span class="paragrafo">Controlli della visuale</span><br>
-           <span class="tasto">Arrow_Up</span> <span class="descrizione">Movimento verso l'alto</span><br>
-           <span class="tasto">Arrow_Down</span> <span class="descrizione">Movimento verso il basso</span><br>
-           <span class="tasto">Left_Click</span> <span class="descrizione">Movimento laterale</span><br>
-           <span class="tasto">C</span> <span class="descrizione">Cambia telecamera</span><br>
+           <span class="paragraph">Controlli della visuale</span><br>
+           <span class="key">Arrow_Up</span> <span class="description">Movimento verso l'alto</span><br>
+           <span class="key">Arrow_Down</span> <span class="description">Movimento verso il basso</span><br>
+           <span class="key">Left_Click</span> <span class="description">Movimento laterale</span><br>
+           <span class="key">C</span> <span class="description">Cambia telecamera</span><br>
            
            <br>
-           <span class="paragrafo">Controlli dell'ambiente</span><br>
-           <span class="tasto">G</span> <span class="descrizione">Cambia modalità tempo</span>
+           <span class="paragraph">Controlli dell'ambiente</span><br>
+           <span class="key">G</span> <span class="description">Cambia modalità tempo</span>
         </div>
     </body>
 </html>

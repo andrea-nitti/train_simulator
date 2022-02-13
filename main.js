@@ -135,10 +135,10 @@ function startEverything(configFlags, renderDistance) {
 }
 
 function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance, glowHalo) {
-    const velocitaOverlay = document.getElementById('velocita');
-    const spazioOverlay = document.getElementById('spazio');
-    const aiutoOverlay = document.getElementById('aiuto2');
-    const coordinateOverlay = document.getElementById('coordinate');
+    const velocitaOverlay = document.getElementById('speed');
+    const spazioOverlay = document.getElementById('distance');
+    const aiutoOverlay = document.getElementById('helpDialog');
+    const coordinateOverlay = document.getElementById('coordinates');
 
     //creazione della skybox
     const skybox = BABYLON.Mesh.CreateBox('skybox', renderDistance * 2 / Math.sqrt(3), scene);  //la dimensione della skybox è calcolata in modo tale che rimanga sempre visibile all'osservatore
