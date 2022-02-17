@@ -219,7 +219,7 @@ function house(posx, posz, arrayOfCityMeshes) {
 
 function cityTerrain(scene, posx, posz, arrayOfCityMeshes) {
     const cityTerrain = BABYLON.MeshBuilder.CreatePlane('cityTerrain', {width: 512, height: 512}, scene);
-    cityTerrain.material = cemento;
+    cityTerrain.material = concrete;
     cityTerrain.position.x = posx;
     cityTerrain.position.y = -0.8;
     cityTerrain.position.z = posz;
@@ -229,7 +229,7 @@ function cityTerrain(scene, posx, posz, arrayOfCityMeshes) {
 
 function lawn(scene, posx, posz, dimensions, arrayOfCityMeshes) {
     const lawn = BABYLON.MeshBuilder.CreatePlane('lawn', {size: dimensions}, scene);
-    lawn.material = erba;
+    lawn.material = grass;
     lawn.position.x = posx;
     lawn.position.y = -0.8;
     lawn.position.z = posz;

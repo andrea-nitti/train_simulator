@@ -60,16 +60,16 @@ function createAxisLabel(letter, color, scene) {
     return axisLabelPlane;
 }
 
-function checkIntersections(posA, lenghtA, posB, lenghtB) { //posA e posB sono le posizioni centrali degli oggetti
+function checkIntersections(posA, lenghtA, posB, lenghtB) { //posA and posB are pivot-points of the selected objects
     const pointA = posA - lenghtA / 2;
     const pointB = posA + lenghtA / 2;
     const pointC = posB - lenghtB / 2;
     const pointD = posB + lenghtB / 2;
-    return !((pointD < pointA) || (pointC > pointB)); //true = esiste intersezione
+    return !((pointD < pointA) || (pointC > pointB));
 }
 
 function allWireframe(status) { //status --> boolean
-    [colnero, metal, cemento, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, erba, moonSurface].forEach(material => {
+    [blackColor, metal, concrete, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, grass, moonSurface].forEach(material => {
         material.wireframe = status;
     });
     [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, stazione0, carrozza, carrovuoto, locomotore].forEach(model => {
@@ -84,10 +84,10 @@ function checkDebugCodes(event) {
         switch(event.keyCode) {
             case 49: allWireframe(true); break;
             case 50: allWireframe(false); break;
-            case 51: velocita = 100; break;
-            case 52: velocita = -10000; break;
-            case 53: velocita += 25; break;
-            case 54: spazio += 1000000; break;  //case 54: spazio = Number.MAX_VALUE; break;
+            case 51: velocity = 100; break;
+            case 52: velocity = -10000; break;
+            case 53: velocity += 25; break;
+            case 54: distanceFromOrigin += 1000000; break;  //case 54: distanceFromOrigin = Number.MAX_VALUE; break;
         }
     }
 }

@@ -2,7 +2,7 @@
 let blackColor, metal, concrete, bricks, hv, station_roof_1, station_roof_2, ground, bricks_rotated, grass, moonSurface;
 
 function initializeColors(scene) {
-    blackColor = new BABYLON.StandardMaterial('nero', scene);
+    blackColor = new BABYLON.StandardMaterial('blackColor', scene);
     blackColor.diffuseColor = new BABYLON.Color3(0.078, 0.078, 0.078);
     metal = new BABYLON.StandardMaterial('metal', scene);
     metal.diffuseColor = new BABYLON.Color3(0.447, 0.474, 0.447);
