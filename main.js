@@ -1,16 +1,16 @@
 //Credits: Andrea Nitti; Lorenzo Parma
 
 "use strict";
-let wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, stazione0, stazione1, stazione2, stazione3, stazione4, carrozza, carrovuoto, locomotore, container1, container2, cisterna1, cisterna2;    //models
+let wire, terrainChunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, stazione0, stazione1, stazione2, stazione3, stazione4, carrozza, carrovuoto, locomotore, container1, container2, cisterna1, cisterna2;    //models
 let sun, moon, day;
 let horn, rain, thunderstorm, thunder1, thunder2, thunder3, thunder4, thunder5, riverSound, sparks; //sounds
 const importedModelsList = ["filo.obj","chunk_binario.obj","ground.obj","ponte1.obj","ringhiera.obj","paloL.obj","paloR.obj","casaAlta.obj","casaBassa.obj","albero1.obj","stazione0.obj","stazione1.obj","stazione2.obj","stazione3.obj","stazione4.obj","carrozza.obj","carrovuoto.obj","locomotore.obj","container1.obj","container2.obj","cisterna1.obj","cisterna2.obj"];
 const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.ogg","thunder4.ogg","thunder5.ogg","rain.ogg","thunderstorm.ogg","river.ogg","sparks.ogg"];
 
-let spazio = 0;
-let velocita = 0;
+let distanceFromOrigin = 0;
+let velocity = 0;
 
-//parametri per la larghezza e l'altezza di ciascun cartello per ogni stazione
+//station sign parameters
 const planeWidth = 10;
 const planeHeight = 3;
 
@@ -24,7 +24,7 @@ function startEverything(configFlags, renderDistance) {
     canvas.addEventListener('wheel', evt => evt.preventDefault());
     const engine = new BABYLON.Engine(canvas, true);
     function schermoDiCaricamento() {}
-    schermoDiCaricamento.prototype.displayLoadingUI = function() {caricamento.innerHTML = "Loading...";};   //".prototype" consente di aggiungere una nuova proprietà (displayLoadingUI) al costruttore di un oggetto (schermoDiCaricamento)
+    schermoDiCaricamento.prototype.displayLoadingUI = function() {caricamento.innerHTML = "Loading...";};   //".prototype" adds a new property (displayLoadingUI) to an object's constructor (schermoDiCaricamento)
     schermoDiCaricamento.prototype.hideLoadingUI = function() {
         caricamento.style.display = "none";
         avanzamento.style.display = "none";
@@ -33,7 +33,7 @@ function startEverything(configFlags, renderDistance) {
     engine.displayLoadingUI();
     const scene = new BABYLON.Scene(engine);
     const defaultCamera = new BABYLON.UniversalCamera('defaultCamera', new BABYLON.Vector3(-8, 7.5, 0), scene);
-    defaultCamera.inputs.clear();   //rimuovo i controlli predefiniti della tastiera
+    defaultCamera.inputs.clear();   //removing all camera default inputs
     defaultCamera.inputs.addMouse();
     defaultCamera.attachControl(canvas, true);
     defaultCamera.maxZ = renderDistance;
@@ -42,7 +42,7 @@ function startEverything(configFlags, renderDistance) {
     freeCam.attachControl(canvas, true);
     freeCam.maxZ = renderDistance;
     scene.activeCamera = defaultCamera;
-    inizializzaColori(scene);
+    initializeColors(scene);
 
     sun = new BABYLON.HemisphericLight('sun', new BABYLON.Vector3(0, -1, 0), scene);
     sun.intensity = 1;
@@ -58,7 +58,7 @@ function startEverything(configFlags, renderDistance) {
         return moonTexture;
     };
 
-    //scene.clearColor = new BABYLON.Color3(0.086, 0.090, 0.150); //imposto il colore esterno alla skybox (blu scuro)
+    //scene.clearColor = new BABYLON.Color3(0.086, 0.090, 0.150); //this is the color of the sky outside the skybox (dark blue)
     const assetsManager = new BABYLON.AssetsManager(scene);
     assetsManager.useDefaultLoadingScreen = false;
     importedModelsList.forEach(x => {
@@ -68,7 +68,7 @@ function startEverything(configFlags, renderDistance) {
             //task.loadedMeshes.forEach(x => {x.doNotSyncBoundingInfo = true;});
             switch(x) {
                 case "filo.obj": wire = task.loadedMeshes; break;
-                case "chunk_binario.obj": terrain_chunk = task.loadedMeshes; break;
+                case "chunk_binario.obj": terrainChunk = task.loadedMeshes; break;
                 case "ground.obj": gravelPlane = task.loadedMeshes; break;
                 case "ponte1.obj": ponte1 = task.loadedMeshes; break;
                 case "ringhiera.obj": ringhiera = task.loadedMeshes; break;
@@ -122,7 +122,7 @@ function startEverything(configFlags, renderDistance) {
         scene.autoClearDepthAndStencil = false;
         setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance, glowHalo);
         scene.blockfreeActiveMeshesAndRenderingGroups = true;
-        [wire, terrain_chunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, stazione0, stazione1, stazione2, stazione3, stazione4, carrozza, carrovuoto, locomotore,  container1, container2, cisterna1, cisterna2].forEach(model => {
+        [wire, terrainChunk, gravelPlane, ponte1, ringhiera, leftPole, rightPole, casa, palazzo, albero1, stazione0, stazione1, stazione2, stazione3, stazione4, carrozza, carrovuoto, locomotore,  container1, container2, cisterna1, cisterna2].forEach(model => {
             model.forEach(modelPiece => {
                 modelPiece.dispose();
                 scene.removeMesh(modelPiece);
@@ -135,13 +135,13 @@ function startEverything(configFlags, renderDistance) {
 }
 
 function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance, glowHalo) {
-    const velocitaOverlay = document.getElementById('speed');
-    const spazioOverlay = document.getElementById('distance');
-    const aiutoOverlay = document.getElementById('helpDialog');
-    const coordinateOverlay = document.getElementById('coordinates');
+    const speedOverlay = document.getElementById('speed');
+    const distanceOverlay = document.getElementById('distance');
+    const infoOverlay = document.getElementById('helpDialog');
+    const coordinatesOverlay = document.getElementById('coordinates');
 
-    //creazione della skybox
-    const skybox = BABYLON.Mesh.CreateBox('skybox', renderDistance * 2 / Math.sqrt(3), scene);  //la dimensione della skybox è calcolata in modo tale che rimanga sempre visibile all'osservatore
+    //skybox creation
+    const skybox = BABYLON.Mesh.CreateBox('skybox', renderDistance * 2 / Math.sqrt(3), scene);  //skybox length is calculated in such a way that it is always visible
     const skyboxMaterial = new BABYLON.StandardMaterial('skyboxMaterial', scene);
     skyboxMaterial.backFaceCulling = false;
     skyboxMaterial.disableLighting = true;
@@ -151,7 +151,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./assets/textures/skybox_v4", scene, ["_px.png", "_py.png", "_pz.png", "_nx.png", "_ny.png", "_nz.png"]);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
 
-    const segments = [];    //array che contiene 12 modelli di terreno ferroviario (lunghi ciascuno 256 unità)
+    const segments = [];    //this array contains 12 terrain models (each one is 256 units long)
     for(let i=0; i<12; i++) {
         const Terrain = createTerrain(scene);
         Terrain.railRoad.position.z = i * 256;
@@ -160,11 +160,11 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     }
 
     const arrayOfStations = createAllStations(scene);
-    const listaCartelli = createSigns(scene, glowHalo);
-    const indice = Math.floor(Math.random() * listaCartelli.length);
-    const cartello = listaCartelli[indice];
-    cartello.position.z = 92;
-    listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
+    const signList = createSigns(scene, glowHalo);
+    const index = Math.floor(Math.random() * signList.length);
+    const sign = signList[index];
+    sign.position.z = 92;
+    cityList.splice(index, 1);  //the first argument is the position of the array element; the second one indicates how many elements need to be removed
 
     const forests = [];
     if(configFlags[2]) {
@@ -177,13 +177,13 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         forests.push(forests.shift());
     }
 
-    //manipolo la nebbia
+    //handling fog properties
     scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
     scene.fogDensity = 0.001;
     scene.fogColor = new BABYLON.Color3(0.494, 0.604, 0.686);
     skybox.applyFog = false;
 
-    const cities = [];  //array che contiene la lista delle mesh (fuse insieme) di 5*3*2 città
+    const cities = [];  //this array contains a list of 5*3*2 city meshes
     if(configFlags[0]) {
         for(let i=0; i<5; i++) {
             const City = createCityGroup(scene, configFlags[1]);
@@ -193,11 +193,11 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         }
     }
 
-    let treno;
-    if(configFlags[3]) treno = createNormalTrain();
+    let train;
+    if(configFlags[3]) train = createNormalTrain();
     if(configFlags[4]) createContainerTrainFirstType(scene);
 
-    const ponte = createBridge(skybox, scene);
+    const bridge = createBridge(skybox, scene);
     riverSound.setVolume(2, 0);
 
     const axisGroup = createAxis(scene);
@@ -225,36 +225,36 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     const lightningPlanes = createLightning(scene, glowHalo);
     const globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
 
-    let modalitaTempo = 0;  //il tipo di ciclo giorno-notte predefinito è quello reale
+    let timeMode = 0;   //the default day-night cycle follows real time
     let deltaSunIntensity = 0.00025;
     let sunsetProgress = 0;
     let moonAngle = 0;
     let stationIndex = 0;
     scene.registerBeforeRender(() => {
         day = new Date();
-        const time = day.getHours() * 60 + day.getMinutes();    //il tempo corrente è rappresentato in minuti (a partire da mezzanotte del giorno corrente)
-        switch(modalitaTempo) {
-            case 0: //modalità reale
-                if(time <= 720) sun.intensity = time / (12 * 60);   //calcolo la luminosità del Sole in base alla proporzione con i minuti contenuti in metà giornata
-                else sun.intensity = (-time) / (12 * 60) + 2;   //la luminosità del Sole è calcolata in modo inverso (con intensità decrescente) dopo mezzo-giorno
+        const time = day.getHours() * 60 + day.getMinutes();    //present time is measured in minutes starting from today's midnight
+        switch(timeMode) {
+            case 0: //real mode
+                if(time <= 720) sun.intensity = time / (12 * 60);   //sun brightness is proportional to the number of minutes present in half a day
+                else sun.intensity = (-time) / (12 * 60) + 2;   //sun brightness is decreasing starting from mid-day
                 break;
-            case 1: //tempo accelerato
+            case 1: //fast-forward mode
                 sun.intensity += deltaSunIntensity;
                 if((sun.intensity >= 1) || (sun.intensity <= 0)) deltaSunIntensity = -deltaSunIntensity;
                 break;
-            case 2: sun.intensity = 0.5; break; //06:00 fisse
-            case 3: sun.intensity = 1; break;   //mezzogiorno fisso
-            case 4: sun.intensity = 0.5; break; //18:00 fisse
-            case 5: sun.intensity = 0; break;   //mezzanotte fissa
+            case 2: sun.intensity = 0.5; break; //steady 06:00 a.m.
+            case 3: sun.intensity = 1; break;   //steady noon
+            case 4: sun.intensity = 0.5; break; //steady 06:00 p.m.
+            case 5: sun.intensity = 0; break;   //steady midnight
         }
         /*if(globalWeatherState.weatherState != 2)*/ skyboxMaterial.alpha = sun.intensity * 0.9 + 0.1;
-        if((sunsetProgress < 0.1) && (globalWeatherState.weatherState == 2)) skyboxMaterial.alpha = sun.intensity - 0.25;   //può esistere un "gradino" di luminosità del cielo se il tramonto e il temporale sono attivi nello stesso momento
+        if((sunsetProgress < 0.1) && (globalWeatherState.weatherState == 2)) skyboxMaterial.alpha = sun.intensity - 0.25;   //DA CAMBIARE: può esistere un "gradino" di luminosità del cielo se il tramonto e il temporale sono attivi nello stesso momento
         
-        //gestione dei colori del tramonto
-        if((modalitaTempo == 0 && time > 720) || (modalitaTempo == 1 && deltaSunIntensity < 0)) {
+        //sunset colors handling code
+        if((timeMode == 0 && time > 720) || (timeMode == 1 && deltaSunIntensity < 0)) {
             const secondHalfDayProgress = 1 - sun.intensity;
-            //7/12 e 3/4 sono le ore di inizio e fine del tramonto per mezzogiorno=0 e mezzanotte=1 (19:00 e 21:00)
-            if((secondHalfDayProgress > 7/12) && (secondHalfDayProgress < 17/24)) sunsetProgress = 8 * secondHalfDayProgress - 14/3;    //17/24 è un punto intermedio tra 7/12 e 3/4
+            //7/12 and 3/4 are the start and end of the sunset if noon = 0 and midnight = 1 (07:00 p.m. and 09:00 p.m.)
+            if((secondHalfDayProgress > 7/12) && (secondHalfDayProgress < 17/24)) sunsetProgress = 8 * secondHalfDayProgress - 14/3;    //17/24 is a point found between 7/12 and 3/4
             else if((secondHalfDayProgress >= 17/24) && (secondHalfDayProgress < 3/4)) sunsetProgress = -24 * secondHalfDayProgress + 18;
         }
         const skyRed = 0.086 + sunsetProgress * (0.965 - 0.086);
@@ -262,16 +262,16 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         const skyBlue = 0.150 + sunsetProgress * (0.040 - 0.150);
         scene.clearColor = new BABYLON.Color3(skyRed, skyGreen, skyBlue);
 
-        //rotazione della Luna
+        //moon rotation
         let moonTime = day.getDate();
         if(moonTime > 28) moonTime = 28;
         moonAngle = moonTime / 28 * 2 * Math.PI;
         moon.position.x = Math.sin(moonAngle) * 250;
         moon.position.y = Math.cos(moonAngle) * 250;
 
-        //controllo se sia presente una sovrapposizione del terreno con la base del ponte (in tal caso rendo il segmento invisibile)
+        //checking if a terrain segment overlaps with the bridge (if an intersection is found, the segment is set to invisible)
         for(let i=0; i<12; i++) {
-            if(segments[i].terrain.position.z > (ponte.position.z + 752) && segments[i].terrain.position.z < (ponte.position.z + 1776)) segments[i].terrain.isVisible = false;
+            if(segments[i].terrain.position.z > (bridge.position.z + 752) && segments[i].terrain.position.z < (bridge.position.z + 1776)) segments[i].terrain.isVisible = false;
             else segments[i].terrain.isVisible = true;
         }
 
@@ -280,28 +280,28 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
 
         if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady() && sparks.isReady()) weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, globalWeatherState);
 
-        if(configFlags[3]) treno.position.z = defaultCamera.position.z - 615;
+        if(configFlags[3]) train.position.z = defaultCamera.position.z - 615;
 
-        velocita -= 0.01;   //per inerzia il treno tenderà a rallentare da solo se non si continua a premere il tasto W
-        if(velocita < 0) velocita = 0;
+        velocity -= 0.01;   //if the W key isn't pressed, the camera starts slowing down for inertia
+        if(velocity < 0) velocity = 0;
 
-        spazio += velocita;
-        defaultCamera.position.z = spazio;
+        distanceFromOrigin += velocity;
+        defaultCamera.position.z = distanceFromOrigin;
 
-        if(defaultCamera.position.z > (4 * 256) + segments[0].railRoad.position.z) {    //sposto il primo modello di terreno se ho superato l'inizio del terzo
+        if(defaultCamera.position.z > (4 * 256) + segments[0].railRoad.position.z) {    //move the first terrain segment if the start of the third one is surpassed
             segments[0].railRoad.position.z += segments.length * 256;
             segments[0].terrain.position.z += segments.length * 256;
-            segments.push(segments.shift());    //il primo elemento diventa l'ultimo
+            segments.push(segments.shift());    //the first element becomes last
         }
-        if(defaultCamera.position.z > arrayOfStations[stationIndex].position.z + 2 * 256) {         //se l'osservatore si trova oltre l'ultima stazione generata (sommata di 2 * 256)
+        if(defaultCamera.position.z > arrayOfStations[stationIndex].position.z + 2 * 256) { //arrayOfStations[stationIndex] indicates the last discovered station
             const previuosStationIndex = stationIndex;
             if(stationIndex < 3) stationIndex += 1;
             else stationIndex = 0;
-            arrayOfStations[stationIndex].position.z = arrayOfStations[previuosStationIndex].position.z + 256 * Math.floor(8 + Math.random() * 40);   //sposto l'ultima stazione ad almeno 4096 unità di distanza dalla precedente
+            arrayOfStations[stationIndex].position.z = arrayOfStations[previuosStationIndex].position.z + 256 * Math.floor(8 + Math.random() * 40); //the last station is moved at least 4096 units away the previous one
             arrayOfStations[stationIndex].setEnabled(true);
-            arrayOfStations[previuosStationIndex].getChildren().forEach(x => x.setEnabled(false));  //spengo tutte le luci della stazione precedente
-            arrayOfStations[stationIndex].getChildren().forEach(x => x.setEnabled(true));           //accendo tutte le luci della stazione corrente
-            //if(checkIntersections(ponte.position.z + 1264, 512 * 2, stazione.position.z + 98, 512 * 3)) stazione.setEnabled(false); //98 --> da cambiare a seconda della lunghezza delle stazioni
+            arrayOfStations[previuosStationIndex].getChildren().forEach(x => x.setEnabled(false));  //turning off all of the previous station lights
+            arrayOfStations[stationIndex].getChildren().forEach(x => x.setEnabled(true));           //turning on all of the current station lights
+            //if(checkIntersections(bridge.position.z + 1264, 512 * 2, stazione.position.z + 98, 512 * 3)) stazione.setEnabled(false); //98 --> DA CAMBIARE a seconda della lunghezza delle stazioni
             if(configFlags[0] && arrayOfStations[stationIndex].isEnabled()) {
                 cities[0].city.position.z = arrayOfStations[stationIndex].position.z;
                 cities[0].trees.position.z = arrayOfStations[stationIndex].position.z;
@@ -311,58 +311,58 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
                 forests[0].position.z = arrayOfStations[stationIndex].position.z + 1280;
                 forests.push(forests.shift());
             }
-            const indice = Math.floor(Math.random() * listaCartelli.length);
-            const cartello = listaCartelli[indice];
-            if(cartello != undefined && arrayOfStations[stationIndex].isEnabled()) {
+            const index = Math.floor(Math.random() * signList.length);
+            const sign = signList[index];
+            if(sign != undefined && arrayOfStations[stationIndex].isEnabled()) {
                 switch(stationIndex) {
-                    case 0: cartello.position.z = arrayOfStations[stationIndex].position.z + 12; break;
-                    case 1: cartello.position.z = arrayOfStations[stationIndex].position.z - 40; break;
-                    case 2: cartello.position.z = arrayOfStations[stationIndex].position.z - 140; break;
-                    case 3: cartello.position.z = arrayOfStations[stationIndex].position.z - 104; break;
+                    case 0: sign.position.z = arrayOfStations[stationIndex].position.z + 12; break;
+                    case 1: sign.position.z = arrayOfStations[stationIndex].position.z - 40; break;
+                    case 2: sign.position.z = arrayOfStations[stationIndex].position.z - 140; break;
+                    case 3: sign.position.z = arrayOfStations[stationIndex].position.z - 104; break;
                 }
-                listaCitta.splice(indice, 1);   //il primo parametro indica la posizione dell'elemento nell'array; il secondo dice quanti elementi sono da rimuovere
+                cityList.splice(index, 1);
             }
             
         }
-        if(defaultCamera.position.z > ponte.position.z + 4096) {
-            ponte.position.z += 512 * Math.floor(16 + Math.random() * 30);
-            if(riverSound.isReady()) riverSound.setPosition(new BABYLON.Vector3(0, 0, ponte.position.z + 1264));
+        if(defaultCamera.position.z > bridge.position.z + 4096) {
+            bridge.position.z += 512 * Math.floor(16 + Math.random() * 30);
+            if(riverSound.isReady()) riverSound.setPosition(new BABYLON.Vector3(0, 0, bridge.position.z + 1264));
         }
 
-        velocitaOverlay.innerText = "Velocità: " + Math.floor(velocita * 10);   //il fattore 10 serve a rendere più realistici i valori
-        spazioOverlay.innerText = "Spazio: " + Math.floor(spazio * 10);
-        coordinateOverlay.innerText = "X: " + freeCam.position.x + "\n Y: " + freeCam.position.y + "\n Z: " + freeCam.position.z;
+        speedOverlay.innerText = "Velocità: " + Math.floor(velocity * 10);  //the multiplier allows for more realistic values
+        distanceOverlay.innerText = "Spazio: " + Math.floor(distanceFromOrigin * 10);
+        coordinatesOverlay.innerText = "X: " + freeCam.position.x + "\n Y: " + freeCam.position.y + "\n Z: " + freeCam.position.z;
     });
     engine.runRenderLoop(() => scene.render());
     window.addEventListener("resize", () => engine.resize());
-    window.addEventListener("keydown", function(event) {    //interazioni con la tastiera
+    window.addEventListener("keydown", function(event) {    //keyboard interactions
         switch(event.keyCode) {
-            case 87: if(velocita < 32) velocita += 0.025; break;    //W --> accelerazione
-            case 83: velocita -= 0.1; break;    //S --> frenata
-            case 38: if(scene.activeCamera == defaultCamera && defaultCamera.position.y <= 64) defaultCamera.position.y += 0.5; break;  //↑ --> salita della visuale
-            case 40: if(scene.activeCamera == defaultCamera && defaultCamera.position.y > -0.5) defaultCamera.position.y -= 0.5; break; //↓ --> discesa della visuale
-            case 32: horn.play(); break;    //spacebar --> sirena
-            case 71: modalitaTempo = (modalitaTempo + 1) % 6; break;    //G --> modalità giorno-notte
+            case 87: if(velocity < 32) velocity += 0.025; break;    //W --> acceleration
+            case 83: velocity -= 0.1; break;    //S --> brake
+            case 38: if(scene.activeCamera == defaultCamera && defaultCamera.position.y <= 64) defaultCamera.position.y += 0.5; break;  //↑ --> rise camera
+            case 40: if(scene.activeCamera == defaultCamera && defaultCamera.position.y > -0.5) defaultCamera.position.y -= 0.5; break; //↓ --> drop camera
+            case 32: horn.play(); break;    //spacebar --> horn
+            case 71: timeMode = (timeMode + 1) % 6; break;  //G --> set timeMode (cyclic change)
             case 72:
-                if(aiutoOverlay.style.display === "") { //H --> mostra aiuto
-                    aiutoOverlay.style.display = "block";
+                if(infoOverlay.style.display === "") {  //H --> display help information
+                    infoOverlay.style.display = "block";
                 }
-                else if(aiutoOverlay.style.display === "block") {   //H --> nascondi aiuto
-                    aiutoOverlay.style.display = "";
+                else if(infoOverlay.style.display === "block") {    //H --> hide help information
+                    infoOverlay.style.display = "";
                 }
                 break;
-            case 67:    //C --> cambia telecamera attiva e visibilità degli assi
+            case 67:    //C --> change active camera and set axis visiblity
                 if(scene.activeCamera == defaultCamera) {
                     scene.activeCamera = freeCam;
                     axisGroup.setEnabled(true);
                     freeCam.position = defaultCamera.position.clone();
                     axisGroup.position = freeCam.position.clone();
-                    coordinateOverlay.style.display = "block";
+                    coordinatesOverlay.style.display = "block";
                 }
                 else {
                     scene.activeCamera = defaultCamera;
                     axisGroup.setEnabled(false);
-                    coordinateOverlay.style.display = "";
+                    coordinatesOverlay.style.display = "";
                 }
             default: return;
         }

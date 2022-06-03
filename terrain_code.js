@@ -4,7 +4,7 @@ function createTerrain(scene) {
     const arrayOfBaseTerrainMeshes = [];
     const arrayOfDynamicTerrainMeshes = [];
 
-    convertModelToMesh(terrain_chunk, arrayOfBaseTerrainMeshes, {positionZ: 112});
+    convertModelToMesh(terrainChunk, arrayOfBaseTerrainMeshes, {positionZ: 112});
     convertModelToMesh(gravelPlane, arrayOfDynamicTerrainMeshes, {positionZ: 112, materialPriority: -1});
 
     for(let x_offset=-48; x_offset<=48; x_offset+=96) convertModelToMesh(ringhiera, arrayOfDynamicTerrainMeshes, {positionX: x_offset, positionZ: 112});

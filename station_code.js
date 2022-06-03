@@ -1,5 +1,4 @@
 "use strict";
-//Funzione per creare la stazione
 function createStation(scene) {
     const chunk_size = 32;
     const arrayOfStationMeshes = [];
