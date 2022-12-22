@@ -9,6 +9,7 @@ const importedSoundsList = ["horn.ogg","thunder1.ogg","thunder2.ogg","thunder3.o
 
 let distanceFromOrigin = 0;
 let velocity = 0;
+let autopilot = 0;
 
 //station sign parameters
 const planeWidth = 10;
@@ -137,8 +138,9 @@ function startEverything(configFlags, renderDistance) {
 function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDistance, glowHalo) {
     const speedOverlay = document.getElementById('speed');
     const distanceOverlay = document.getElementById('distance');
-    const infoOverlay = document.getElementById('helpDialog');
+    const helpOverlay = document.getElementById('helpDialog');
     const coordinatesOverlay = document.getElementById('coordinates');
+    const infoOverlay = document.getElementById('info');
 
     //skybox creation
     const skybox = BABYLON.Mesh.CreateBox('skybox', renderDistance * 2 / Math.sqrt(3), scene);  //skybox length is calculated in such a way that it is always visible
@@ -230,6 +232,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     let sunsetProgress = 0;
     let moonAngle = 0;
     let stationIndex = 0;
+    let previuosStationIndex = 0;
     scene.registerBeforeRender(() => {
         day = new Date();
         const time = day.getHours() * 60 + day.getMinutes();    //present time is measured in minutes starting from today's midnight
@@ -288,13 +291,20 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         distanceFromOrigin += velocity;
         defaultCamera.position.z = distanceFromOrigin;
 
+        if(autopilot) {
+            if(velocity < 10 && defaultCamera.position.z < arrayOfStations[stationIndex].position.z - 1260)
+                velocity += 0.025;
+            else if(defaultCamera.position.z > arrayOfStations[stationIndex].position.z - 1260)
+                velocity -= 0.025;
+        }
+
         if(defaultCamera.position.z > (4 * 256) + segments[0].railRoad.position.z) {    //move the first terrain segment if the start of the third one is surpassed
             segments[0].railRoad.position.z += segments.length * 256;
             segments[0].terrain.position.z += segments.length * 256;
             segments.push(segments.shift());    //the first element becomes last
         }
         if(defaultCamera.position.z > arrayOfStations[stationIndex].position.z + 2 * 256) { //arrayOfStations[stationIndex] indicates the last discovered station
-            const previuosStationIndex = stationIndex;
+            previuosStationIndex = stationIndex;
             if(stationIndex < 3) stationIndex += 1;
             else stationIndex = 0;
             arrayOfStations[stationIndex].position.z = arrayOfStations[previuosStationIndex].position.z + 256 * Math.floor(8 + Math.random() * 40); //the last station is moved at least 4096 units away the previous one
@@ -322,7 +332,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
                 }
                 cityList.splice(index, 1);
             }
-            
+
         }
         if(defaultCamera.position.z > bridge.position.z + 4096) {
             bridge.position.z += 512 * Math.floor(16 + Math.random() * 30);
@@ -332,6 +342,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         speedOverlay.innerText = "Velocità: " + Math.floor(velocity * 10);  //the multiplier allows for more realistic values
         distanceOverlay.innerText = "Spazio: " + Math.floor(distanceFromOrigin * 10);
         coordinatesOverlay.innerText = "X: " + freeCam.position.x + "\n Y: " + freeCam.position.y + "\n Z: " + freeCam.position.z;
+        infoOverlay.innerText = "Pilota automatico: " + ((autopilot) ? "inserito" : "disinserito");
     });
     engine.runRenderLoop(() => scene.render());
     window.addEventListener("resize", () => engine.resize());
@@ -339,16 +350,17 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         switch(event.keyCode) {
             case 87: if(velocity < 32) velocity += 0.025; break;    //W --> acceleration
             case 83: velocity -= 0.1; break;    //S --> brake
+            case 80: autopilot = (autopilot + 1) % 2; break;    //P --> automatic driving
             case 38: if(scene.activeCamera == defaultCamera && defaultCamera.position.y <= 64) defaultCamera.position.y += 0.5; break;  //↑ --> rise camera
             case 40: if(scene.activeCamera == defaultCamera && defaultCamera.position.y > -0.5) defaultCamera.position.y -= 0.5; break; //↓ --> drop camera
             case 32: horn.play(); break;    //spacebar --> horn
             case 71: timeMode = (timeMode + 1) % 6; break;  //G --> set timeMode (cyclic change)
             case 72:
-                if(infoOverlay.style.display === "") {  //H --> display help information
-                    infoOverlay.style.display = "block";
+                if(helpOverlay.style.display === "") {  //H --> display help information
+                    helpOverlay.style.display = "block";
                 }
-                else if(infoOverlay.style.display === "block") {    //H --> hide help information
-                    infoOverlay.style.display = "";
+                else if(helpOverlay.style.display === "block") {    //H --> hide help information
+                    helpOverlay.style.display = "";
                 }
                 break;
             case 67:    //C --> change active camera and set axis visiblity
