@@ -195,10 +195,6 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         }
     }
 
-    let train;
-    if(configFlags[3]) train = createNormalTrain();
-    if(configFlags[4]) createContainerTrainFirstType(scene);
-
     const bridge = createBridge(skybox, scene);
     riverSound.setVolume(2, 0);
 
@@ -216,13 +212,19 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
     rainParticleSystem.maxScaleX = 0.1;
 
     const sparksParticleSystem = new BABYLON.ParticleSystem('sparksPS', 50, scene);
-    sparksParticleSystem.particleTexture = new BABYLON.Texture("./assets/textures/spark.png");
-    sparksParticleSystem.emitter = new BABYLON.Vector3(-8, 27.625, -10);
-    sparksParticleSystem.direction1 = sparksParticleSystem.direction2 = BABYLON.Vector3.Zero();
-    sparksParticleSystem.minLifeTime = 0.15;
-    sparksParticleSystem.maxLifeTime = 0.75;
-    sparksParticleSystem.minSize = 0.01;
-    sparksParticleSystem.maxSize = 0.25;
+    let train;
+
+    if(configFlags[3]) {
+        train = createNormalTrain();
+        sparksParticleSystem.particleTexture = new BABYLON.Texture("./assets/textures/spark.png");
+        sparksParticleSystem.emitter = new BABYLON.Vector3(-8, 27.625, -10);
+        sparksParticleSystem.direction1 = sparksParticleSystem.direction2 = BABYLON.Vector3.Zero();
+        sparksParticleSystem.minLifeTime = 0.15;
+        sparksParticleSystem.maxLifeTime = 0.75;
+        sparksParticleSystem.minSize = 0.01;
+        sparksParticleSystem.maxSize = 0.25;
+    }
+    if(configFlags[4]) createContainerTrainFirstType(scene);
 
     const lightningPlanes = createLightning(scene, glowHalo);
     const globalWeatherState = {finishTimeStamp: 0, weatherState: 0};
@@ -281,7 +283,7 @@ function setupScene(engine, defaultCamera, freeCam, scene, configFlags, renderDi
         rainParticleSystem.emitter.z = defaultCamera.position.z;
         sparksParticleSystem.emitter.z = defaultCamera.position.z - 10;
 
-        if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady() && sparks.isReady()) weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, globalWeatherState);
+        if(rain.isReady() && thunderstorm.isReady() && thunder1.isReady() && thunder2.isReady() && thunder3.isReady() && thunder4.isReady() && thunder5.isReady() && sparks.isReady()) weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, globalWeatherState, configFlags);
 
         if(configFlags[3]) train.position.z = defaultCamera.position.z - 615;
 

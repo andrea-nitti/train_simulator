@@ -28,7 +28,7 @@ function createForestGroup(scene) { //a 'group' indicates 6 forest blocks
     return forestParentNode;
 }
 
-function weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, globalWeatherState) {
+function weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, globalWeatherState, configFlags) {
     const timeStamp = new Date().valueOf() / 1000;  //valueOf() --> milliseconds since 01/01/1970
     if(globalWeatherState.finishTimeStamp < timeStamp) {
         globalWeatherState.weatherState = Math.floor(Math.random() * 3);
@@ -48,7 +48,7 @@ function weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, glob
                 rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
                 sparksParticleSystem.start();
-                sparks.play();
+                if(configFlags[3]) sparks.play();
                 break;
             case 2: //thunderstorm
                 rain.stop();
@@ -58,7 +58,7 @@ function weather(rainParticleSystem, sparksParticleSystem, lightningPlanes, glob
                 rainParticleSystem.emitRate = 100;
                 rainParticleSystem.start();
                 sparksParticleSystem.start();
-                sparks.play();
+                if(configFlags[3]) sparks.play();
                 break;
         }
         const duration = 60 * (1 + Math.round(Math.random() * 4));  //duration is measured in minutes
